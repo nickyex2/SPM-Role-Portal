@@ -151,3 +151,40 @@ INSERT INTO ROLE_DETAILS ('role_name', 'role_description', 'role_status') VALUES
 ('Agile Team Lead', 'Agile Team Lead', 'active'),
 ('Agile Tester', 'Agile Tester', 'active'),
 ('Agile Trainer', 'Agile Trainer', 'active')
+
+INSERT INTO STAFF_REPORTING_OFFICER (`staff_id`, `RO_id`) VALUES
+(1, 3),
+(2, 3),
+(3, 3);
+
+INSERT INTO STAFF_ROLES (`staff_id`, `staff_role`, `role_type`, `sr_status`) VALUES
+(1, 1, 'primary', 'active'),
+(1, 2, 'secondary', 'active'),
+(2, 1, 'primary', 'active'),
+(2, 2, 'secondary', 'active'),
+(3, 1, 'primary', 'active'),
+(3, 2, 'secondary', 'active');
+
+INSERT INTO STAFF_SKILLS (`staff_id`, `skill_id`, `ss_status`) VALUES
+(1, 1, 'active'),
+(1, 2, 'active'),
+(1, 3, 'active'),
+(1, 4, 'active'),
+(1, 5, 'active'),
+(1, 6, 'active'),
+(1, 7, 'active'),
+(1, 8, 'active'),
+(1, 9, 'active')
+
+INSERT INTO ROLE_SKILLS (`role_id`, `skill_id`) VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5),
+(1, 6),
+(1, 7),
+(1, 8),
+(1, 9)
+
+
