@@ -50,7 +50,7 @@ INSERT INTO STAFF_DETAILS (`fname`, `lname`, `dept`, `email`, `phone`, `biz_addr
 ('FAUD', 'NIZAM', 'SALES', 'faud_nizam@all-in-one.com.sg', '65 1434 5678', '1, Marina Boulevard, Singapore 018989', 'manager'),
 ('JOHN', 'DOE', 'IT', 'john_doe@all-in-one.com.sg', '65 1534 5678', '1, Marina Boulevard, Singapore 018989', 'inactive');
 
-INSERT INTO ROLE_DETAILS ('role_name', 'role_description', 'role_status') VALUES
+INSERT INTO ROLE_DETAILS (`role_name`, `role_description`, `role_status`) VALUES
 ('Data Scientist', 'Data Scientist', 'active'),
 ('Data Engineer', 'Data Engineer', 'active'),
 ('Data Analyst', 'Data Analyst', 'active'),
@@ -70,7 +70,7 @@ INSERT INTO ROLE_DETAILS ('role_name', 'role_description', 'role_status') VALUES
 ('Business Process Auditor', 'Business Process Auditor', 'active'),
 ('Business Process Controller', 'Business Process Controller', 'active'),
 ('Agile Coach', 'Agile Coach', 'active'),
-('Human Resource Manager', 'Human Resource Manager', 'active')
+('Human Resource Manager', 'Human Resource Manager', 'active'),
 ('Finance Manager', 'Finance Manager', 'active'),
 ('Sales Manager', 'Sales Manager', 'active'),
 ('IT Manager', 'IT Manager', 'active'),
@@ -168,23 +168,23 @@ INSERT INTO STAFF_ROLES (`staff_id`, `staff_role`, `role_type`, `sr_status`) VAL
 INSERT INTO STAFF_SKILLS (`staff_id`, `skill_id`, `ss_status`) VALUES
 (1, 1, 'active'),
 (1, 2, 'active'),
-(1, 3, 'active'),
+(2, 3, 'active'),
 (1, 4, 'active'),
-(1, 5, 'active'),
+(2, 5, 'active'),
 (1, 6, 'active'),
-(1, 7, 'active'),
-(1, 8, 'active'),
-(1, 9, 'active')
+(3, 7, 'active'),
+(4, 8, 'active'),
+(3, 9, 'active')
 
 INSERT INTO ROLE_SKILLS (`role_id`, `skill_id`) VALUES
 (1, 1),
 (1, 2),
-(1, 3),
+(2, 3),
 (1, 4),
 (1, 5),
-(1, 6),
+(2, 6),
 (1, 7),
-(1, 8),
-(1, 9)
+(3, 8),
+(3, 9)
 
 
