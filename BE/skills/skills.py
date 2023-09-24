@@ -1,12 +1,16 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 import sys
-from os import environ
+import os
 from flask_cors import CORS
+from dotenv import load_dotenv
+import enum
+import json
 
 
+load_dotenv()
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('dbURL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # check os and change sql setting respectively
@@ -19,27 +23,31 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 CORS(app, allow_headers=['Content-Type', 'Access-Control-Allow-Origin',
-                         'Access-Control-Allow-Headers', 'Access-Control-Allow-Methods'])
+                        'Access-Control-Allow-Headers', 'Access-Control-Allow-Methods'])
+
+class statusEnum(enum.Enum):
+    active = "active"
+    inactive = "inactive"
 
 # skill table setup
-class Skillset(db.Model):
-    __tablename__ = 'skillset'  
+class Skill(db.Model):
+    __tablename__ = 'SKILL_DETAILS'  
     skill_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     skill_name = db.Column(db.String(300), nullable=False)
-    skill_description = db.Column(db.String(500), nullable=False)
+    skill_status = db.Column(db.Enum(statusEnum), nullable=False)
 
-    def __init__(self, skill_id, skill_name, skill_description):
+    def __init__(self, skill_id, skill_name, skill_status):
         self.skill_id = skill_id
         self.skill_name = skill_name
-        self.skill_description = skill_description
+        self.skill_status = skill_status
 
     def json(self):
-        return {"skill_id": self.skill_id, "skill_name": self.skill_name, "skill_description": self.skill_description}
+        return {"skill_id": self.skill_id, "skill_name": self.skill_name, "skill_status": self.skill_status.name}
 
 # get all skills from db
-@app.route("/skill")
+@app.route("/getAllSkills")
 def get_all():
-    Skills = Skillset.query.all()
+    Skills = Skill.query.all()
     if len(Skills):
         return jsonify(
             {
@@ -52,14 +60,14 @@ def get_all():
     return jsonify(
         {
             "code": 404,
-            "message": "Oops. No skills in the skillset database."
+            "message": "Oops. No skills in the SKILL_DETAILS database."
         }
     ),404
 
 # get skill by id
-@app.route("/skill/<int:skill_id>")
+@app.route("/getSkill/<int:skill_id>")
 def find_by_id(skill_id):
-    skill = Skillset.query.filter_by(skill_id=skill_id).first()
+    skill = Skill.query.filter_by(skill_id=skill_id).first()
     if skill:
         return jsonify(
             {
@@ -75,9 +83,9 @@ def find_by_id(skill_id):
     ), 404
 
 # create new skill
-@app.route("/skill/<int:skill_id>", methods=['POST'])
+@app.route("/addSkill/<int:skill_id>", methods=['POST'])
 def create_skill(skill_id):
-    if Skillset.query.filter_by(skill_id=skill_id).first():
+    if Skill.query.filter_by(skill_id=skill_id).first():
         return jsonify(
             {
                 "code": 410,
@@ -114,15 +122,13 @@ def create_skill(skill_id):
     ), 201
 
 # update skillset by skill_id
-@app.route("/skillset/<int:skill_id>", methods=['PUT'])
+@app.route("/updateSkill/<int:skill_id>", methods=['PUT'])
 def update_skill(skill_id):
-    skill = Skillset.query.filter_by(skill_id=skill_id).first()
-    print(skill)
+    skill = Skill.query.filter_by(skill_id=skill_id).first()
     if skill:
-        print(skill)
         skillStatus = request.get_json(force=True)
         print("data is " + format(skillStatus))
-        skill.skill_description = skillStatus["skill_description"]
+        skill.skill_status = skillStatus["skill_status"]
     try:
         db.session.commit()
     except:
@@ -136,46 +142,45 @@ def update_skill(skill_id):
             }
         ), 502
     
-    skill = json.dumps(skill, default=str)
     return jsonify(
         {
             "code": 202,
-            "data": skill
+            "data": skill.json()
         }
     ), 202
 
-# delete skillset by skill_id
-@app.route("/skill/<int:skill_id>", methods=['POST'])
-def delete_skill(skill_id):
-    # Check if the skill with the given skill_id exists
-    skill = Skillset.query.get(skill_id)
+# # delete skillset by skill_id
+# @app.route("/skill/<int:skill_id>", methods=['POST'])
+# def delete_skill(skill_id):
+#     # Check if the skill with the given skill_id exists
+#     skill = Skill.query.get(skill_id)
 
-    if skill is None:
-        return jsonify(
-            {
-                "code": 404,
-                "data": {
-                    "skill_id": skill_id
-                },
-                "message": "Skill not found"
-            }
-        ), 404
+#     if skill is None:
+#         return jsonify(
+#             {
+#                 "code": 404,
+#                 "data": {
+#                     "skill_id": skill_id
+#                 },
+#                 "message": "Skill not found"
+#             }
+#         ), 404
 
-    # Delete the skill
-    db.session.delete(skill)
-    db.session.commit()
+#     # Delete the skill
+#     db.session.delete(skill)
+#     db.session.commit()
 
-    return jsonify(
-        {   "code": 200,
-            "message": "Skill deleted successfully"
-        }
-    ), 200
+#     return jsonify(
+#         {   "code": 200,
+#             "message": "Skill deleted successfully"
+#         }
+#     ), 200
 
 
 if __name__ == '__main__':
     # host=’0.0.0.0’ allows the service to be accessible from any other in the network 
     # and not only from your own computer
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=os.environ.get('PORT'), debug=True)
 
 
 # export dbURL=mysql+mysqlconnector://root:root@localhost:3306/skill

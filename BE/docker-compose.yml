@@ -15,5 +15,23 @@ services:
     volumes:
       - ./mysql:/var/lib/mysql
       - ./dbinitscripts:/docker-entrypoint-initdb.d
+    networks:
+      - backend
+  skills:
+    build:
+      context: ./
+      dockerfile: ./skills/skills.Dockerfile
+    image: skills:latest
+    container_name: skills
+    depends_on:
+      - mysql
+    ports:
+      - 5001:5001
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
 
 
