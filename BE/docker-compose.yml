@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8.0.34
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: SPM
+      MYSQL_USER: user
+      MYSQL_PASSWORD: test
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mysql:/var/lib/mysql
+      - ./dbinitscripts:/docker-entrypoint-initdb.d
+    networks:
+      - backend
+  skills:
+    build:
+      context: ./
+      dockerfile: ./skills/skills.Dockerfile
+    image: skills:latest
+    container_name: skills
+    depends_on:
+      - mysql
+    ports:
+      - 5001:5001
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+
