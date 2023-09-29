@@ -41,7 +41,7 @@ FOREIGN KEY (RO_id) REFERENCES STAFF_DETAILS(staff_id)
 
 -- STAFF_ROLES TABLE
 CREATE TABLE IF NOT EXISTS STAFF_ROLES (
-staff_id int NOT NULL,
+staff_id int NOT NULL ,
 staff_role int NOT NULL,
 role_type ENUM ('primary', 'secondary') NOT NULL,
 sr_status ENUM ('active', 'inactive') NOT NULL,
@@ -71,7 +71,7 @@ FOREIGN KEY (skill_id) REFERENCES SKILL_DETAILS(skill_id)
 
 -- ROLE_LISTINGS TABLE
 CREATE TABLE IF NOT EXISTS ROLE_LISTINGS (
-  role_listing_id int NOT NULL,
+  role_listing_id int NOT NULL AUTO_INCREMENT,
   role_id int NOT NULL,
   role_listing_desc VARCHAR(10000) NOT NULL,
   role_listing_source int NOT NULL,
