@@ -39,8 +39,9 @@ class RoleListing(db.Model):
     role_listing_updater = db.Column(db.Integer, nullable=False)
     role_listing_ts_update = db.Column(db.TIMESTAMP, nullable=False, server_default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 
-    def __init__(self, role_id, role_listing_desc, role_listing_source, role_listing_open, role_listing_close,
+    def __init__(self,role_listing_id, role_id, role_listing_desc, role_listing_source, role_listing_open, role_listing_close,
                  role_listing_creator, role_listing_status, role_listing_updater):
+        self.role_listing_id = role_listing_id
         self.role_id = role_id
         self.role_listing_desc = role_listing_desc
         self.role_listing_source = role_listing_source
@@ -69,6 +70,7 @@ class RoleListing(db.Model):
 def create_role_listing():
     try:
         data = request.get_json()
+        role_listing_id = data.get("role_listing_id")
         role_id = data.get("role_id")
         role_listing_desc = data.get("role_listing_desc")
         role_listing_source = data.get("role_listing_source")
@@ -79,6 +81,7 @@ def create_role_listing():
         role_listing_updater = data.get("role_listing_updater")
 
         role_listing = RoleListing(
+            role_listing_id = role_listing_id,
             role_id=role_id,
             role_listing_desc=role_listing_desc,
             role_listing_source=role_listing_source,
