@@ -123,9 +123,4 @@ def create_staff(staff_id):
     ), 201
 
 if __name__ == '__main__':
-    # host=’0.0.0.0’ allows the service to be accessible from any other in the network 
-    # and not only from your own computer
     app.run(host='0.0.0.0', port=os.environ.get('PORT'), debug=True)
-
-
-# export dbURL=mysql+mysqlconnector://root:root@localhost:3306/staff

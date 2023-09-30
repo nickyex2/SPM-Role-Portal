@@ -212,7 +212,5 @@ def update_role_listing(role_listing_id):
         ), 400
     
 if __name__ == '__main__':
-    # host=’0.0.0.0’ allows the service to be accessible from any other in the network 
-    # and not only from your own computer
     app.run(host='0.0.0.0', port=os.environ.get('PORT'), debug=True)
 
