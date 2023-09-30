@@ -29,6 +29,54 @@ services:
       - 5001:5001
     networks:
       - backend
+  staff:
+    build:
+      context: ./
+      dockerfile: ./staff/staff.Dockerfile
+    image: staff:latest
+    container_name: staff
+    depends_on:
+      - mysql
+    ports:
+      - 5000:5000
+    networks:
+      - backend
+  staff_skill:
+    build:
+      context: ./
+      dockerfile: ./staffSkill/staffSkill.Dockerfile
+    image: staff_skill:latest
+    container_name: staff_skill
+    depends_on:
+      - mysql
+    ports:
+      - 5004:5004
+    networks:
+      - backend
+  role:
+    build:
+      context: ./
+      dockerfile: ./role/role.Dockerfile
+    image: role:latest
+    container_name: role
+    depends_on:
+      - mysql
+    ports:
+      - 5003:5003
+    networks:
+      - backend
+  role_listing:
+    build:
+      context: ./
+      dockerfile: ./role_listing/role_listing.Dockerfile
+    image: role_listing:latest
+    container_name: role_listing
+    depends_on:
+      - mysql
+    ports:
+      - 5002:5002
+    networks:
+      - backend
 
 networks:
   backend:

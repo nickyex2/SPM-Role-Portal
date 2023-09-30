@@ -150,7 +150,7 @@ INSERT INTO ROLE_DETAILS (`role_name`, `role_description`, `role_status`) VALUES
 ('Agile Scrum Master', 'Agile Scrum Master', 'active'),
 ('Agile Team Lead', 'Agile Team Lead', 'active'),
 ('Agile Tester', 'Agile Tester', 'active'),
-('Agile Trainer', 'Agile Trainer', 'active')
+('Agile Trainer', 'Agile Trainer', 'active');
 
 INSERT INTO STAFF_REPORTING_OFFICER (`staff_id`, `RO_id`) VALUES
 (1, 3),
@@ -174,7 +174,7 @@ INSERT INTO STAFF_SKILLS (`staff_id`, `skill_id`, `ss_status`) VALUES
 (1, 6, 'active'),
 (3, 7, 'active'),
 (4, 8, 'active'),
-(3, 9, 'active')
+(3, 9, 'active');
 
 INSERT INTO ROLE_SKILLS (`role_id`, `skill_id`) VALUES
 (1, 1),
@@ -185,7 +185,7 @@ INSERT INTO ROLE_SKILLS (`role_id`, `skill_id`) VALUES
 (2, 6),
 (1, 7),
 (3, 8),
-(3, 9)
+(3, 9);
 
 -- Insert 2 sample records into ROLE_LISTINGS table
 INSERT INTO ROLE_LISTINGS (
