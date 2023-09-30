@@ -189,16 +189,17 @@ INSERT INTO ROLE_SKILLS (`role_id`, `skill_id`) VALUES
 
 -- Insert 2 sample records into ROLE_LISTINGS table
 INSERT INTO ROLE_LISTINGS (
-    role_id,
-    role_listing_desc,
-    role_listing_source,
-    role_listing_open,
-    role_listing_close,
-    role_listing_creator,
-    role_listing_status,
-    role_listing_updater
+    `role_listing_id`,
+    `role_id`,
+    `role_listing_desc`,
+    `role_listing_source`,
+    `role_listing_open`,
+    `role_listing_close`,
+    `role_listing_creator`,
+    `role_listing_status`,
+    `role_listing_updater`
 )
 VALUES
-    (1, 'Sample Role Listing 1', 3, '2023-10-01', '2023-10-10', 2, 'active', 2),
-    (3, 'Sample Role Listing 2', 3, '2023-11-01', '2023-11-10', 2, 'inactive', 2);
+    (19458657, 1, 'Sample Role Listing 1', 3, '2023-10-01', '2023-10-10', 2, 'active', 2),
+    (19458658, 3, 'Sample Role Listing 2', 3, '2023-11-01', '2023-11-10', 2, 'inactive', 2);
 
