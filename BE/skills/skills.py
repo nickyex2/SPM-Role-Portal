@@ -88,7 +88,7 @@ def create_skill(skill_id):
 
     data = request.get_json(force=True)
     print("data is " + format(data))
-    skill = skill(skill_id, **data)
+    skill = Skill(skill_id, **data)
 
     try:
         db.session.add(skill)
