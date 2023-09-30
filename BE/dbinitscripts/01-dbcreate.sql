@@ -41,12 +41,12 @@ FOREIGN KEY (RO_id) REFERENCES STAFF_DETAILS(staff_id)
 
 -- STAFF_ROLES TABLE
 CREATE TABLE IF NOT EXISTS STAFF_ROLES (
-staff_id int NOT NULL,
+staff_id int NOT NULL ,
 staff_role int NOT NULL,
 role_type ENUM ('primary', 'secondary') NOT NULL,
 sr_status ENUM ('active', 'inactive') NOT NULL,
 PRIMARY KEY (staff_id, staff_role),
-FOREIGN KEY (staff_id) REFERENCES STAFF_DETAILS(staff_id), 
+FOREIGN KEY (staff_id) REFERENCES STAFF_DETAILS(staff_id),
 FOREIGN KEY (staff_role) REFERENCES ROLE_DETAILS(role_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -56,8 +56,8 @@ staff_id int NOT NULL,
 skill_id int NOT NULL,
 ss_status ENUM ('active', 'unverified', 'in progress') NOT NULL,
 PRIMARY KEY (staff_id, skill_id),
-FOREIGN KEY (staff_id) REFERENCES STAFF_DETAILS(staff_id), 
-FOREIGN KEY (skill_id) REFERENCES SKILL_DETAILS(skill_id) 
+FOREIGN KEY (staff_id) REFERENCES STAFF_DETAILS(staff_id),
+FOREIGN KEY (skill_id) REFERENCES SKILL_DETAILS(skill_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ROLE_SKILLS TABLE
