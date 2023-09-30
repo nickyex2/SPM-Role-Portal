@@ -10,6 +10,7 @@ services:
       MYSQL_DATABASE: SPM
       MYSQL_USER: user
       MYSQL_PASSWORD: test
+      TZ: Asia/Singapore
     ports:
       - 3306:3306
     volumes:
@@ -23,6 +24,8 @@ services:
       dockerfile: ./skills/skills.Dockerfile
     image: skills:latest
     container_name: skills
+    environment:
+      TZ: Asia/Singapore
     depends_on:
       - mysql
     ports:
@@ -35,6 +38,8 @@ services:
       dockerfile: ./staff/staff.Dockerfile
     image: staff:latest
     container_name: staff
+    environment:
+      TZ: Asia/Singapore
     depends_on:
       - mysql
     ports:
@@ -47,6 +52,8 @@ services:
       dockerfile: ./staffSkill/staffSkill.Dockerfile
     image: staff_skill:latest
     container_name: staff_skill
+    environment:
+      TZ: Asia/Singapore
     depends_on:
       - mysql
     ports:
@@ -59,6 +66,8 @@ services:
       dockerfile: ./role/role.Dockerfile
     image: role:latest
     container_name: role
+    environment:
+      TZ: Asia/Singapore
     depends_on:
       - mysql
     ports:
@@ -71,6 +80,8 @@ services:
       dockerfile: ./role_listing/role_listing.Dockerfile
     image: role_listing:latest
     container_name: role_listing
+    environment:
+      TZ: Asia/Singapore
     depends_on:
       - mysql
     ports:
