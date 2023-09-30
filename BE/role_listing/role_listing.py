@@ -6,8 +6,9 @@ from flask_cors import CORS
 import enum
 from sqlalchemy import TIMESTAMP
 import datetime
+from dotenv import load_dotenv
 
-
+load_dotenv()
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('dbURL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
