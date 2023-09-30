@@ -41,11 +41,11 @@ services:
       - 5000:5000
     networks:
       - backend
-  staffSkill:
+  staff_skill:
     build:
       context: ./
       dockerfile: ./staffSkill/staffSkill.Dockerfile
-    image: staffSkill:latest
+    image: staff_skill:latest
     container_name: staff_skill
     depends_on:
       - mysql
