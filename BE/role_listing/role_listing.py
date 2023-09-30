@@ -6,25 +6,19 @@ from flask_cors import CORS
 import enum
 from sqlalchemy import TIMESTAMP
 import datetime
+from dotenv import load_dotenv
 
-
+load_dotenv()
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/spm'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('dbURL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# check os and change sql setting respectively
-# my_os=sys.platform
-# if my_os == "darwin":
-#     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/staff'
-# elif my_os == "win32" or my_os == "win64":
-#     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/staff'
-
 db = SQLAlchemy(app)
+CORS(app)
 
-CORS(app, allow_headers=['Content-Type', 'Access-Control-Allow-Origin',
-                         'Access-Control-Allow-Headers', 'Access-Control-Allow-Methods'])
-
-
+class statusEnum(enum.Enum):
+    active = "active"
+    inactive = "inactive"
+    
 class RoleListing(db.Model):
     __tablename__ = 'ROLE_LISTINGS'
     role_listing_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -35,7 +29,7 @@ class RoleListing(db.Model):
     role_listing_close = db.Column(db.Date, nullable=False)
     role_listing_creator = db.Column(db.Integer, nullable=False)
     role_listing_ts_create = db.Column(db.TIMESTAMP, nullable=False, server_default=db.func.current_timestamp())
-    role_listing_status = db.Column(db.Enum('active', 'inactive'), nullable=False)
+    role_listing_status = db.Column(db.Enum(statusEnum), nullable=False)
     role_listing_updater = db.Column(db.Integer, nullable=False)
     role_listing_ts_update = db.Column(db.TIMESTAMP, nullable=False, server_default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 
@@ -61,7 +55,7 @@ class RoleListing(db.Model):
             "role_listing_close": self.role_listing_close.isoformat(),
             "role_listing_creator": self.role_listing_creator,
             "role_listing_ts_create": self.role_listing_ts_create.isoformat(),
-            "role_listing_status": self.role_listing_status,
+            "role_listing_status": self.role_listing_status.name,
             "role_listing_updater": self.role_listing_updater,
             "role_listing_ts_update": self.role_listing_ts_update.isoformat()
         }
@@ -130,35 +124,53 @@ def get_all_role_listings():
         }
     ), 404
 
-#delete a rolelisting base on role listing id
-@app.route("/deleteRoleListing/<int:role_listing_id>", methods=["DELETE"])
-def delete_role_listing(role_listing_id):
-    try:
-        role_listing = RoleListing.query.get(role_listing_id)
-        if role_listing:
-            db.session.delete(role_listing)
-            db.session.commit()
-
-            return jsonify(
-                {
-                    "code": 200,
-                    "message": f"RoleListing with ID {role_listing_id} deleted successfully."
-                }
-            ), 200
-        else:
-            return jsonify(
-                {
-                    "code": 404,
-                    "message": f"RoleListing with ID {role_listing_id} not found. Nothing deleted."
-                }
-            ), 404
-    except Exception as e:
+# Get a specific RoleListing by role_listing_id
+@app.route("/getRoleListing/<int:role_listing_id>")
+def get_role_listing(role_listing_id):
+    role_listing = RoleListing.query.get(role_listing_id)
+    if role_listing:
         return jsonify(
             {
-                "code": 400,
-                "message": f"Failed to delete RoleListing with ID {role_listing_id}. Error: {str(e)}"
+                "code": 200,
+                "data": role_listing.json()
             }
-        ), 400
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": f"RoleListing with ID {role_listing_id} not found."
+        }
+    ), 404
+    
+# # delete a rolelisting base on role listing id
+# @app.route("/deleteRoleListing/<int:role_listing_id>", methods=["DELETE"])
+# def delete_role_listing(role_listing_id):
+#     try:
+#         role_listing = RoleListing.query.get(role_listing_id)
+#         if role_listing:
+#             db.session.delete(role_listing)
+#             db.session.commit()
+
+#             return jsonify(
+#                 {
+#                     "code": 200,
+#                     "message": f"RoleListing with ID {role_listing_id} deleted successfully."
+#                 }
+#             ), 200
+#         else:
+#             return jsonify(
+#                 {
+#                     "code": 404,
+#                     "message": f"RoleListing with ID {role_listing_id} not found. Nothing deleted."
+#                 }
+#             ), 404
+#     except Exception as e:
+#         return jsonify(
+#             {
+#                 "code": 400,
+#                 "message": f"Failed to delete RoleListing with ID {role_listing_id}. Error: {str(e)}"
+#             }
+#         ), 400
     
 # Update a specific RoleListing by role_listing_id
 @app.route("/updateRoleListing/<int:role_listing_id>", methods=["PUT"])
@@ -202,27 +214,6 @@ def update_role_listing(role_listing_id):
             }
         ), 400
     
-# Get a specific RoleListing by role_listing_id
-@app.route("/getRoleListing/<int:role_listing_id>")
-def get_role_listing(role_listing_id):
-    role_listing = RoleListing.query.get(role_listing_id)
-    if role_listing:
-        return jsonify(
-            {
-                "code": 200,
-                "data": role_listing.json()
-            }
-        )
-    return jsonify(
-        {
-            "code": 404,
-            "message": f"RoleListing with ID {role_listing_id} not found."
-        }
-    ), 404
-
-    
 if __name__ == '__main__':
-    # host=’0.0.0.0’ allows the service to be accessible from any other in the network 
-    # and not only from your own computer
-    app.run(host='0.0.0.0', port=5002, debug=True)
+    app.run(host='0.0.0.0', port=os.environ.get('PORT'), debug=True)
 

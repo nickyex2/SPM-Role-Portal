@@ -12,18 +12,8 @@ load_dotenv()
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('dbURL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# check os and change sql setting respectively
-# my_os=sys.platform
-# if my_os == "darwin":
-#     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/skillset'
-# elif my_os == "win32" or my_os == "win64":
-#     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/skillset'
-
 db = SQLAlchemy(app)
-
-CORS(app, allow_headers=['Content-Type', 'Access-Control-Allow-Origin',
-                        'Access-Control-Allow-Headers', 'Access-Control-Allow-Methods'])
+CORS(app)
 
 class statusEnum(enum.Enum):
     active = "active"
@@ -98,7 +88,7 @@ def create_skill(skill_id):
 
     data = request.get_json(force=True)
     print("data is " + format(data))
-    skill = skill(skill_id, **data)
+    skill = Skill(skill_id, **data)
 
     try:
         db.session.add(skill)
@@ -178,9 +168,4 @@ def update_skill(skill_id):
 
 
 if __name__ == '__main__':
-    # host=’0.0.0.0’ allows the service to be accessible from any other in the network 
-    # and not only from your own computer
     app.run(host='0.0.0.0', port=os.environ.get('PORT'), debug=True)
-
-
-# export dbURL=mysql+mysqlconnector://root:root@localhost:3306/skill
