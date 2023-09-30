@@ -57,7 +57,7 @@ skill_id int NOT NULL,
 ss_status ENUM ('active', 'unverified', 'in progress') NOT NULL,
 PRIMARY KEY (staff_id, skill_id),
 FOREIGN KEY (staff_id) REFERENCES STAFF_DETAILS(staff_id),
-FOREIGN KEY (skill_id) REFERENCES SKILL_DETAILS(skill_id) 
+FOREIGN KEY (skill_id) REFERENCES SKILL_DETAILS(skill_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ROLE_SKILLS TABLE
