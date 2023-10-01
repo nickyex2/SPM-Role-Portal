@@ -10,25 +10,15 @@ import json
 
 load_dotenv()
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/spm'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('dbURL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# check os and change sql setting respectively
-# my_os=sys.platform
-# if my_os == "darwin":
-#     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/skillset'
-# elif my_os == "win32" or my_os == "win64":
-#     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/skillset'
-
 db = SQLAlchemy(app)
-
-CORS(app, allow_headers=['Content-Type', 'Access-Control-Allow-Origin',
-                        'Access-Control-Allow-Headers', 'Access-Control-Allow-Methods'])
+CORS(app)
 
 
 class RoleApplication(db.Model):
     __tablename__ = 'ROLE_APPLICATIONS'
-    role_app_id = db.Column(db.Integer, primary_key=True)
+    role_app_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     role_listing_id = db.Column(db.Integer, nullable=False)
     staff_id = db.Column(db.Integer, nullable=False)
     role_app_status = db.Column(db.Enum('applied', 'withdrawn'), nullable=False)
@@ -184,5 +174,5 @@ def delete_role_application(role_app_id):
 if __name__ == '__main__':
 # host=’0.0.0.0’ allows the service to be accessible from any other in the network 
 # and not only from your own computer
-    app.run(host='0.0.0.0', port=5005, debug=True)
+    app.run(host='0.0.0.0', port=os.environ.get('PORT'), debug=True)
 

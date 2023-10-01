@@ -88,6 +88,62 @@ services:
       - 5002:5002
     networks:
       - backend
+  staff_role:
+    build:
+      context: ./
+      dockerfile: ./staffRole/staffRole.Dockerfile
+    image: staff_role:latest
+    container_name: staff_role
+    environment:
+      TZ: Asia/Singapore
+    depends_on:
+      - mysql
+    ports:
+      - 5006:5006
+    networks:
+      - backend
+  staff_reporting_officer:
+    build:
+      context: ./
+      dockerfile: ./staffReportingOfficer/staffReport.Dockerfile
+    image: staff_reporting_officer:latest
+    container_name: staff_reporting_officer
+    environment:
+      TZ: Asia/Singapore
+    depends_on:
+      - mysql
+    ports:
+      - 5007:5007
+    networks:
+      - backend
+  role_skills:
+    build:
+      context: ./
+      dockerfile: ./roleSkills/roleSkills.Dockerfile
+    image: role_skills:latest
+    container_name: role_skills
+    environment:
+      TZ: Asia/Singapore
+    depends_on:
+      - mysql
+    ports:
+      - 5008:5008
+    networks:
+      - backend
+  staff_skills:
+    build:
+      context: ./
+      dockerfile: ./staffSkill/staffSkill.Dockerfile
+    image: staff_skills:latest
+    container_name: staff_skills
+    environment:
+      TZ: Asia/Singapore
+    depends_on:
+      - mysql
+    ports:
+      - 5005:5005
+    networks:
+      - backend
 
 networks:
   backend:

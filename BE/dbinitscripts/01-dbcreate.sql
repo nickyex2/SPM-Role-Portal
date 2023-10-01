@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS ROLE_LISTINGS (
 
 -- ROLE_APPLICATIONS TABLE
 CREATE TABLE IF NOT EXISTS ROLE_APPLICATIONS (
-  role_app_id int NOT NULL,
+  role_app_id int NOT NULL AUTO_INCREMENT,
   role_listing_id int NOT NULL,
   staff_id int NOT NULL,
   role_app_status ENUM ('applied', 'withdrawn') NOT NULL,
