@@ -15,27 +15,30 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 CORS(app)
 
+
 class statusEnum(enum.Enum):
     active = "active"
     inactive = "inactive"
-    
+
+
 class RoleListing(db.Model):
     __tablename__ = 'ROLE_LISTINGS'
-    role_listing_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    role_listing_id = db.Column(
+        db.Integer, primary_key=True, autoincrement=True)
     role_id = db.Column(db.Integer, nullable=False)
     role_listing_desc = db.Column(db.String(10000), nullable=False)
     role_listing_source = db.Column(db.Integer, nullable=False)
     role_listing_open = db.Column(db.Date, nullable=False)
     role_listing_close = db.Column(db.Date, nullable=False)
     role_listing_creator = db.Column(db.Integer, nullable=False)
-    role_listing_ts_create = db.Column(db.TIMESTAMP, nullable=False, server_default=db.func.current_timestamp())
+    role_listing_ts_create = db.Column(
+        db.TIMESTAMP, nullable=False, server_default=db.func.current_timestamp())
     role_listing_status = db.Column(db.Enum(statusEnum), nullable=False)
     role_listing_updater = db.Column(db.Integer, nullable=False)
-    role_listing_ts_update = db.Column(db.TIMESTAMP, nullable=False, server_default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
+    role_listing_ts_update = db.Column(
+        db.TIMESTAMP, nullable=False, server_default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 
-
-    def __init__(self, role_id, role_listing_desc, role_listing_source, role_listing_open, role_listing_close,
-                role_listing_creator, role_listing_status, role_listing_updater):
+    def __init__(self, role_id, role_listing_desc, role_listing_source, role_listing_open, role_listing_close, role_listing_creator, role_listing_status, role_listing_updater):
         self.role_id = role_id
         self.role_listing_desc = role_listing_desc
         self.role_listing_source = role_listing_source
@@ -60,6 +63,7 @@ class RoleListing(db.Model):
             "role_listing_ts_update": self.role_listing_ts_update.isoformat()
         }
 
+
 @app.route("/createRoleListing", methods=["POST"])
 def create_role_listing():
     try:
@@ -75,7 +79,7 @@ def create_role_listing():
         role_listing_updater = data.get("role_listing_updater")
 
         role_listing = RoleListing(
-            role_listing_id = role_listing_id,
+            role_listing_id=role_listing_id,
             role_id=role_id,
             role_listing_desc=role_listing_desc,
             role_listing_source=role_listing_source,
@@ -103,8 +107,10 @@ def create_role_listing():
                 "message": f"Failed to create RoleListing. Error: {str(e)}"
             }
         ), 400
-    
+
 # Get all RoleListings
+
+
 @app.route("/getAllRoleListings")
 def get_all_role_listings():
     role_listings = RoleListing.query.all()
@@ -125,6 +131,8 @@ def get_all_role_listings():
     ), 404
 
 # Get a specific RoleListing by role_listing_id
+
+
 @app.route("/getRoleListing/<int:role_listing_id>")
 def get_role_listing(role_listing_id):
     role_listing = RoleListing.query.get(role_listing_id)
@@ -141,7 +149,7 @@ def get_role_listing(role_listing_id):
             "message": f"RoleListing with ID {role_listing_id} not found."
         }
     ), 404
-    
+
 # # delete a rolelisting base on role listing id
 # @app.route("/deleteRoleListing/<int:role_listing_id>", methods=["DELETE"])
 # def delete_role_listing(role_listing_id):
@@ -171,8 +179,10 @@ def get_role_listing(role_listing_id):
 #                 "message": f"Failed to delete RoleListing with ID {role_listing_id}. Error: {str(e)}"
 #             }
 #         ), 400
-    
+
 # Update a specific RoleListing by role_listing_id
+
+
 @app.route("/updateRoleListing/<int:role_listing_id>", methods=["PUT"])
 def update_role_listing(role_listing_id):
     try:
@@ -213,7 +223,7 @@ def update_role_listing(role_listing_id):
                 "message": f"Failed to update RoleListing with ID {role_listing_id}. Error: {str(e)}"
             }
         ), 400
-    
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=os.environ.get('PORT'), debug=True)
-
