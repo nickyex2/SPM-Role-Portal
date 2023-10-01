@@ -24,7 +24,7 @@ class statusEnum(enum.Enum):
 class RoleListing(db.Model):
     __tablename__ = 'ROLE_LISTINGS'
     role_listing_id = db.Column(
-        db.Integer, primary_key=True, autoincrement=True)
+        db.Integer, primary_key=True)
     role_id = db.Column(db.Integer, nullable=False)
     role_listing_desc = db.Column(db.String(10000), nullable=False)
     role_listing_source = db.Column(db.Integer, nullable=False)
@@ -38,7 +38,8 @@ class RoleListing(db.Model):
     role_listing_ts_update = db.Column(
         db.TIMESTAMP, nullable=False, server_default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 
-    def __init__(self, role_id, role_listing_desc, role_listing_source, role_listing_open, role_listing_close, role_listing_creator, role_listing_status, role_listing_updater):
+    def __init__(self, role_listing_id, role_id, role_listing_desc, role_listing_source, role_listing_open, role_listing_close, role_listing_creator, role_listing_status, role_listing_updater):
+        self.role_listing_id = role_listing_id
         self.role_id = role_id
         self.role_listing_desc = role_listing_desc
         self.role_listing_source = role_listing_source
