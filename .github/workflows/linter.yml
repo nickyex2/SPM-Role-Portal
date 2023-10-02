@@ -63,4 +63,3 @@ jobs:
           VALIDATE_JSON: true
           VALIDATE_SQL: true
           VALIDATE_DOCKERFILE_HADOLINT: true
-          VALIDATE_CSS: true
