@@ -16,7 +16,7 @@ export default function Role_Listing_Edit({
     role_listing_id: 0,
     role_id: 0,
     role_listing_desc: "",
-    role_listing_source: "",
+    role_listing_source: 0,
     role_listing_open: new Date(),
     role_listing_close: new Date(),
     role_listing_status: "",
