@@ -16,7 +16,7 @@ export default function Role_Listing_Edit({
     role_listing_id: 0,
     role_id: 0,
     role_listing_desc: "",
-    role_listing_source: "",
+    role_listing_source: 0,
     role_listing_open: new Date(),
     role_listing_close: new Date(),
     role_listing_status: "",
@@ -54,15 +54,16 @@ export default function Role_Listing_Edit({
           type="number"
           name="role_listing_id"
           id="floating_role_listing_id"
-          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+          className="block py-2.5 px-0 w-full text-sm text-gray- bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
           placeholder=" "
           value={role?.role_listing_id}
+          readOnly
           disabled
           required
         />
         <label
           htmlFor="floating_role_listing_id"
-          className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+          className="peer-focus:font-medium absolute text-sm text-gray- dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
         >
           Role Listing ID
         </label>
@@ -71,7 +72,7 @@ export default function Role_Listing_Edit({
         <textarea
           name="role_listing_desc"
           id="floating_role_listing_desc"
-          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+          className="block py-2.5 px-0 w-full text-sm text-gray- bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
           placeholder=" "
           value={role?.role_listing_desc}
           onChange={(e) => {
@@ -84,7 +85,7 @@ export default function Role_Listing_Edit({
         />
         <label
           htmlFor="floating_role_listing_desc"
-          className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+          className="peer-focus:font-medium absolute text-sm text-gray- dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
         >
           Role Listing Description
         </label>
@@ -94,65 +95,24 @@ export default function Role_Listing_Edit({
           type="number"
           name="role_listing_source"
           id="floating_role_listing_source"
-          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+          className="block py-2.5 px-0 w-full text-sm text-gray- bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
           placeholder=" "
           value={role?.role_listing_source}
+          readOnly
           disabled
           required
         />
         <label
           htmlFor="floating_role_listing_source"
-          className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+          className="peer-focus:font-medium absolute text-sm text-gray- dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
         >
           Role Listing Source Manager ID
         </label>
       </div>
-      <div className="grid md:grid-cols-2 md:gap-6">
-        <div className="relative z-0 w-full mb-6 group">
-          <input
-            type="text"
-            name="role_listing_open"
-            id="floating_role_listing_open"
-            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            placeholder=" "
-            value={role?.role_listing_open.toString()}
-            onChange={(e) => {
-              setRole({
-                ...role,
-                role_listing_open: new Date(e.target.value),
-              } as TRoleListing); // not sure how to change this yet
-            }}
-            required
-          />
-          <label
-            htmlFor="floating_role_listing_open"
-            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >
-            Role Listing Open
-          </label>
-        </div>
-        <div className="relative z-0 w-full mb-6 group">
-          <input
-            type="text"
-            name="role_listing_close"
-            id="floating_role_listing_close"
-            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            placeholder=" "
-            value={role?.role_listing_close.toString()}
-            required
-          />
-          <label
-            htmlFor="floating_role_listing_close"
-            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >
-            Role Listing Close
-          </label>
-        </div>
-      </div>
       <div className="relative z-0 w-full mb-6 group">
         <label
           htmlFor="role_listing_status"
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          className="block mb-2 text-sm font-medium text-gray- dark:text-white"
         >
           Role Listing Status
         </label>
@@ -170,6 +130,29 @@ export default function Role_Listing_Edit({
           <option value={`active`}>active</option>
           <option value={`inactive`}>inactive</option>
         </select>
+      </div>
+      <div className="grid md:grid-cols-2 md:gap-6 z-0">
+        <div className="relative z-0 w-full mb-6 group">
+          <Datepicker onSelectedDateChanged={(date) => {
+            console.log(date)
+            setRole({
+              ...role,
+              role_listing_open: date,
+            } as TRoleListing);
+            }
+          }
+          />
+        </div>
+        <div className="relative z-0 w-full mb-6 group">
+        <Datepicker onSelectedDateChanged={(date) => {
+            setRole({
+              ...role,
+              role_listing_close: date,
+            } as TRoleListing);
+            }
+          }
+          />
+        </div>
       </div>
       <button
         type="button"
