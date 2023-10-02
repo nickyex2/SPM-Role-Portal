@@ -1,6 +1,25 @@
 'use client'
 import React from 'react'
 import SkillCard from './SkillCard'
+import axios from 'axios'
+
+const skillsURL = 'http://localhost:5001/skills'
+
+const getSkills = () => {
+    // fetch from database all the skills and format into list
+    // return all SkillCard components
+    const [skills, setSkills] = React.useState(null);
+
+    React.useEffect(() => {
+        const all = async () => {
+            await axios.get(skillsURL)
+            .then(
+            response => setSkills(response.data.data))
+        }
+        all();
+    }, []);
+
+}
 
 const AllSkills = () => {
   return (

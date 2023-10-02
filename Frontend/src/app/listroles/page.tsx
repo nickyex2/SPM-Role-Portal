@@ -3,6 +3,9 @@ import React from "react";
 import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import Navbar from "../../components/Navbar";
+import SearchBar from "@/components/SearchBar";
+import { Sidebar } from "flowbite-react";
 
 export default function List_Roles() {
   // const router = useRouter()
@@ -25,7 +28,25 @@ export default function List_Roles() {
   }, []);
   return (
     <div>
-      <h1>List Roles</h1>
+      <div className='container'>
+        <Navbar />
+
+        <div className='grid grid-cols-1 place-items-center'>
+            <div className='w-2/4 my-16'>
+              <SearchBar />
+            </div>
+        </div>
+      </div>
+      
+
+      <Sidebar />
+      
+
+      {/* <div>
+        <h1 className='text-3xl font-bold'>All Roles</h1>
+      </div> */}
+
+      {/* <h1>List Roles</h1>
       {loading ? (
         <h1>Loading...</h1>
       ) : (
@@ -46,7 +67,7 @@ export default function List_Roles() {
             );
           })}
         </div>
-      )}
+      )} */}
     </div>
   );
 }
