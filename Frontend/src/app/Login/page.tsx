@@ -1,8 +1,40 @@
-// Import required modules and components
-import React from 'react';
-import Image from 'next/image';
+"use client";
 
-const Login = () => {
+// Import required modules and components
+import React, {FormEvent, useState} from 'react';
+import Image from 'next/image';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+
+const Login:React.FC = () => {
+
+  const router = useRouter();
+  const check_staff_url = "http://localhost:5000/getAllStaff";
+  const [email, setEmail] = useState<string>("");
+
+  const handleSignIn = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(email);
+
+    try {
+      const res = await axios.get(check_staff_url);
+      const staff = res.data.data.staffs;
+      console.log(staff);
+      for (var i = 0; i < staff.length; i++) {
+        if (staff[i].email == email) {
+          console.log("Login successful");
+          router.push("/Home");
+          return;
+        }
+      }
+      console.log("Login unsuccessful");
+      alert("Login unsuccessful");
+    }
+    catch (error) {
+      console.log("Error:", error);
+    }
+  };
+
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -27,7 +59,7 @@ const Login = () => {
 
               <div>
                 <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Username
+                  Email
                 </label>
                 <input
                   type="email"
@@ -35,7 +67,9 @@ const Login = () => {
                   id="email"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="jack.ng.2020"
-                  required // No need for an empty value here
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               
@@ -55,14 +89,12 @@ const Login = () => {
                     </label>
                   </div>
                 </div>
-                <a href="#" className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">
-                  Forgot password?
-                </a>
               </div>
 
               <button
                 type="submit"
                 className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                onClick={() => handleSignIn}
               >
                 Sign in
               </button>
