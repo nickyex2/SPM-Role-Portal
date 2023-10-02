@@ -23,17 +23,17 @@ const Login:React.FC = () => {
       for (var i = 0; i < staff.length; i++) {
         if (staff[i].email == email) {
           // Set local storage
-          localStorage.setItem("staff_id", staff[i].staff_id);
-          localStorage.setItem("fname", staff[i].fname);
-          localStorage.setItem("lname", staff[i].lname);
-          localStorage.setItem("dept", staff[i].dept);
-          localStorage.setItem("email", staff[i].email);
-          localStorage.setItem("phone", staff[i].phone);
-          localStorage.setItem("biz_address", staff[i].biz_address);
-          localStorage.setItem("sys_role", staff[i].sys_role);
+          sessionStorage.setItem("staff_id", staff[i].staff_id);
+          sessionStorage.setItem("fname", staff[i].fname);
+          sessionStorage.setItem("lname", staff[i].lname);
+          sessionStorage.setItem("dept", staff[i].dept);
+          sessionStorage.setItem("email", staff[i].email);
+          sessionStorage.setItem("phone", staff[i].phone);
+          sessionStorage.setItem("biz_address", staff[i].biz_address);
+          sessionStorage.setItem("sys_role", staff[i].sys_role);
 
           console.log("Login successful");
-          router.push("/Home");
+          router.push("/");
           return;
         }
       }
