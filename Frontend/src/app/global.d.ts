@@ -29,6 +29,24 @@ type TRoleListing = {
   role_listing_ts_update: EpochTimeStamp;
 }
 
+type TRoleDetails = {
+  role_id: number;
+  role_name: string;
+  role_description: string;
+  role_status: string;
+}
+
+type TSkillDetails = {
+  skill_id: number;
+  skill_name: string;
+  skill_status: string;
+}
+
+type TRoleSkills = {
+  role_id: number;
+  skill_id: number;
+}
+
 type TResponseData = {
   code: number;
   data: any;

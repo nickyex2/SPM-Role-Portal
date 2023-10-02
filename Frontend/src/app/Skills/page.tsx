@@ -1,9 +1,7 @@
 'use client'
 import React from 'react'
-import NavBar from '../../components/Navbar'
-import SkillCard from '@/components/SkillCard'
-import axios from 'axios'
-
+import NavBar from '../../_components/Navbar'
+import AllSkills from '@/_components/AllSkills'
 
 const SkillsPage = () => {
 

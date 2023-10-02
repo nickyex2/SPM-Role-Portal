@@ -7,6 +7,8 @@ import Navbar from "../../components/Navbar";
 import SearchBar from "@/components/SearchBar";
 import { Sidebar } from "flowbite-react";
 
+import Link from "next/link";
+
 export default function List_Roles() {
   // const router = useRouter()
   const [roles, setRoles] = useState<Array<TRoleListing>>();
@@ -54,7 +56,7 @@ export default function List_Roles() {
           {roles?.map((role) => {
             return (
               <div key={role.role_listing_id}>
-                <h1>{role.role_id}</h1>
+                <Link href={ `/listroles/${role.role_listing_id}` }>{role.role_id}</Link>
                 <h2>{role.role_listing_desc}</h2>
                 <h3>{role.role_listing_open.toString()}</h3>
                 <h4>
