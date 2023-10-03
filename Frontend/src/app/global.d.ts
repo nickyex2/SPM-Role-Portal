@@ -20,8 +20,8 @@ type TRoleListing = {
   role_id: number;
   role_listing_desc: string;
   role_listing_source: number;
-  role_listing_open: Date;
-  role_listing_close: Date;
+  role_listing_open: string;
+  role_listing_close: string;
   role_listing_status: string;
   role_listing_creator: number;
   role_listing_ts_create: EpochTimeStamp;
