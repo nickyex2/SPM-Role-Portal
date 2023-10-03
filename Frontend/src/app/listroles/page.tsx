@@ -57,7 +57,7 @@ export default function List_Roles() {
                 router.push("/listroles/add");
               }}
             >
-              Add New Role Listing
+              New Listing
             </Button>
           ) : null}
         </div>
