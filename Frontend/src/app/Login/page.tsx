@@ -22,8 +22,18 @@ const Login:React.FC = () => {
       console.log(staff);
       for (var i = 0; i < staff.length; i++) {
         if (staff[i].email == email) {
+          // Set local storage
+          sessionStorage.setItem("staff_id", staff[i].staff_id);
+          sessionStorage.setItem("fname", staff[i].fname);
+          sessionStorage.setItem("lname", staff[i].lname);
+          sessionStorage.setItem("dept", staff[i].dept);
+          sessionStorage.setItem("email", staff[i].email);
+          sessionStorage.setItem("phone", staff[i].phone);
+          sessionStorage.setItem("biz_address", staff[i].biz_address);
+          sessionStorage.setItem("sys_role", staff[i].sys_role);
+
           console.log("Login successful");
-          router.push("/Home");
+          router.push("/");
           return;
         }
       }
@@ -55,7 +65,7 @@ const Login:React.FC = () => {
               Sign in to your account
             </h1>
 
-            <form className="space-y-4 md:space-y-6" action="#">
+            <form className="space-y-4 md:space-y-6" action="#" onSubmit={handleSignIn}>
 
               <div>
                 <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -93,8 +103,7 @@ const Login:React.FC = () => {
 
               <button
                 type="submit"
-                className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                onClick={() => handleSignIn}
+                className="w-full text-black bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               >
                 Sign in
               </button>

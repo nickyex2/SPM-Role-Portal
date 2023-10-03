@@ -17,8 +17,8 @@ export default function Role_Listing_Edit({
     role_id: 0,
     role_listing_desc: "",
     role_listing_source: 0,
-    role_listing_open: new Date(),
-    role_listing_close: new Date(),
+    role_listing_open: "",
+    role_listing_close: "",
     role_listing_status: "",
     role_listing_creator: 0,
     role_listing_ts_create: 0,
@@ -26,9 +26,22 @@ export default function Role_Listing_Edit({
     role_listing_ts_update: 0,
   });
   const [loading, setLoading] = useState(true);
+  const editingStaffID = sessionStorage.getItem("staff_id") as string;
   async function submitEditedRoleListing() {
     // need to add in updater id and updater timestamp into state
     console.log(role);
+    setRole({
+      ...role,
+      role_listing_ts_updater: parseInt(editingStaffID),
+      role_listing_ts_update: Date.now()
+    })
+    const response: AxiosResponse<TResponseData> = await axios.put(
+      `http://localhost:5002/updateRoleListing/${params.role_listing_id}`,
+      role
+    );
+    if (response.data.code === 200) {
+      router.push(`/listroles/${params.role_listing_id}`);
+    }
   }
   useEffect(() => {
     async function getRoleListing(): Promise<TRoleListing> {
@@ -137,20 +150,22 @@ export default function Role_Listing_Edit({
             console.log(date)
             setRole({
               ...role,
-              role_listing_open: date,
+              role_listing_open: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
             } as TRoleListing);
             }
           }
+          value={new Date(role?.role_listing_open).toDateString()}
           />
         </div>
         <div className="relative z-0 w-full mb-6 group">
         <Datepicker onSelectedDateChanged={(date) => {
             setRole({
               ...role,
-              role_listing_close: date,
+              role_listing_close: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
             } as TRoleListing);
             }
           }
+          value={new Date(role?.role_listing_close).toDateString()}
           />
         </div>
       </div>
