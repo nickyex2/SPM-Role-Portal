@@ -7,6 +7,7 @@ import { Button, Checkbox, Label, TextInput, Textarea } from 'flowbite-react';
 import { useRouter } from "next/navigation";
 
 export default function Add_New_Role_Listing() {
+  const router = useRouter();
   const todayDate = new Date();
   const [roleListing, setRoleListing] = useState<TRoleListing>({
     role_listing_id: 0,
@@ -132,15 +133,23 @@ export default function Add_New_Role_Listing() {
         </div>
         <div className="flex items-center gap-2 mb-4">
         <Checkbox id="remember" onChange={(e) => {
-          setRoleListing({...roleListing, role_listing_status: 'inactive'})
+          if (e.target.checked) setRoleListing({...roleListing, role_listing_status: 'inactive'})
+          else setRoleListing({...roleListing, role_listing_status: 'active'})
         }} />
         <Label htmlFor="remember">
           Set as Inactive
         </Label>
       </div>
+      <div className="grid md:grid-cols-2 md:gap-6">
+        <Button type="button" onClick={() => {
+          router.push('/listroles')
+        }}>
+          Back
+        </Button>
         <Button type="button" onClick={handleAddRoleListing}>
           Submit
         </Button>
+      </div>
       </form>
     </div>
   );

@@ -1,12 +1,13 @@
 "use client";
 import React from "react";
 import axios, { AxiosResponse } from "axios";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Button } from "flowbite-react";
 
 export default function List_Roles() {
-  // const router = useRouter()
+  const router = useRouter();
   const [roles, setRoles] = useState<Array<TRoleListing>>();
   const [loading, setLoading] = useState(true);
 
@@ -34,7 +35,9 @@ export default function List_Roles() {
           {roles?.map((role) => {
             return (
               <div key={role.role_listing_id}>
-                <Link href={ `/listroles/${role.role_listing_id}` }>{role.role_id}</Link>
+                <Link href={`/listroles/${role.role_listing_id}`}>
+                  {role.role_id}
+                </Link>
                 <h2>{role.role_listing_desc}</h2>
                 <h3>{role.role_listing_open.toString()}</h3>
                 <h4>
@@ -46,6 +49,17 @@ export default function List_Roles() {
               </div>
             );
           })}
+          {sessionStorage.getItem("sys_role") === "hr" ||
+          sessionStorage.getItem("sys_role") === "manager" ? (
+            <Button
+              type="button"
+              onClick={() => {
+                router.push("/listroles/add");
+              }}
+            >
+              Add New Role Listing
+            </Button>
+          ) : null}
         </div>
       )}
     </div>
