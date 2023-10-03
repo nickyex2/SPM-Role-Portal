@@ -3,8 +3,11 @@ import React from "react";
 import axios, { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Button } from "flowbite-react";
+import { useRouter } from "next/navigation";
 
 export default function Role_Listing_Profile( { params } : { params: { role_listing_id: string } }) {
+  const router = useRouter();
   const [role, setRole] = useState<TRoleListing>();
   const [roleDetails, setRoleDetails] = useState<TRoleDetails>();
   const [roleSkills, setRoleSkills] = useState<Array<TRoleSkills>>();
@@ -74,6 +77,7 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
           </div>
         );
       })}
+      <Button type="button" onClick={()=>{router.push('/listroles')}}>Return to All Listings</Button>
     </div>
   )
   );

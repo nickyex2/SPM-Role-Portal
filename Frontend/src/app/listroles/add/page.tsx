@@ -12,8 +12,8 @@ export default function Add_New_Role_Listing() {
     role_id: 0,
     role_listing_desc: "",
     role_listing_source: 0,
-    role_listing_open: new Date(),
-    role_listing_close: new Date(),
+    role_listing_open: "",
+    role_listing_close: "",
     role_listing_status: "",
     role_listing_creator: 0,
     role_listing_ts_create: 0,
@@ -106,7 +106,7 @@ export default function Add_New_Role_Listing() {
                 id="role_listing_open"
                 required
                 onSelectedDateChanged={(open_date) =>{
-                  setRoleListing({...roleListing, role_listing_open: open_date})
+                  setRoleListing({...roleListing, role_listing_open: `${open_date.getFullYear()}-${open_date.getMonth() + 1}-${open_date.getDate()}`})
                 }
                 }
               />
@@ -122,7 +122,7 @@ export default function Add_New_Role_Listing() {
                 id="role_listing_close"
                 required
                 onSelectedDateChanged={(close_date) =>{
-                  setRoleListing({...roleListing, role_listing_close: close_date})
+                  setRoleListing({...roleListing, role_listing_close: `${close_date.getFullYear()}-${close_date.getMonth() + 1}-${close_date.getDate()}`})
                 }
                 }
               />
