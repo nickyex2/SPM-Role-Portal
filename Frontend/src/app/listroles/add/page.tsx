@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import axios, { AxiosResponse } from "axios";
 import { useState } from "react";
 import { Datepicker } from "flowbite-react";
@@ -17,13 +17,22 @@ export default function Add_New_Role_Listing() {
     role_listing_open: `${todayDate.getFullYear()}-${todayDate.getMonth() + 1}-${todayDate.getDate()}`,
     role_listing_close: `${todayDate.getFullYear()}-${todayDate.getMonth() + 1}-${todayDate.getDate()}`,
     role_listing_status: "active",
-    role_listing_creator: parseInt(sessionStorage.getItem("staff_id") as string),
+    role_listing_creator: 0,
     role_listing_ts_create: 0,
-    role_listing_updater: parseInt(sessionStorage.getItem("staff_id") as string),
+    role_listing_updater: 0,
     role_listing_ts_update: 0,
   });
+  const [creator, setCreator] = useState(0);
+  useEffect(() => {
+    setCreator(parseInt(sessionStorage.getItem("staff_id") as string));
+  }, []);
   async function handleAddRoleListing() {
     // need to add in updater id and updater timestamp into state then send to db
+    setRoleListing({
+      ...roleListing,
+      role_listing_creator: creator,
+      role_listing_updater: creator
+    })
     console.log(roleListing);
   }
   return (

@@ -26,7 +26,10 @@ export default function Role_Listing_Edit({
     role_listing_ts_update: 0,
   });
   const [loading, setLoading] = useState(true);
-  const editingStaffID = sessionStorage.getItem("staff_id") as string;
+  const [editingStaffID, setEditingStaffID] = useState("");
+  useEffect(() => {
+    setEditingStaffID(sessionStorage.getItem("staff_id") as string);
+  }, []);
   async function submitEditedRoleListing() {
     // need to add in updater id and updater timestamp into state
     console.log(role);
