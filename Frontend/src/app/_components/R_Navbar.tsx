@@ -1,10 +1,18 @@
 'use client';
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Button, Navbar } from 'flowbite-react';
 import { ThemeSwitcher } from '../ThemeSwitcher';
+import { useRouter, usePathname } from 'next/navigation';
 
 export default function R_Navbar() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const [staff, setStaff] = React.useState<string>('');
+  useEffect(() => {
+    setStaff(sessionStorage.getItem('staff_id') as string);
+  }, [])
+  
   return (
     <Navbar
       fluid
@@ -30,25 +38,28 @@ export default function R_Navbar() {
             Home
           </p> */}
         </Navbar.Link>
-        <Navbar.Link href="#">
+        <Navbar.Link href="/listroles">
           Jobs
         </Navbar.Link>
-        <Navbar.Link href="#">
+        <Navbar.Link href="/Skills">
           Skills
         </Navbar.Link>
-        {/* <Navbar.Link href="#">
-          Pricing
-        </Navbar.Link>
-        <Navbar.Link href="#">
-          Contact
-        </Navbar.Link> */}
       </Navbar.Collapse>
 
       <div className="flex md:order-2">
         <div className='hidden md:flex order-2'>
-          <Button>
-          Login/Signup
+          {!staff ? 
+          <Button onClick={() => {
+            router.push('/Login');
+          }}>
+          Login
+          </Button> : <Button onClick={() => {
+            sessionStorage.clear();
+            router.push('/Login')
+          }}>
+          Logout
           </Button>
+          }
           <ThemeSwitcher />
         </div>
         <Navbar.Toggle />
