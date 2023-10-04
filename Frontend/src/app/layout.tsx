@@ -18,9 +18,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-slate-50 dark:bg-[#0d1117] duration-300`}>
+      <body className={`${inter.className} bg-slate-200 dark:bg-[#0d1117] duration-300`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <ThemeSwitcher />
           <main>{children}</main>
         </ThemeProvider>
       </body>

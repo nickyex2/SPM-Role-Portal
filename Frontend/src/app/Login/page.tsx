@@ -1,7 +1,7 @@
 "use client";
 
 // Import required modules and components
-import React, {FormEvent, useState} from 'react';
+import React, {FormEvent, useState, useEffect} from 'react';
 import Image from 'next/image';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
@@ -11,7 +11,11 @@ const Login:React.FC = () => {
   const router = useRouter();
   const check_staff_url = "http://localhost:5000/getAllStaff";
   const [email, setEmail] = useState<string>("");
-
+  useEffect(() => {
+    if (sessionStorage.getItem("staff_id")) {
+      router.push("/listroles");
+    }
+  }, [router])
   const handleSignIn = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(email);
@@ -33,7 +37,7 @@ const Login:React.FC = () => {
           sessionStorage.setItem("sys_role", staff[i].sys_role);
 
           console.log("Login successful");
-          router.push("/");
+          router.push("/listroles");
           return;
         }
       }

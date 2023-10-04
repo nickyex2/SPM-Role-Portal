@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Button, Navbar } from 'flowbite-react';
+import { ThemeSwitcher } from '../ThemeSwitcher';
 
 export default function R_Navbar() {
   return (
@@ -48,8 +49,8 @@ export default function R_Navbar() {
           <Button>
           Login/Signup
           </Button>
+          <ThemeSwitcher />
         </div>
-        
         <Navbar.Toggle />
       </div>
       
