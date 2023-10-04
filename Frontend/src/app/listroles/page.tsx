@@ -3,14 +3,14 @@ import React from "react";
 import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import Navbar from "../../_components/Navbar";
-import SearchBar from "@/_components/SearchBar";
+import Navbar from "../_components/Navbar";
+import SearchBar from "@/app/_components/SearchBar";
 import { Sidebar } from "flowbite-react";
 
 //flowbite-react components
-import R__Navbar from "@/_components/R_Navbar";
-import R_Sidebar from "@/_components/R_Sidebar";
-import R_AllRoles from "@/_components/R_AllRoles";
+import R__Navbar from "@/app/_components/R_Navbar";
+import R_Sidebar from "@/app/_components/R_Sidebar";
+import R_AllRoles from "@/app/_components/R_AllRoles";
 
 import Link from "next/link";
 
