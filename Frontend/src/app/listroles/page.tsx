@@ -3,9 +3,14 @@ import React from "react";
 import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import Navbar from "../../components/Navbar";
-import SearchBar from "@/components/SearchBar";
+import Navbar from "../../_components/Navbar";
+import SearchBar from "@/_components/SearchBar";
 import { Sidebar } from "flowbite-react";
+
+//flowbite-react components
+import R__Navbar from "@/_components/R_Navbar";
+import R_Sidebar from "@/_components/R_Sidebar";
+import R_AllRoles from "@/_components/R_AllRoles";
 
 import Link from "next/link";
 
@@ -30,18 +35,29 @@ export default function List_Roles() {
   }, []);
   return (
     <div>
-      <div className='container'>
-        <Navbar />
+      {/* <div className='container'>
+          
 
         <div className='grid grid-cols-1 place-items-center'>
-            <div className='w-2/4 my-16'>
-              <SearchBar />
-            </div>
+            
         </div>
+      </div> */}
+
+      <R__Navbar />
+  
+      <SearchBar />
+      
+    <div className='flex items-stretch h-screen'>
+      <div>
+        <R_Sidebar />
+      </div>
+        
+      <div className='w-full'>
+        <R_AllRoles />
       </div>
       
-
-      <Sidebar />
+    </div>
+      
       
 
       {/* <div>
