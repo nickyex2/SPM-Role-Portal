@@ -3,6 +3,13 @@ import React from "react";
 import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import SearchBar from "@/app/_components/SearchBar";
+
+//flowbite-react components
+import R__Navbar from "@/app/_components/R_Navbar";
+import R_Sidebar from "@/app/_components/R_Sidebar";
+import R_AllRoles from "@/app/_components/R_AllRoles";
+
 import Link from "next/link";
 import { Button } from "flowbite-react";
 
@@ -27,7 +34,36 @@ export default function List_Roles() {
   }, []);
   return (
     <div>
-      <h1>List Roles</h1>
+      {/* <div className='container'>
+          
+
+        <div className='grid grid-cols-1 place-items-center'>
+            
+        </div>
+      </div> */}
+
+      <R__Navbar />
+  
+      <SearchBar />
+      
+    <div className='flex items-stretch h-screen'>
+      <div>
+        <R_Sidebar />
+      </div>
+        
+      <div className='w-full'>
+        <R_AllRoles />
+      </div>
+      
+    </div>
+      
+      
+
+      {/* <div>
+        <h1 className='text-3xl font-bold'>All Roles</h1>
+      </div> */}
+
+      {/* <h1>List Roles</h1>
       {loading ? (
         <h1>Loading...</h1>
       ) : (
@@ -61,7 +97,7 @@ export default function List_Roles() {
             </Button>
           ) : null}
         </div>
-      )}
+      )} */}
     </div>
   );
 }
