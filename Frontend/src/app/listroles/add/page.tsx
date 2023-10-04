@@ -1,27 +1,38 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import axios, { AxiosResponse } from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Datepicker } from "flowbite-react";
 import { Button, Checkbox, Label, TextInput, Textarea } from 'flowbite-react';
 import { useRouter } from "next/navigation";
 
 export default function Add_New_Role_Listing() {
+  const router = useRouter();
+  const todayDate = new Date();
   const [roleListing, setRoleListing] = useState<TRoleListing>({
     role_listing_id: 0,
     role_id: 0,
     role_listing_desc: "",
     role_listing_source: 0,
-    role_listing_open: "",
-    role_listing_close: "",
-    role_listing_status: "",
+    role_listing_open: `${todayDate.getFullYear()}-${todayDate.getMonth() + 1}-${todayDate.getDate()}`,
+    role_listing_close: `${todayDate.getFullYear()}-${todayDate.getMonth() + 1}-${todayDate.getDate()}`,
+    role_listing_status: "active",
     role_listing_creator: 0,
     role_listing_ts_create: 0,
-    role_listing_ts_updater: 0,
+    role_listing_updater: 0,
     role_listing_ts_update: 0,
   });
+  const [creator, setCreator] = useState(0);
+  useEffect(() => {
+    setCreator(parseInt(sessionStorage.getItem("staff_id") as string));
+  }, []);
   async function handleAddRoleListing() {
     // need to add in updater id and updater timestamp into state then send to db
+    setRoleListing({
+      ...roleListing,
+      role_listing_creator: creator,
+      role_listing_updater: creator
+    })
     console.log(roleListing);
   }
   return (
@@ -96,7 +107,7 @@ export default function Add_New_Role_Listing() {
           />
         </div>
         <div className="grid md:grid-cols-2 md:gap-6">
-          <div className="relative w-full mb-6 group">
+          <div className="relative w-full mb-3 group">
             <div className="mb-2 block">
               <Label
                 htmlFor="role_listing_open"
@@ -112,7 +123,7 @@ export default function Add_New_Role_Listing() {
               />
             </div>
           </div>
-          <div className="relative w-full mb-6 group">
+          <div className="relative w-full mb-3 group">
             <div className="mb-2 block">
               <Label
                 htmlFor="role_listing_close"
@@ -129,9 +140,25 @@ export default function Add_New_Role_Listing() {
             </div>
           </div>
         </div>
+        <div className="flex items-center gap-2 mb-4">
+        <Checkbox id="remember" onChange={(e) => {
+          if (e.target.checked) setRoleListing({...roleListing, role_listing_status: 'inactive'})
+          else setRoleListing({...roleListing, role_listing_status: 'active'})
+        }} />
+        <Label htmlFor="remember">
+          Set as Inactive
+        </Label>
+      </div>
+      <div className="grid md:grid-cols-2 md:gap-6">
+        <Button type="button" onClick={() => {
+          router.push('/listroles')
+        }}>
+          Back
+        </Button>
         <Button type="button" onClick={handleAddRoleListing}>
           Submit
         </Button>
+      </div>
       </form>
     </div>
   );

@@ -25,7 +25,7 @@ type TRoleListing = {
   role_listing_status: string;
   role_listing_creator: number;
   role_listing_ts_create: EpochTimeStamp;
-  role_listing_ts_updater: number;
+  role_listing_updater: number;
   role_listing_ts_update: EpochTimeStamp;
 }
 
