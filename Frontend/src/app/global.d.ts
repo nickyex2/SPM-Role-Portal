@@ -51,3 +51,9 @@ type TResponseData = {
   code: number;
   data: any;
 }
+
+type TSkillDetails = {
+  skill_id: number,
+  skill_name: string,
+  skill_status: string
+}
