@@ -1,6 +1,5 @@
 'use client'
 import React from 'react'
-import NavBar from '../_components/Navbar'
 import SkillCard from '@/app/_components/SkillCard'
 import axios from 'axios'
 
