@@ -4,7 +4,6 @@ import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import SearchBar from "@/app/_components/SearchBar";
-import { Sidebar } from "flowbite-react";
 
 //flowbite-react components
 import R__Navbar from "@/app/_components/R_Navbar";
