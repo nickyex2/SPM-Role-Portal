@@ -41,7 +41,7 @@ export default function List_Roles() {
         <div>
           <R_Sidebar />
         </div>
-        <div className="w-4/6 mx-auto bg-slate-200 dark:bg-[#0d1117] ">
+        <div className="w-4/6 mx-auto mt-5">
           {sysRole === "hr" ||
           sysRole === "manager" ? (
             <Button
@@ -49,12 +49,12 @@ export default function List_Roles() {
               onClick={() => {
                 router.push("/listroles/add");
               }}
-              className="float-right mt-5 mb-5"
+              className="mb-5 float-right z-10"
             >
               New Listing
             </Button>
           ) : null}
-          <Table hoverable className="rounded-md drop-shadow-none">
+          <Table hoverable className="rounded-md drop-shadow-none z-auto bg-slate-200 dark:bg-[#0d1117]">
             <Table.Body className="divide-y">
               <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
@@ -83,12 +83,12 @@ export default function List_Roles() {
                     <Table.Cell>{role.role_listing_open}</Table.Cell>
                     <Table.Cell>{role.role_listing_close}</Table.Cell>
                     <Table.Cell>
-                      <a
+                      <Link
                         className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
                         href={`/listroles/${role.role_listing_id}`}
                       >
-                        <p>View More</p>
-                      </a>
+                        View More
+                      </Link>
                     </Table.Cell>
                   </Table.Row>
                 );
