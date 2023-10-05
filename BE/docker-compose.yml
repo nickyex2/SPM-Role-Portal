@@ -10,6 +10,7 @@ services:
       MYSQL_DATABASE: SPM
       MYSQL_USER: user
       MYSQL_PASSWORD: test
+      TZ: Asia/Singapore
     ports:
       - 3306:3306
     volumes:
@@ -23,10 +24,124 @@ services:
       dockerfile: ./skills/skills.Dockerfile
     image: skills:latest
     container_name: skills
+    environment:
+      TZ: Asia/Singapore
     depends_on:
       - mysql
     ports:
       - 5001:5001
+    networks:
+      - backend
+  staff:
+    build:
+      context: ./
+      dockerfile: ./staff/staff.Dockerfile
+    image: staff:latest
+    container_name: staff
+    environment:
+      TZ: Asia/Singapore
+    depends_on:
+      - mysql
+    ports:
+      - 5000:5000
+    networks:
+      - backend
+  staff_skill:
+    build:
+      context: ./
+      dockerfile: ./staffSkill/staffSkill.Dockerfile
+    image: staff_skill:latest
+    container_name: staff_skill
+    environment:
+      TZ: Asia/Singapore
+    depends_on:
+      - mysql
+    ports:
+      - 5004:5004
+    networks:
+      - backend
+  role:
+    build:
+      context: ./
+      dockerfile: ./role/role.Dockerfile
+    image: role:latest
+    container_name: role
+    environment:
+      TZ: Asia/Singapore
+    depends_on:
+      - mysql
+    ports:
+      - 5003:5003
+    networks:
+      - backend
+  role_listing:
+    build:
+      context: ./
+      dockerfile: ./role_listing/role_listing.Dockerfile
+    image: role_listing:latest
+    container_name: role_listing
+    environment:
+      TZ: Asia/Singapore
+    depends_on:
+      - mysql
+    ports:
+      - 5002:5002
+    networks:
+      - backend
+  staff_role:
+    build:
+      context: ./
+      dockerfile: ./staffRole/staffRole.Dockerfile
+    image: staff_role:latest
+    container_name: staff_role
+    environment:
+      TZ: Asia/Singapore
+    depends_on:
+      - mysql
+    ports:
+      - 5006:5006
+    networks:
+      - backend
+  staff_reporting_officer:
+    build:
+      context: ./
+      dockerfile: ./staffReportingOfficer/staffReport.Dockerfile
+    image: staff_reporting_officer:latest
+    container_name: staff_reporting_officer
+    environment:
+      TZ: Asia/Singapore
+    depends_on:
+      - mysql
+    ports:
+      - 5007:5007
+    networks:
+      - backend
+  role_skills:
+    build:
+      context: ./
+      dockerfile: ./roleSkills/roleSkills.Dockerfile
+    image: role_skills:latest
+    container_name: role_skills
+    environment:
+      TZ: Asia/Singapore
+    depends_on:
+      - mysql
+    ports:
+      - 5008:5008
+    networks:
+      - backend
+  staff_skills:
+    build:
+      context: ./
+      dockerfile: ./staffSkill/staffSkill.Dockerfile
+    image: staff_skills:latest
+    container_name: staff_skills
+    environment:
+      TZ: Asia/Singapore
+    depends_on:
+      - mysql
+    ports:
+      - 5005:5005
     networks:
       - backend
 

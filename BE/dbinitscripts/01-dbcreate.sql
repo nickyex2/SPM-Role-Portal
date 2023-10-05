@@ -35,18 +35,18 @@ PRIMARY KEY (role_id)
 CREATE TABLE IF NOT EXISTS STAFF_REPORTING_OFFICER (
 staff_id int NOT NULL,
 RO_id int NOT NULL,
-PRIMARY KEY (staff_id, RO_id),
+PRIMARY KEY (staff_id),
 FOREIGN KEY (RO_id) REFERENCES STAFF_DETAILS(staff_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- STAFF_ROLES TABLE
 CREATE TABLE IF NOT EXISTS STAFF_ROLES (
-staff_id int NOT NULL,
+staff_id int NOT NULL ,
 staff_role int NOT NULL,
 role_type ENUM ('primary', 'secondary') NOT NULL,
 sr_status ENUM ('active', 'inactive') NOT NULL,
 PRIMARY KEY (staff_id, staff_role),
-FOREIGN KEY (staff_id) REFERENCES STAFF_DETAILS(staff_id), 
+FOREIGN KEY (staff_id) REFERENCES STAFF_DETAILS(staff_id),
 FOREIGN KEY (staff_role) REFERENCES ROLE_DETAILS(role_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -56,8 +56,8 @@ staff_id int NOT NULL,
 skill_id int NOT NULL,
 ss_status ENUM ('active', 'unverified', 'in progress') NOT NULL,
 PRIMARY KEY (staff_id, skill_id),
-FOREIGN KEY (staff_id) REFERENCES STAFF_DETAILS(staff_id), 
-FOREIGN KEY (skill_id) REFERENCES SKILL_DETAILS(skill_id) 
+FOREIGN KEY (staff_id) REFERENCES STAFF_DETAILS(staff_id),
+FOREIGN KEY (skill_id) REFERENCES SKILL_DETAILS(skill_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ROLE_SKILLS TABLE
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS ROLE_LISTINGS (
 
 -- ROLE_APPLICATIONS TABLE
 CREATE TABLE IF NOT EXISTS ROLE_APPLICATIONS (
-  role_app_id int NOT NULL,
+  role_app_id int NOT NULL AUTO_INCREMENT,
   role_listing_id int NOT NULL,
   staff_id int NOT NULL,
   role_app_status ENUM ('applied', 'withdrawn') NOT NULL,

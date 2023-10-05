@@ -150,7 +150,7 @@ INSERT INTO ROLE_DETAILS (`role_name`, `role_description`, `role_status`) VALUES
 ('Agile Scrum Master', 'Agile Scrum Master', 'active'),
 ('Agile Team Lead', 'Agile Team Lead', 'active'),
 ('Agile Tester', 'Agile Tester', 'active'),
-('Agile Trainer', 'Agile Trainer', 'active')
+('Agile Trainer', 'Agile Trainer', 'active');
 
 INSERT INTO STAFF_REPORTING_OFFICER (`staff_id`, `RO_id`) VALUES
 (1, 3),
@@ -174,7 +174,7 @@ INSERT INTO STAFF_SKILLS (`staff_id`, `skill_id`, `ss_status`) VALUES
 (1, 6, 'active'),
 (3, 7, 'active'),
 (4, 8, 'active'),
-(3, 9, 'active')
+(3, 9, 'active');
 
 INSERT INTO ROLE_SKILLS (`role_id`, `skill_id`) VALUES
 (1, 1),
@@ -185,6 +185,21 @@ INSERT INTO ROLE_SKILLS (`role_id`, `skill_id`) VALUES
 (2, 6),
 (1, 7),
 (3, 8),
-(3, 9)
+(3, 9);
 
+-- Insert 2 sample records into ROLE_LISTINGS table
+INSERT INTO ROLE_LISTINGS (
+    `role_listing_id`,
+    `role_id`,
+    `role_listing_desc`,
+    `role_listing_source`,
+    `role_listing_open`,
+    `role_listing_close`,
+    `role_listing_creator`,
+    `role_listing_status`,
+    `role_listing_updater`
+)
+VALUES
+    (19458657, 1, 'Sample Role Listing 1', 3, '2023-10-01', '2023-10-10', 2, 'active', 2),
+    (19458658, 3, 'Sample Role Listing 2', 3, '2023-11-01', '2023-11-10', 2, 'inactive', 2);
 
