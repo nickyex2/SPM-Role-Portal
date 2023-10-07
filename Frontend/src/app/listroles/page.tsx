@@ -41,7 +41,7 @@ export default function List_Roles() {
         <div>
           <R_Sidebar />
         </div>
-        <div className="w-4/6 mx-auto mt-5">
+        <div className="w-4/6 mx-auto mt-5 z-20">
           {sysRole === "hr" ||
           sysRole === "manager" ? (
             <Button
@@ -54,7 +54,7 @@ export default function List_Roles() {
               New Listing
             </Button>
           ) : null}
-          <Table hoverable className="rounded-md drop-shadow-none z-auto bg-slate-200 dark:bg-[#0d1117]">
+          <Table hoverable className="rounded-md drop-shadow-none z-0 bg-slate-200 dark:bg-[#0d1117]">
             <Table.Body className="divide-y">
               <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
