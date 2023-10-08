@@ -17,6 +17,7 @@ export default function R_Navbar() {
     <Navbar
       fluid
       rounded
+      className='sticky top-0 z-50'
     >
       <Navbar.Brand href="https://flowbite-react.com">
         {/* <img
@@ -53,7 +54,8 @@ export default function R_Navbar() {
             router.push('/Login');
           }}>
           Login
-          </Button> : <Button onClick={() => {
+          </Button> : 
+          <Button onClick={() => {
             sessionStorage.clear();
             router.push('/Login')
           }}>
