@@ -57,3 +57,13 @@ type TSkillDetails = {
   skill_name: string,
   skill_status: string
 }
+
+type TRoleListingChanges = {
+  role_listing_id : number,
+  change_no: number,
+  role_listing_updater: number,
+  log_time: EpochTimeStamp,
+  changed_field: string,
+  old_value: string,
+  new_value: string
+}
