@@ -67,3 +67,10 @@ type TRoleListingChanges = {
   old_value: string,
   new_value: string
 }
+
+type TRoleApplication = {
+  role_app_id: number,
+  role_listing_id: number,
+  staff_id: number,
+  role_app_status: string,
+}
