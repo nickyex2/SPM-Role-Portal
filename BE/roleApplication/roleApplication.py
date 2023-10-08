@@ -15,13 +15,15 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 CORS(app)
 
-
+class AppliedEnum(enum.Enum):
+    applied = 'applied'
+    withdrawn = 'withdrawn'
 class RoleApplication(db.Model):
     __tablename__ = 'ROLE_APPLICATIONS'
     role_app_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     role_listing_id = db.Column(db.Integer, nullable=False)
     staff_id = db.Column(db.Integer, nullable=False)
-    role_app_status = db.Column(db.Enum('applied', 'withdrawn'), nullable=False)
+    role_app_status = db.Column(db.Enum(AppliedEnum), nullable=False)
 
     def __init__(self, role_listing_id, staff_id, role_app_status):
         self.role_listing_id = role_listing_id
@@ -33,7 +35,7 @@ class RoleApplication(db.Model):
             "role_app_id": self.role_app_id,
             "role_listing_id": self.role_listing_id,
             "staff_id": self.staff_id,
-            "role_app_status": self.role_app_status
+            "role_app_status": self.role_app_status.name
         }
     
 # Create a new RoleApplication
@@ -89,10 +91,10 @@ def get_all_role_applications():
         }
     ), 404
 
-# Get a specific RoleApplication by role_app_id
-@app.route("/getRoleApplication/<int:role_app_id>")
-def get_role_application(role_app_id):
-    role_application = RoleApplication.query.get(role_app_id)
+# Get RoleApplications by role_listing_id
+@app.route("/getRoleApplicationsListing/<int:role_listing_id>")
+def get_role_application(role_listing_id):
+    role_application = RoleApplication.query.filter_by(role_listing_id=role_listing_id)
     if role_application:
         return jsonify(
             {
@@ -103,10 +105,46 @@ def get_role_application(role_app_id):
     return jsonify(
         {
             "code": 404,
-            "message": f"RoleApplication with ID {role_app_id} not found."
+            "message": f"RoleApplication with {role_listing_id} not found."
         }
     ), 404
 
+@app.route("/getRoleApplicationsStaff/<int:staff_id>")
+def get_applications_staff(staff_id):
+    role_applications = RoleApplication.query.filter_by(staff_id=staff_id)
+    if len(role_applications):
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "role_applications": [role_app.json() for role_app in role_applications]
+                }
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": f"RoleApplication with staff ID {staff_id} not found."
+        }
+    ), 404
+
+# get role application by role_listing_id and staff_id
+@app.route("/getRoleApplication/<int:role_listing_id>/<int:staff_id>")
+def get_applications_staff_role(role_listing_id, staff_id):
+    role_application = RoleApplication.query.filter_by(role_listing_id=role_listing_id, staff_id=staff_id).first()
+    if len(role_application):
+        return jsonify(
+            {
+                "code": 200,
+                "data": role_application.json() 
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": f"RoleApplication with role_listing_id {role_listing_id} and staff ID {staff_id} not found."
+        }
+    ), 404
 # Update a specific RoleApplication by role_app_id
 @app.route("/updateRoleApplication/<int:role_app_id>", methods=["PUT"])
 def update_role_application(role_app_id):
