@@ -9,11 +9,27 @@ import R__Navbar from "@/app/_components/R_Navbar";
 import R_Sidebar from "@/app/_components/R_Sidebar";
 import Link from "next/link";
 import { Button, Table } from "flowbite-react";
+import { error } from "console";
+
+type TRoleListing = {
+  role_listing_id: number,
+  role_id: number,
+  role_listing_desc: string,
+  role_listing_source: number,
+  role_listing_open: string,
+  role_listing_close: string,
+  role_listing_creator: number,
+  role_listing_ts_created: string,
+  role_listing_status: string,
+  role_listing_updater: number,
+  role_listing_ts_update: string,
+  details: TRoleDetails,
+}
 
 type TRoleDetails = {
   role_id: number,
   role_name: string,
-  role_description: string,
+  role_desc: string,
   role_status: string,
 }
 
@@ -30,6 +46,14 @@ export default function List_Roles() {
       getAllRolesURL
     );
     return response.data.data?.role_listings;
+  }
+
+  async function getRoleDetails(role:TRoleListing): Promise<TRoleDetails> {
+    console.log(role);
+    const response: AxiosResponse<TResponseData> = await axios.get(
+      `http://localhost:5003/getRole/${role?.role_listing_id}`
+    );
+    return response.data.data;
   }
 
   // async function getRoleName(roleID: number): Promise<String> {
@@ -50,67 +74,105 @@ export default function List_Roles() {
 
   useEffect(() => {
     setLoading(true);
-    getAllRoles().then((data) => {
-      setRoles(data);
-      // console.log(data);
-      setLoading(false);
-    });
+    
+    getAllRoles()
+      .then((data) => {
+        // Fetch details for all roles concurrently using Promise.all
+        const fetchRoleDetailsPromises = data?.map((role) =>
+          getRoleDetails(role)
+        );
+
+        Promise.all(fetchRoleDetailsPromises)
+          .then((detailsArray) => {
+            // Update the state with the role details
+            const updatedRoles = data?.map((role, index) => ({
+              ...role,
+              details: detailsArray[index],
+            }));
+            setRoles(updatedRoles);
+            setLoading(false);
+          })
+          .catch((error) => {
+            console.error("Error fetching role details:", error);
+            setLoading(false);
+          });
+      })
+      .catch((error) => {
+        console.error("Error fetching roles:", error);
+        setLoading(false);
+      });
   }, []);
+  
   useEffect(() => {
     setSysRole(sessionStorage.getItem("sys_role") as string);
   }, []);
 
   return (
+    loading ? ( <h1>Loading...</h1> ) : (
     <div>
       <R__Navbar />
       <SearchBar />
-      <div className="flex items-stretch h-screen">
-        <div className="w-4/6 mx-auto mt-5">
-          {sysRole === "hr" ||
-          sysRole === "manager" ? (
+      <div className="flex items-stretch h-screen flex-col">
+          {sysRole === "hr" || sysRole === "manager" ? (
             <Button
               type="button"
               onClick={() => {
                 router.push("/listroles/add");
               }}
-              className="mb-5 float-right z-10"
+              className="my-5 mx-auto"
             >
               New Listing
             </Button>
           ) : null}
+        <div className="w-4/6 mx-auto">
           {roles?.map((role) => {
             return (
-              <Link href={`/listroles/${role.role_listing_id}`} className="max-w p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 mx-auto mb-4 grid grid-col-4 gap-2" key={role.role_listing_id}>
+              <Link href={`/listroles/${role.role_listing_id}`} className="max-w p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 mx-auto mb-4 grid grid-col-3 gap-2 hover:underline" key={role.role_listing_id}>
 
                 {/* Image */}
 
                 {/* roleList.TITLE */}
-                <div className="col-span-1">
-                  <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{role.role_listing_id}</h5> 
-                  <p className="font-normal text-gray-700 dark:text-gray-400">{role.role_listing_open}</p>
-                  <p className="font-normal text-gray-700 dark:text-gray-400">{role.role_listing_status}</p>
+                <div className="col-span-2">
+                  <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                    {role.details?.role_name}
+                  </h5>
                 </div>
 
-                {/* roleList.role_listing_desc */}
-                <div className="col-span-1">
+                {/* role_listing_open, role_listing_status */}
+                <div className="col-span-1 flex justify-end">
+                  <div className="rounded-full bg-gray-300 p-2">
+                    <p className="font-normal text-gray-700 dark:text-gray-400">{role?.role_listing_open}</p>
+                  </div>
+                  <div className={`rounded-full p-2 ${role?.role_listing_status === 'active' ? 'bg-green-500': 'bg-red-500'}`}>
+                    <p className="font-normal text-gray-700 dark:text-gray-400">{role?.role_listing_status}</p>
+                  </div>
+                </div>
+
+                {/* roleList.role_listing_source */}
+                <div className="col-span-2">
+                  <p className="font-normal text-gray-700 dark:text-gray-400">{role.role_listing_source}</p>
+                </div>
+
+                {/* roleList.role_listing_close */}
+                <div className="col-span-2">
                   <p className="font-normal text-gray-700 dark:text-gray-400">{role.role_listing_close}</p>
                 </div>
 
-                {/* role.role_listing_source */}
+                {/* role.role_listing_desc */}
                 <div className="col-span-3">
                   <p className="font-normal text-gray-700 dark:text-gray-400">
                     {role.role_listing_desc.length > 200
                     ? role.role_listing_desc.slice(0, 200) + "..."
                     : role.role_listing_desc}
                   </p>
-                  <div className='grid justify-items-end '>
+                  {/* <div className='grid justify-items-end '>
                     <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-right mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                       <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
                       </svg>
                       <span className="sr-only">Icon description</span>
                     </button>
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* <p className="font-normal text-gray-700 dark:text-gray-400">{role.role_listing_source}</p> */}
@@ -184,5 +246,6 @@ export default function List_Roles() {
         </div>
       </div>
     </div>
+    )
   );
 }
