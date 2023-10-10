@@ -20,7 +20,7 @@ CORS(app)
 class StaffReportingOfficer(db.Model):
     __tablename__ = 'STAFF_REPORTING_OFFICER'
     staff_id = db.Column(db.Integer, primary_key=True)
-    RO_id = db.Column(db.Integer, primary_key=True)
+    RO_id = db.Column(db.Integer)
 
     def __init__(self, staff_id, RO_id):
         self.staff_id = staff_id
@@ -64,88 +64,86 @@ def create_staff_reporting_officer():
             }
         ), 400
 
-# Get all StaffReportingOfficers
-@app.route("/getAllStaffReportingOfficers")
-def get_all_staff_reporting_officers():
-    staff_reporting_officers = StaffReportingOfficer.query.all()
-    if len(staff_reporting_officers):
-        return jsonify(
-            {
-                "code": 200,
-                "data": {
-                    "staff_reporting_officers": [sro.json() for sro in staff_reporting_officers]
-                }
-            }
-        )
-    return jsonify(
-        {
-            "code": 404,
-            "message": "No staff reporting officers in the database."
-        }
-    ), 404
+# # Get all StaffReportingOfficers
+# @app.route("/getAllStaffReportingOfficers")
+# def get_all_staff_reporting_officers():
+#     staff_reporting_officers = StaffReportingOfficer.query.all()
+#     if len(staff_reporting_officers):
+#         return jsonify(
+#             {
+#                 "code": 200,
+#                 "data": {
+#                     "staff_reporting_officers": [sro.json() for sro in staff_reporting_officers]
+#                 }
+#             }
+#         )
+#     return jsonify(
+#         {
+#             "code": 404,
+#             "message": "No staff reporting officers in the database."
+#         }
+#     ), 404
 
-# Get a specific StaffReportingOfficer by staff_id and RO_id
-@app.route("/getStaffReportingOfficer/<int:staff_id>/<int:RO_id>")
-def get_staff_reporting_officer(staff_id, RO_id):
-    staff_reporting_officer = StaffReportingOfficer.query.filter_by(
-        staff_id=staff_id, RO_id=RO_id
-    ).first()
-    if staff_reporting_officer:
-        return jsonify(
-            {
-                "code": 200,
-                "data": staff_reporting_officer.json()
-            }
-        )
-    return jsonify(
-        {
-            "code": 404,
-            "message": f"StaffReportingOfficer with staff_id {staff_id} and RO_id {RO_id} not found."
-        }
-    ), 404
+# # Get a specific StaffReportingOfficer by staff_id and RO_id
+# @app.route("/getStaffReportingOfficer/<int:staff_id>/<int:RO_id>")
+# def get_staff_reporting_officer(staff_id, RO_id):
+#     staff_reporting_officer = StaffReportingOfficer.query.filter_by(
+#         staff_id=staff_id, RO_id=RO_id
+#     ).first()
+#     if staff_reporting_officer:
+#         return jsonify(
+#             {
+#                 "code": 200,
+#                 "data": staff_reporting_officer.json()
+#             }
+#         )
+#     return jsonify(
+#         {
+#             "code": 404,
+#             "message": f"StaffReportingOfficer with staff_id {staff_id} and RO_id {RO_id} not found."
+#         }
+#     ), 404
 
-# Delete a specific StaffReportingOfficer by staff_id and RO_id
-@app.route("/deleteStaffReportingOfficer/<int:staff_id>/<int:RO_id>", methods=["DELETE"])
-def delete_staff_reporting_officer(staff_id, RO_id):
-    try:
-        staff_reporting_officer = StaffReportingOfficer.query.filter_by(
-            staff_id=staff_id, RO_id=RO_id
-        ).first()
-        if staff_reporting_officer:
-            db.session.delete(staff_reporting_officer)
-            db.session.commit()
+# # Delete a specific StaffReportingOfficer by staff_id and RO_id
+# @app.route("/deleteStaffReportingOfficer/<int:staff_id>/<int:RO_id>", methods=["DELETE"])
+# def delete_staff_reporting_officer(staff_id, RO_id):
+#     try:
+#         staff_reporting_officer = StaffReportingOfficer.query.filter_by(
+#             staff_id=staff_id, RO_id=RO_id
+#         ).first()
+#         if staff_reporting_officer:
+#             db.session.delete(staff_reporting_officer)
+#             db.session.commit()
 
-            return jsonify(
-                {
-                    "code": 200,
-                    "message": f"StaffReportingOfficer with staff_id {staff_id} and RO_id {RO_id} deleted successfully."
-                }
-            ), 200
-        else:
-            return jsonify(
-                {
-                    "code": 404,
-                    "message": f"StaffReportingOfficer with staff_id {staff_id} and RO_id {RO_id} not found. Nothing deleted."
-                }
-            ), 404
-    except Exception as e:
-        return jsonify(
-            {
-                "code": 400,
-                "message": f"Failed to delete StaffReportingOfficer with staff_id {staff_id} and RO_id {RO_id}. Error: {str(e)}"
-            }
-        ), 400
+#             return jsonify(
+#                 {
+#                     "code": 200,
+#                     "message": f"StaffReportingOfficer with staff_id {staff_id} and RO_id {RO_id} deleted successfully."
+#                 }
+#             ), 200
+#         else:
+#             return jsonify(
+#                 {
+#                     "code": 404,
+#                     "message": f"StaffReportingOfficer with staff_id {staff_id} and RO_id {RO_id} not found. Nothing deleted."
+#                 }
+#             ), 404
+#     except Exception as e:
+#         return jsonify(
+#             {
+#                 "code": 400,
+#                 "message": f"Failed to delete StaffReportingOfficer with staff_id {staff_id} and RO_id {RO_id}. Error: {str(e)}"
+#             }
+#         ), 400
     
 @app.route("/getStaffReportingOfficer/<int:staff_id>")
 def get_staff_reporting_officers_by_staff_id(staff_id):
-    staff_reporting_officers = StaffReportingOfficer.query.filter_by(staff_id=staff_id).all()
-    if len(staff_reporting_officers):
+    staff_reporting_officers = StaffReportingOfficer.query.filter_by(staff_id=staff_id).first()
+    if staff_reporting_officers:
         return jsonify(
             {
                 "code": 200,
-                "data": {
-                    "staff_reporting_officers": [sro.json() for sro in staff_reporting_officers]
-                }
+                "data": staff_reporting_officers.json()
             }
         )
     return jsonify(
