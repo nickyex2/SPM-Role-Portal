@@ -4,34 +4,12 @@ import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import SearchBar from "@/app/_components/SearchBar";
-//flowbite-react components
+
 import R__Navbar from "@/app/_components/R_Navbar";
 import R_Sidebar from "@/app/_components/R_Sidebar";
 import Link from "next/link";
 import { Button, Table } from "flowbite-react";
 import { error } from "console";
-
-type TRoleListing = {
-  role_listing_id: number,
-  role_id: number,
-  role_listing_desc: string,
-  role_listing_source: number,
-  role_listing_open: string,
-  role_listing_close: string,
-  role_listing_creator: number,
-  role_listing_ts_created: string,
-  role_listing_status: string,
-  role_listing_updater: number,
-  role_listing_ts_update: string,
-  details: TRoleDetails,
-}
-
-type TRoleDetails = {
-  role_id: number,
-  role_name: string,
-  role_desc: string,
-  role_status: string,
-}
 
 export default function List_Roles() {
   const router = useRouter();
@@ -51,26 +29,10 @@ export default function List_Roles() {
   async function getRoleDetails(role:TRoleListing): Promise<TRoleDetails> {
     console.log(role);
     const response: AxiosResponse<TResponseData> = await axios.get(
-      `http://localhost:5003/getRole/${role?.role_listing_id}`
+      getRoleDetailsURL + role?.role_listing_id
     );
     return response.data.data;
   }
-
-  // async function getRoleName(roleID: number): Promise<String> {
-  //   const response: AxiosResponse<TResponseData> = await axios.get(
-  //     getRoleDetailsURL + roleID
-  //   );
-  //   console.log(response.data.data.role_name);
-  //   return response.data.data.role_name;
-  // }
-  
-  // Retrieve role details for specified role id
-  // async function getRoleDetails(roleID: number): Promise<TRoleDetails> {
-  //   const response: AxiosResponse<TResponseData> = await axios.get(
-  //     getRoleDetailsURL + roleID
-  //   );
-  //   return response.data.data;
-  // }
 
   useEffect(() => {
     setLoading(true);
@@ -150,17 +112,18 @@ export default function List_Roles() {
 
                 {/* roleList.role_listing_source */}
                 <div className="col-span-2">
-                  <p className="font-normal text-gray-700 dark:text-gray-400">{role.role_listing_source}</p>
+                  <p className="font-normal text-gray-700 dark:text-gray-400">Hiring Manager: {role.role_listing_source}</p>
                 </div>
 
                 {/* roleList.role_listing_close */}
                 <div className="col-span-2">
-                  <p className="font-normal text-gray-700 dark:text-gray-400">{role.role_listing_close}</p>
+                  <p className="font-normal text-gray-700 dark:text-gray-400">Application Deadline: {role.role_listing_close}</p>
                 </div>
 
                 {/* role.role_listing_desc */}
                 <div className="col-span-3">
                   <p className="font-normal text-gray-700 dark:text-gray-400">
+                    Job Description:<br />
                     {role.role_listing_desc.length > 200
                     ? role.role_listing_desc.slice(0, 200) + "..."
                     : role.role_listing_desc}
@@ -173,76 +136,11 @@ export default function List_Roles() {
                       <span className="sr-only">Icon description</span>
                     </button>
                   </div> */}
-                </div>
-
-                {/* <p className="font-normal text-gray-700 dark:text-gray-400">{role.role_listing_source}</p> */}
-                {/* roleList.role_listing_status */}
-
-                {/* roleList.role_listing_open */}
-
-                {/* roleList.role_listing_close */}
-                    
+                </div>                    
                 
             </Link>
-              // <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" key={role.role_listing_id}>
-              //   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-              //     {role.role_id}
-              //   </Table.Cell>
-              //   <Table.Cell>{role.role_listing_source}</Table.Cell>
-              //   <Table.Cell>{role.role_listing_open}</Table.Cell>
-              //   <Table.Cell>{role.role_listing_close}</Table.Cell>
-              //   <Table.Cell>
-              //     <Link
-              //       className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
-              //       href={`/listroles/${role.role_listing_id}`}
-              //     >
-              //       View More
-              //     </Link>
-              //   </Table.Cell>
-              // </Table.Row>
             );
           })}
-          {/* <Table hoverable className="rounded-md drop-shadow-none z-auto bg-slate-200 dark:bg-[#0d1117]">
-            <Table.Body className="divide-y">
-              <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  Role Name
-                </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  Hiring Manager
-                </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  Application Opening Date
-                </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  Application Closing Date
-                </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  Action
-                </Table.Cell>
-              </Table.Row>
-              {roles?.map((role) => {
-                return (
-                  <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" key={role.role_listing_id}>
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                      {role.role_id}
-                    </Table.Cell>
-                    <Table.Cell>{role.role_listing_source}</Table.Cell>
-                    <Table.Cell>{role.role_listing_open}</Table.Cell>
-                    <Table.Cell>{role.role_listing_close}</Table.Cell>
-                    <Table.Cell>
-                      <Link
-                        className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
-                        href={`/listroles/${role.role_listing_id}`}
-                      >
-                        View More
-                      </Link>
-                    </Table.Cell>
-                  </Table.Row>
-                );
-              })}
-            </Table.Body>
-          </Table> */}
         </div>
       </div>
     </div>
