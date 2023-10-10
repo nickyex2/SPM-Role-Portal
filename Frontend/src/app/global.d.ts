@@ -74,3 +74,21 @@ type TRoleApplication = {
   staff_id: number,
   role_app_status: string,
 }
+
+type TReportingOfficer = {
+  staff_id: number,
+  RO_id: number
+}
+
+type TStaffSkill = {
+  staff_id: number,
+  skill_id: number,
+  ss_status: string
+}
+
+type TStaffRole = {
+  staff_id: number,
+  role_id: number,
+  role_type: string,
+  sr_status: string
+}

@@ -1,25 +1,35 @@
-'use client';
+"use client";
 
-import React, {useEffect} from 'react';
-import { Button, Navbar } from 'flowbite-react';
-import { ThemeSwitcher } from '../ThemeSwitcher';
-import { useRouter, usePathname } from 'next/navigation';
+import React, { useEffect } from "react";
+import { Navbar, Dropdown, Avatar } from "flowbite-react";
+import { ThemeSwitcher } from "../ThemeSwitcher";
+import { useRouter, usePathname } from "next/navigation";
+import { DropdownItem } from "flowbite-react/lib/esm/components/Dropdown/DropdownItem";
 
 export default function R_Navbar() {
   const router = useRouter();
   const pathname = usePathname();
-  const [staff, setStaff] = React.useState<string>('');
+  const [staff, setStaff] = React.useState({
+    fname: "",
+    lname: "",
+    email: "",
+    staff_id: "",
+  });
   useEffect(() => {
-    setStaff(sessionStorage.getItem('staff_id') as string);
-  }, [])
-  
+    setStaff({
+      fname: sessionStorage.getItem("fname") as string,
+      lname: sessionStorage.getItem("lname") as string,
+      email: sessionStorage.getItem("email") as string,
+      staff_id: sessionStorage.getItem("staff_id") as string,
+    })
+  }, []);
+  function logout() {
+    sessionStorage.clear();
+    router.push("/Login");
+  }
   return (
-    <Navbar
-      fluid
-      rounded
-      className='sticky top-0 z-50'
-    >
-      <Navbar.Brand href="https://flowbite-react.com">
+    <Navbar fluid rounded className="sticky top-0 z-50 bg-grey-300">
+      <Navbar.Brand href="http://localhost:3000/listroles">
         {/* <img
           alt="Flowbite React Logo"
           className="mr-3 h-6 sm:h-9"
@@ -29,46 +39,54 @@ export default function R_Navbar() {
           All-In-One
         </span>
       </Navbar.Brand>
-      
+
       <Navbar.Collapse>
-        <Navbar.Link
-          active
-          href="#"
-        >
+        <Navbar.Link active href="#">
           {/* <p>
             Home
           </p> */}
         </Navbar.Link>
-        <Navbar.Link href="/listroles">
-          Jobs
-        </Navbar.Link>
-        <Navbar.Link href="/Skills">
-          Skills
-        </Navbar.Link>
+        <Navbar.Link href="/listroles">Jobs</Navbar.Link>
+        <Navbar.Link href="/Skills">Skills</Navbar.Link>
       </Navbar.Collapse>
 
       <div className="flex md:order-2">
-        <div className='hidden md:flex order-2'>
-          {!staff ? 
-          <Button onClick={() => {
-            router.push('/Login');
-          }}>
-          Login
-          </Button> : 
-          <Button onClick={() => {
-            sessionStorage.clear();
-            router.push('/Login')
-          }}>
-          Logout
-          </Button>
-          }
+        <div className="hidden md:flex order-2">
+          {/* {staff.email !== "" ? (
+            <Dropdown
+              arrowIcon={false}
+              inline
+              label={<Avatar alt="User settings" rounded />}
+            >
+              <Dropdown.Header>
+                <span className="block text-sm">
+                  {`${staff.fname} ${staff.lname}`}
+                </span>
+                <span className="block truncate text-sm font-medium">
+                  {staff.email}
+                </span>
+              </Dropdown.Header>
+              <DropdownItem
+                onClick={() => {
+                  router.push("/profile");
+                }}
+              >
+                Profile
+              </DropdownItem>
+              <Dropdown.Divider />
+              <DropdownItem
+                onClick={() => {
+                  logout();
+                }}
+              >
+                Sign out
+              </DropdownItem>
+            </Dropdown>
+          ) : null} */}
           <ThemeSwitcher />
         </div>
         <Navbar.Toggle />
       </div>
-      
     </Navbar>
-  )
+  );
 }
-
-
