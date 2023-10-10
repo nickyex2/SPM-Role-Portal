@@ -75,7 +75,7 @@ def create_role_application():
 @app.route("/getAllRoleApplications")
 def get_all_role_applications():
     role_applications = RoleApplication.query.all()
-    if len(role_applications):
+    if role_applications:
         return jsonify(
             {
                 "code": 200,
@@ -112,7 +112,7 @@ def get_role_application(role_listing_id):
 @app.route("/getRoleApplicationsStaff/<int:staff_id>")
 def get_applications_staff(staff_id):
     role_applications = RoleApplication.query.filter_by(staff_id=staff_id)
-    if len(role_applications):
+    if role_applications:
         return jsonify(
             {
                 "code": 200,
@@ -132,7 +132,7 @@ def get_applications_staff(staff_id):
 @app.route("/getRoleApplication/<int:role_listing_id>/<int:staff_id>")
 def get_applications_staff_role(role_listing_id, staff_id):
     role_application = RoleApplication.query.filter_by(role_listing_id=role_listing_id, staff_id=staff_id).first()
-    if len(role_application):
+    if role_application:
         return jsonify(
             {
                 "code": 200,

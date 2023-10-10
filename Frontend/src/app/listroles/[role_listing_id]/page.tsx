@@ -3,15 +3,20 @@ import React from "react";
 import axios, { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Button } from "flowbite-react";
+import { Button, Modal } from "flowbite-react";
 import { useRouter } from "next/navigation";
+import R_Navbar from "@/app/_components/R_Navbar";
+import { HiOutlineCheckCircle } from 'react-icons/hi'
 
 export default function Role_Listing_Profile( { params } : { params: { role_listing_id: string } }) {
   const router = useRouter();
+  const [openModal, setOpenModal] = useState<string | undefined>();
+  const props = { openModal, setOpenModal };
   const [role, setRole] = useState<TRoleListing>();
   const [roleDetails, setRoleDetails] = useState<TRoleDetails>();
-  const [roleSkills, setRoleSkills] = useState<Array<TRoleSkills>>();
+  const [roleSkillsDetails, setRoleSkillsDetails] = useState<Array<TSkillDetails>>([]); // [ { skill_id: 1, skill_name: "skill1" }, { skill_id: 2, skill_name: "skill2" }
   const [roleListingChanges, setRoleListingChanges] = useState<Array<TRoleListingChanges>>([]);
+  const [appliedRole, setAppliedRole] = useState<TRoleApplication | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   async function getRoleDetails(): Promise<TRoleDetails> {
     const response: AxiosResponse<TResponseData> = await axios.get(
@@ -26,11 +31,58 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
     );
     return response.data.data?.role_skills;
   }
+  async function getSkillDetails(roleSkills: Array<Number>): Promise<Array<TSkillDetails>>{
+    let sendData = {
+      skill_ids: roleSkills
+    }
+    const response: AxiosResponse<TResponseData> = await axios.post(
+      `http://localhost:5001/getSkills`,
+      sendData
+    );
+    return response.data.data;
+  }
   async function getRoleListingChanges(): Promise<Array<TRoleListingChanges>> {
     const response: AxiosResponse<TResponseData> = await axios.get(
       `http://localhost:5002/getRoleListingChanges/${params.role_listing_id}`
     );
     return response.data.data?.role_listing_changes;
+  }
+  async function getAppliedRole(): Promise<TRoleApplication | undefined> {
+    try {
+      const response: AxiosResponse<TResponseData> = await axios.get(
+        `http://localhost:5005/getRoleApplication/${params.role_listing_id}/${sessionStorage.getItem("staff_id")}`
+      );
+      return response.data.data;
+    }
+    catch (error) {
+      return undefined;
+    }
+  }
+  async function applyRole(role_listing_id: number, staff_id: number) {
+    const sendApplication = {
+      role_listing_id: role_listing_id,
+      staff_id: staff_id,
+      role_app_status: "applied"
+    }
+    const response: AxiosResponse<TResponseData> = await axios.post(
+      `http://localhost:5005/createRoleApplication`,
+      sendApplication
+    );
+    if (response.status === 201) {
+      props.setOpenModal('pop-up-applied');
+    }
+  }
+  async function withdrawRole(roleApplication: TRoleApplication) {
+    const response: AxiosResponse<TResponseData> = await axios.put(
+      `http://localhost:5005/updateRoleApplication/${roleApplication.role_app_id}`,
+      {
+        ...roleApplication,
+        role_app_status: "withdrawn"
+      }
+    );
+    if (response.status === 200) {
+      props.setOpenModal('pop-up-withdraw');
+    }
   }
   useEffect(() => {
     async function getRoleListing(): Promise<TRoleListing> {
@@ -53,18 +105,33 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
       console.log(data);
     });
     getRoleSkills().then((data) => {
-      setRoleSkills(data);
+      let skills: Array<Number> = [];
+      data.forEach((roleSkill) => {
+        skills.push(roleSkill.skill_id);
+      });
+      getSkillDetails(skills).then((data) => {
+        setRoleSkillsDetails(data);
+        console.log(data);
+      });
       console.log(data);
     });
     getRoleListingChanges().then((data) => {
       setRoleListingChanges(data);
       console.log(data);
     });
+    getAppliedRole().then((data) => {
+      if (data) {
+        setAppliedRole(data);
+        console.log(data);
+      }
+      console.log(appliedRole)
+    });
     setLoading(false);
   }
   return (
     loading ? ( <h1>Loading...</h1> ) : (
     <div>
+      <R_Navbar></R_Navbar>
       <form>
         <div className="grid md:grid-cols-2 md:gap-6">
           <div className="mb-6">
@@ -165,7 +232,14 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
           Submit
         </button>
       </form>
-
+      {appliedRole ? (
+        <Button onClick={() => {
+          withdrawRole(appliedRole);
+        }}>Withdraw</Button>
+      ) : <Button onClick={() => {
+        applyRole(role?.role_listing_id as number, parseInt(sessionStorage.getItem("staff_id") as string));
+      }}>Apply</Button>
+      }
       {sessionStorage.getItem("sys_role") === "hr" || parseInt(sessionStorage.getItem("staff_id") as string) === role?.role_listing_source ? (
         <div>
           <Link type="button" href={ `./${params.role_listing_id}/edit` } className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
@@ -203,6 +277,38 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
         );
       })} */}
       <Button type="button" onClick={()=>{router.push('/listroles')}}>Return to All Listings</Button>
+      <Modal show={props.openModal === 'pop-up-applied'} size="md" popup onClose={() => props.setOpenModal(undefined)}>
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-center">
+            <HiOutlineCheckCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+              Successfully Applied For Role
+            </h3>
+            <div className="flex justify-center gap-4">
+              <Button onClick={() => router.push('/listroles')}>
+                {`Back To Listings`}
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
+      <Modal show={props.openModal === 'pop-up-withdraw'} size="md" popup onClose={() => props.setOpenModal(undefined)}>
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-center">
+            <HiOutlineCheckCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+              Withdrawn Role Application Successfully
+            </h3>
+            <div className="flex justify-center gap-4">
+              <Button onClick={() => router.push('/listroles')}>
+                {`Back To Listings`}
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </div>
   )
   );
