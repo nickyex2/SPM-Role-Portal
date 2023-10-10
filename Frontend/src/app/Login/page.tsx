@@ -5,6 +5,7 @@ import React, {FormEvent, useState, useEffect} from 'react';
 import Image from 'next/image';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { Button } from 'flowbite-react';
 
 const Login:React.FC = () => {
 
@@ -18,7 +19,6 @@ const Login:React.FC = () => {
   }, [router])
   const handleSignIn = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(email);
 
     try {
       const res = await axios.get(check_staff_url);
@@ -53,12 +53,13 @@ const Login:React.FC = () => {
     <section className="bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
 
-        <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+        <a href="#" className="flex items-center mb-4 text-2xl font-semibold text-gray-900 dark:text-white">
           <Image
             src="https://flowbite.com/docs/images/logo.svg"
             alt="Logo"
             width={32}
             height={32}
+            className='mr-3'
           />
           All-In-One
         </a>
@@ -80,7 +81,7 @@ const Login:React.FC = () => {
                   name="email"
                   id="email"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="jack.ng.2020"
+                  placeholder="jack.ng.2020@all-in-one.com.sg"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -105,12 +106,12 @@ const Login:React.FC = () => {
                 </div>
               </div>
 
-              <button
+              <Button
                 type="submit"
-                className="w-full text-black bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                className="w-full text-black dark:text-white hover:bg-primary-200 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:hover:bg-primary-200 dark:focus:ring-primary-800"
               >
                 Sign in
-              </button>
+              </Button>
 
             </form>
           </div>

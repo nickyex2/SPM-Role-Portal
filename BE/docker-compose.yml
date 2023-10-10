@@ -130,12 +130,12 @@ services:
       - 5008:5008
     networks:
       - backend
-  staff_skills:
+  role_application:
     build:
       context: ./
-      dockerfile: ./staffSkill/staffSkill.Dockerfile
-    image: staff_skills:latest
-    container_name: staff_skills
+      dockerfile: ./roleApplication/roleApplication.Dockerfile
+    image: role_application:latest
+    container_name: role_application
     environment:
       TZ: Asia/Singapore
     depends_on:

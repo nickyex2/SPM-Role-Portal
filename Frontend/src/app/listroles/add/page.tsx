@@ -3,12 +3,15 @@ import React, { useEffect } from "react";
 import axios, { AxiosResponse } from "axios";
 import { useState } from "react";
 import { Datepicker } from "flowbite-react";
-import { Button, Checkbox, Label, TextInput, Textarea } from 'flowbite-react';
+import { Button, Checkbox, Label, TextInput, Textarea, Modal } from 'flowbite-react';
 import { useRouter } from "next/navigation";
+import { HiOutlineCheckCircle } from 'react-icons/hi'
 
 export default function Add_New_Role_Listing() {
   const router = useRouter();
   const todayDate = new Date();
+  const [openModal, setOpenModal] = useState<string | undefined>();
+  const props = { openModal, setOpenModal };
   const [roleListing, setRoleListing] = useState<TRoleListing>({
     role_listing_id: 0,
     role_id: 0,
@@ -27,13 +30,19 @@ export default function Add_New_Role_Listing() {
     setCreator(parseInt(sessionStorage.getItem("staff_id") as string));
   }, []);
   async function handleAddRoleListing() {
-    // need to add in updater id and updater timestamp into state then send to db
     setRoleListing({
       ...roleListing,
       role_listing_creator: creator,
       role_listing_updater: creator
     })
     console.log(roleListing);
+    const response: AxiosResponse<TResponseData> = await axios.post(
+      "http://localhost:5002/createRoleListing",
+      roleListing
+    );
+    if (response.status === 201 ) {
+      props.setOpenModal('pop-up');
+    }
   }
   return (
     <div>
@@ -160,6 +169,22 @@ export default function Add_New_Role_Listing() {
         </Button>
       </div>
       </form>
+      <Modal show={props.openModal === 'pop-up'} size="md" popup onClose={() => props.setOpenModal(undefined)}>
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-center">
+            <HiOutlineCheckCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+              Role Listing Successfully Created
+            </h3>
+            <div className="flex justify-center gap-4">
+              <Button onClick={() => router.push('/listroles')}>
+                {`Back To Listings`}
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }
