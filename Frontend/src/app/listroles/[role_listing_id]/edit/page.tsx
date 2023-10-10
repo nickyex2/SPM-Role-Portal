@@ -23,13 +23,7 @@ export default function Role_Listing_Edit({
     role_listing_creator: 0,
     role_listing_ts_create: 0,
     role_listing_updater: 0,
-    role_listing_ts_update: 0,
-    details: {
-      role_id: 0,
-      role_name: "",
-      role_description: "",
-      role_status: "",
-    }
+    role_listing_ts_update: 0
   });
   const [loading, setLoading] = useState(true);
   const [editingStaffID, setEditingStaffID] = useState("");
