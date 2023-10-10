@@ -19,7 +19,6 @@ const Login:React.FC = () => {
   }, [router])
   const handleSignIn = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(email);
 
     try {
       const res = await axios.get(check_staff_url);

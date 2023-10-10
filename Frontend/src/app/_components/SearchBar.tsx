@@ -5,12 +5,12 @@ const SearchBar = () => {
     <section
       className={`bg-center bg-no-repeat backgroundSearch bg-gray-700 bg-blend-multiply`}
     >
-      <div className="px-4 mx-auto max-w-screen-xl text-center py-24 lg:py-56">
+      <div className="px-4 mx-auto max-w-screen-xl text-center py-10 lg:py-20">
         <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-white md:text-5xl lg:text-6xl">
           All-In-One
         </h1>
         <p className="mb-8 text-lg font-normal text-gray-300 lg:text-xl sm:px-16 lg:px-48">
-          We are super gay!
+          Expand your knowledge and grow your career!
         </p>
         <div className="flex flex-col space-y-4 place-items-center sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
           <form className="flex items-center w-2/4">
