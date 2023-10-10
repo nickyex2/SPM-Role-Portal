@@ -59,7 +59,7 @@ export default function List_Roles() {
         console.error("Error fetching roles:", error);
         setLoading(false);
       });
-  }, []);
+  }, [router]);
   
   useEffect(() => {
     setSysRole(sessionStorage.getItem("sys_role") as string);

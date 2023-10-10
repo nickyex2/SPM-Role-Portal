@@ -27,7 +27,7 @@ export default function R_Navbar() {
     router.push("/Login");
   }
   return (
-    <Navbar fluid rounded className="sticky top-0 z-50 bg-grey-300">
+    <Navbar fluid rounded className="sticky top-0 z-50 bg-blue-300">
       <Navbar.Brand href="http://localhost:3000/listroles">
         {/* <img
           alt="Flowbite React Logo"

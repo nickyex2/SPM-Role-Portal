@@ -9,9 +9,6 @@ type TStaff = {
     dept: string;
     email: string;
     phone: string;
-    role: string[];
-    manager: string | null;
-    skills: string[];
     sys_role: string;
 }
 
@@ -88,7 +85,7 @@ type TStaffSkill = {
 
 type TStaffRole = {
   staff_id: number,
-  role_id: number,
+  staff_role: number,
   role_type: string,
   sr_status: string
 }
