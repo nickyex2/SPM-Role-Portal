@@ -4,7 +4,6 @@ import React, { useEffect } from "react";
 import { Navbar, Dropdown, Avatar } from "flowbite-react";
 import { ThemeSwitcher } from "../ThemeSwitcher";
 import { useRouter, usePathname } from "next/navigation";
-import { DropdownItem } from "flowbite-react/lib/esm/components/Dropdown/DropdownItem";
 
 export default function R_Navbar() {
   const router = useRouter();
@@ -52,7 +51,7 @@ export default function R_Navbar() {
 
       <div className="flex md:order-2">
         <div className="hidden md:flex order-2">
-          {/* {staff.email !== "" ? (
+          {staff.email !== "" ? (
             <Dropdown
               arrowIcon={false}
               inline
@@ -66,23 +65,23 @@ export default function R_Navbar() {
                   {staff.email}
                 </span>
               </Dropdown.Header>
-              <DropdownItem
+              <Dropdown.Item
                 onClick={() => {
                   router.push("/profile");
                 }}
               >
                 Profile
-              </DropdownItem>
+              </Dropdown.Item>
               <Dropdown.Divider />
-              <DropdownItem
+              <Dropdown.Item
                 onClick={() => {
                   logout();
                 }}
               >
                 Sign out
-              </DropdownItem>
+              </Dropdown.Item>
             </Dropdown>
-          ) : null} */}
+          ) : null}
           <ThemeSwitcher />
         </div>
         <Navbar.Toggle />
