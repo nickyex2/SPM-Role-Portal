@@ -43,7 +43,7 @@ class Role(db.Model):
 @app.route("/getAllRoles")
 def get_all_roles():
     roles = Role.query.all()
-    if len(roles):
+    if roles:
         return jsonify(
             {
                 "code": 200,
@@ -77,6 +77,24 @@ def get_role(role_id):
         }
     ), 404
 
+@app.route("/getRoles", methods=["POST"])
+def get_roles():
+    data = request.get_json()
+    role_ids = data['role_ids']
+    roles = Role.query.filter(Role.role_id.in_(role_ids)).all()
+    if roles:
+        return jsonify(
+            {
+                "code": 200,
+                "data": [role.json() for role in roles]
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": f"Roles with IDs {role_ids} not found."
+        }
+    ), 404
 # Update a specific Role by role_id
 @app.route("/updateRole/<int:role_id>", methods=["PUT"])
 def update_role(role_id):
