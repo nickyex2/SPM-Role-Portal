@@ -4,20 +4,19 @@ import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import SearchBar from "@/app/_components/SearchBar";
-
 import R__Navbar from "@/app/_components/R_Navbar";
-import R_Sidebar from "@/app/_components/R_Sidebar";
 import Link from "next/link";
 import { Button, Table } from "flowbite-react";
 import { error } from "console";
 
 export default function List_Roles() {
   const router = useRouter();
-  const [roles, setRoles] = useState<Array<TRoleListing>>();
+  const [roles, setRoles] = useState<Array<TRoleListing>>([]);
+  const [roleDetails, setRoleDetails] = useState<Array<TRoleDetails>>([]);
   const [loading, setLoading] = useState(true);
   const [sysRole, setSysRole] = useState<string>("");
   const getAllRolesURL = "http://localhost:5002/getAllRoleListings";
-  const getRoleDetailsURL = "http://localhost:5003/getRole/";
+  const getRoleDetailsURL = "http://localhost:5003/getRoles";
 
   async function getAllRoles(): Promise<Array<TRoleListing>> {
     const response: AxiosResponse<TResponseData> = await axios.get(
@@ -26,10 +25,12 @@ export default function List_Roles() {
     return response.data.data?.role_listings;
   }
 
-  async function getRoleDetails(role:TRoleListing): Promise<TRoleDetails> {
-    console.log(role);
-    const response: AxiosResponse<TResponseData> = await axios.get(
-      getRoleDetailsURL + role?.role_listing_id
+  async function getRoleDetails(role_ids: Array<Number>): Promise<Array<TRoleDetails>> {
+    let sendData = {
+      role_ids: role_ids
+    }
+    const response: AxiosResponse<TResponseData> = await axios.post(
+      getRoleDetailsURL, sendData
     );
     return response.data.data;
   }
@@ -40,24 +41,17 @@ export default function List_Roles() {
     getAllRoles()
       .then((data) => {
         // Fetch details for all roles concurrently using Promise.all
-        const fetchRoleDetailsPromises = data?.map((role) =>
-          getRoleDetails(role)
-        );
-
-        Promise.all(fetchRoleDetailsPromises)
-          .then((detailsArray) => {
-            // Update the state with the role details
-            const updatedRoles = data?.map((role, index) => ({
-              ...role,
-              details: detailsArray[index],
-            }));
-            setRoles(updatedRoles);
-            setLoading(false);
+        setRoles(data);
+        let role_ids: Array<Number> = [];
+        data.forEach((role) => {
+          role_ids.push(role.role_id);
+        });
+        getRoleDetails(role_ids)
+          .then((data) => {
+            setRoleDetails(data);
+            console.log(data);
           })
-          .catch((error) => {
-            console.error("Error fetching role details:", error);
-            setLoading(false);
-          });
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching roles:", error);
@@ -100,17 +94,17 @@ export default function List_Roles() {
                 {/* roleList.TITLE */}
                 <div className="col-span-2">
                   <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                    {role.details?.role_name}
+                    {roleDetails.find((roleDetail) => roleDetail.role_id === role.role_id)?.role_name}
                   </h5>
                 </div>
 
                 {/* role_listing_open, role_listing_status */}
                 <div className="col-span-1 flex justify-end">
                   <div className="rounded-full bg-gray-300 p-2">
-                    <p className="font-normal text-gray-700 dark:text-gray-400">{daysSinceOpen} days ago</p>
+                    <p className="font-normal text-gray-700 dark:text-black">{daysSinceOpen} days ago</p>
                   </div>
                   <div className={`rounded-full p-2 ${role?.role_listing_status === 'active' ? 'bg-green-500': 'bg-red-500'}`}>
-                    <p className="font-normal text-gray-700 dark:text-gray-400">{role?.role_listing_status}</p>
+                    <p className="font-normal text-gray-700 dark:text-black">{role?.role_listing_status}</p>
                   </div>
                 </div>
 
