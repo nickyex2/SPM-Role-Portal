@@ -88,6 +88,10 @@ export default function List_Roles() {
           ) : null}
         <div className="w-4/6 mx-auto">
           {roles?.map((role) => {
+            const today = new Date();
+            const roleListingOpenDate = new Date(role.role_listing_open);
+            const timeDifference = today.getTime() - roleListingOpenDate.getTime();
+            const daysSinceOpen = Math.floor(timeDifference / (1000 * 3600 * 24));
             return (
               <Link href={`/listroles/${role.role_listing_id}`} className="max-w p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 mx-auto mb-4 grid grid-col-3 gap-2 hover:underline" key={role.role_listing_id}>
 
@@ -103,7 +107,7 @@ export default function List_Roles() {
                 {/* role_listing_open, role_listing_status */}
                 <div className="col-span-1 flex justify-end">
                   <div className="rounded-full bg-gray-300 p-2">
-                    <p className="font-normal text-gray-700 dark:text-gray-400">{role?.role_listing_open}</p>
+                    <p className="font-normal text-gray-700 dark:text-gray-400">{daysSinceOpen} days ago</p>
                   </div>
                   <div className={`rounded-full p-2 ${role?.role_listing_status === 'active' ? 'bg-green-500': 'bg-red-500'}`}>
                     <p className="font-normal text-gray-700 dark:text-gray-400">{role?.role_listing_status}</p>
