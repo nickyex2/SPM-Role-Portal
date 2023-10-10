@@ -14,9 +14,9 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
   const props = { openModal, setOpenModal };
   const [role, setRole] = useState<TRoleListing>();
   const [roleDetails, setRoleDetails] = useState<TRoleDetails>();
-  const [roleSkills, setRoleSkills] = useState<Array<TRoleSkills>>();
+  const [roleSkillsDetails, setRoleSkillsDetails] = useState<Array<TSkillDetails>>([]); // [ { skill_id: 1, skill_name: "skill1" }, { skill_id: 2, skill_name: "skill2" }
   const [roleListingChanges, setRoleListingChanges] = useState<Array<TRoleListingChanges>>([]);
-  const [appliedRole, setAppliedRole] = useState<TRoleApplication | undefined>();
+  const [appliedRole, setAppliedRole] = useState<TRoleApplication | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   async function getRoleDetails(): Promise<TRoleDetails> {
     const response: AxiosResponse<TResponseData> = await axios.get(
@@ -31,6 +31,16 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
     );
     return response.data.data?.role_skills;
   }
+  async function getSkillDetails(roleSkills: Array<Number>): Promise<Array<TSkillDetails>>{
+    let sendData = {
+      skill_ids: roleSkills
+    }
+    const response: AxiosResponse<TResponseData> = await axios.post(
+      `http://localhost:5001/getSkills`,
+      sendData
+    );
+    return response.data.data;
+  }
   async function getRoleListingChanges(): Promise<Array<TRoleListingChanges>> {
     const response: AxiosResponse<TResponseData> = await axios.get(
       `http://localhost:5002/getRoleListingChanges/${params.role_listing_id}`
@@ -38,13 +48,15 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
     return response.data.data?.role_listing_changes;
   }
   async function getAppliedRole(): Promise<TRoleApplication | undefined> {
-    const response: AxiosResponse<TResponseData> = await axios.get(
-      `http://localhost:5005/getRoleApplication/${params.role_listing_id}/${sessionStorage.getItem("staff_id")}`
-    );
-    if (response.status === 200) {
+    try {
+      const response: AxiosResponse<TResponseData> = await axios.get(
+        `http://localhost:5005/getRoleApplication/${params.role_listing_id}/${sessionStorage.getItem("staff_id")}`
+      );
       return response.data.data;
     }
-    return undefined;
+    catch (error) {
+      return undefined;
+    }
   }
   async function applyRole(role_listing_id: number, staff_id: number) {
     const sendApplication = {
@@ -93,7 +105,14 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
       console.log(data);
     });
     getRoleSkills().then((data) => {
-      setRoleSkills(data);
+      let skills: Array<Number> = [];
+      data.forEach((roleSkill) => {
+        skills.push(roleSkill.skill_id);
+      });
+      getSkillDetails(skills).then((data) => {
+        setRoleSkillsDetails(data);
+        console.log(data);
+      });
       console.log(data);
     });
     getRoleListingChanges().then((data) => {
@@ -105,6 +124,7 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
         setAppliedRole(data);
         console.log(data);
       }
+      console.log(appliedRole)
     });
     setLoading(false);
   }

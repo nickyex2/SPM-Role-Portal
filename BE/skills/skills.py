@@ -73,7 +73,7 @@ def find_by_id(skill_id):
     ), 404
 
 #get skills by skill_ids
-@app.route("/getSkills", methods=['GET'])
+@app.route("/getSkills", methods=['POST'])
 def find_by_ids():
     data = request.get_json(force=True)
     skill_ids = data['skill_ids']
