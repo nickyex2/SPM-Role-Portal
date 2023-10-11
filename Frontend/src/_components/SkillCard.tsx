@@ -3,7 +3,6 @@ import React from 'react'
 import Link from 'next/link'
 
 
-// define props passed to SkillCard for dynamic rendering
 type SkillDetails = {
   skill_id: number,
   skill_name: string,
