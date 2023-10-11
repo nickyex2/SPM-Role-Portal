@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Button, Modal, Table } from 'flowbite-react';
 import R_Navbar from '@/app/_components/R_Navbar';
 import { useRouter } from 'next/navigation';
+import { HiOutlineArrowLeft } from 'react-icons/hi';
 
 export default function Role_Applicants( { params } : { params: { role_listing_id: string } }) {
   const router = useRouter();
@@ -49,7 +50,7 @@ export default function Role_Applicants( { params } : { params: { role_listing_i
         <Button className='mb-5' onClick={() => {
           router.push(`/listroles/${role_listing_id}`)
         }}>
-          Back
+          <HiOutlineArrowLeft className="h-6 w-6" />
         </Button>
         <Table>
           <Table.Head>
@@ -70,6 +71,9 @@ export default function Role_Applicants( { params } : { params: { role_listing_i
             </Table.HeadCell>
             <Table.HeadCell>
               <span className="font-bold">Applied Date</span>
+            </Table.HeadCell>
+            <Table.HeadCell>
+              <span className="font-bold">Role Skill %</span>
             </Table.HeadCell>
             <Table.HeadCell>
               <span className="font-bold">More Actions</span>
@@ -107,6 +111,9 @@ export default function Role_Applicants( { params } : { params: { role_listing_i
                     </Table.Cell>
                     <Table.Cell>
                       <span>{roleApplicant.role_app_ts_create.toLocaleString()}</span>
+                    </Table.Cell>
+                    <Table.Cell>
+                      
                     </Table.Cell>
                     <Table.Cell>
                       <Button size="xs" onClick={() => {
