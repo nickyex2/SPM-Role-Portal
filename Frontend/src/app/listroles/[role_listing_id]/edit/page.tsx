@@ -22,17 +22,20 @@ export default function Role_Listing_Edit({
     role_listing_status: "",
     role_listing_creator: 0,
     role_listing_ts_create: 0,
-    role_listing_ts_updater: 0,
-    role_listing_ts_update: 0,
+    role_listing_updater: 0,
+    role_listing_ts_update: 0
   });
   const [loading, setLoading] = useState(true);
-  const editingStaffID = sessionStorage.getItem("staff_id") as string;
+  const [editingStaffID, setEditingStaffID] = useState("");
+  useEffect(() => {
+    setEditingStaffID(sessionStorage.getItem("staff_id") as string);
+  }, []);
   async function submitEditedRoleListing() {
     // need to add in updater id and updater timestamp into state
     console.log(role);
     setRole({
       ...role,
-      role_listing_ts_updater: parseInt(editingStaffID),
+      role_listing_updater: parseInt(editingStaffID),
       role_listing_ts_update: Date.now()
     })
     const response: AxiosResponse<TResponseData> = await axios.put(

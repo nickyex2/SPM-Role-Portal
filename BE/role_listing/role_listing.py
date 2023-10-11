@@ -64,7 +64,36 @@ class RoleListing(db.Model):
             "role_listing_ts_update": self.role_listing_ts_update.isoformat()
         }
 
+class RoleListingChanges(db.Model):
+    __tablename__ = 'ROLE_LISTING_CHANGES'
+    change_id = db.Column(db.Integer, primary_key=True)
+    role_listing_id = db.Column(db.Integer, nullable=False, primary_key=True)
+    change_no = db.Column(db.Integer, nullable=False, primary_key=True)
+    log_time = db.Column(db.TIMESTAMP, nullable=False, server_default=db.func.current_timestamp())
+    role_listing_updater = db.Column(db.Integer, nullable=False)
+    changed_field = db.Column(db.String(255), nullable=False)
+    old_value = db.Column(db.String(10000), nullable=False)
+    new_value = db.Column(db.String(10000), nullable=False)
 
+    def __init__(self, role_listing_id, change_no, role_listing_updater, changed_field, old_value, new_value):
+        self.role_listing_id = role_listing_id
+        self.change_no = change_no
+        self.role_listing_updater = role_listing_updater
+        self.changed_field = changed_field
+        self.old_value = old_value
+        self.new_value = new_value
+
+    def json(self):
+        return {
+            "role_listing_id": self.role_listing_id,
+            "change_no": self.change_no,
+            "log_time": self.log_time.isoformat(),
+            "role_listing_updater": self.role_listing_updater,
+            "changed_field": self.changed_field,
+            "old_value": self.old_value,
+            "new_value": self.new_value
+        }
+    
 @app.route("/createRoleListing", methods=["POST"])
 def create_role_listing():
     try:
@@ -225,6 +254,24 @@ def update_role_listing(role_listing_id):
             }
         ), 400
 
+@app.route("/getRoleListingChanges/<int:role_listing_id>")
+def getRoleListingChanges(role_listing_id):
+    role_listing_changes = RoleListingChanges.query.filter_by(role_listing_id=role_listing_id).all()
+    if len(role_listing_changes):
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "role_listing_changes": [role_listing_change.json() for role_listing_change in role_listing_changes]
+                }
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": f"No changes for role listing with ID {role_listing_id} found."
+        }
+    ), 404
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=os.environ.get('PORT'), debug=True)

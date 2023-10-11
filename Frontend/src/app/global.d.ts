@@ -9,9 +9,6 @@ type TStaff = {
     dept: string;
     email: string;
     phone: string;
-    role: string[];
-    manager: string | null;
-    skills: string[];
     sys_role: string;
 }
 
@@ -25,7 +22,7 @@ type TRoleListing = {
   role_listing_status: string;
   role_listing_creator: number;
   role_listing_ts_create: EpochTimeStamp;
-  role_listing_ts_updater: number;
+  role_listing_updater: number;
   role_listing_ts_update: EpochTimeStamp;
 }
 
@@ -56,4 +53,39 @@ type TSkillDetails = {
   skill_id: number,
   skill_name: string,
   skill_status: string
+}
+
+type TRoleListingChanges = {
+  role_listing_id : number,
+  change_no: number,
+  role_listing_updater: number,
+  log_time: EpochTimeStamp,
+  changed_field: string,
+  old_value: string,
+  new_value: string
+}
+
+type TRoleApplication = {
+  role_app_id: number,
+  role_listing_id: number,
+  staff_id: number,
+  role_app_status: string,
+}
+
+type TReportingOfficer = {
+  staff_id: number,
+  RO_id: number
+}
+
+type TStaffSkill = {
+  staff_id: number,
+  skill_id: number,
+  ss_status: string
+}
+
+type TStaffRole = {
+  staff_id: number,
+  staff_role: number,
+  role_type: string,
+  sr_status: string
 }
