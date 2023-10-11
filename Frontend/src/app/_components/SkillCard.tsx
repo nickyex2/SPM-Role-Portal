@@ -3,14 +3,9 @@ import React from 'react'
 import Link from 'next/link'
 
 
-type SkillDetails = {
-  skill_id: number,
-  skill_name: string,
-  skill_status: string
-}
-
+// define props passed to SkillCard for dynamic rendering
 const SkillCard = (
-  {skill_id, skill_name, skill_status}: SkillDetails
+  {skill_id, skill_name, skill_status}: TSkillDetails
 ) => {
   return (
         <Link href="#" className="h-full block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 mx-auto">

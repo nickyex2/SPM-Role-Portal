@@ -1,17 +1,16 @@
 'use client'
 import React from 'react'
-import NavBar from '../../_components/Navbar'
-import SkillCard from '@/_components/SkillCard'
+import SkillCard from '@/app/_components/SkillCard'
 import axios from 'axios'
 
 // react-flowbite components
-import R_Navbar from '../../_components/R_Navbar'
+import R_Navbar from '../_components/R_Navbar'
 
 const SkillsPage = () => {
 
   const skillsURL = 'http://localhost:5001/getAllSkills'
 
-  const [skills, setSkills] = React.useState([]);
+  const [skills, setSkills] = React.useState<Array<TSkillDetails>>([]);
   const [loading, setLoading] = React.useState(false)
 
   React.useEffect(() => {
