@@ -95,12 +95,12 @@ def get_all_role_applications():
 # Get RoleApplications by role_listing_id
 @app.route("/getRoleApplicationsListing/<int:role_listing_id>")
 def get_role_application(role_listing_id):
-    role_application = RoleApplication.query.filter_by(role_listing_id=role_listing_id)
+    role_application = RoleApplication.query.filter_by(role_listing_id=role_listing_id).all()
     if role_application:
         return jsonify(
             {
                 "code": 200,
-                "data": role_application.json()
+                "data": [role_app.json() for role_app in role_application]
             }
         )
     return jsonify(

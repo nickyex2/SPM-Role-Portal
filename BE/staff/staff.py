@@ -83,6 +83,26 @@ def find_by_id(staff_id):
         }
     ), 404
 
+@app.route("/getMultipleStaff", methods=['POST'])
+def get_multiple_staff():
+    staff_id_list = request.get_json(force=True)['staff_ids']
+    staff = Staff.query.filter(Staff.staff_id.in_(staff_id_list)).all()
+    if staff:
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "staff": [staff.json() for staff in staff]
+                }
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "Staff not found."
+        }
+    ), 404
+
 # create new staff redundant
 @app.route("/createStaff/<string:staff_id>", methods=['POST'])
 def create_staff(staff_id):
