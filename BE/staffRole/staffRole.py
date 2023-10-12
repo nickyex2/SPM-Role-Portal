@@ -75,7 +75,7 @@ def create_staff_role():
 @app.route("/getAllStaffRoles")
 def get_all_staff_roles():
     staff_roles = StaffRole.query.all()
-    if len(staff_roles):
+    if staff_roles:
         return jsonify(
             {
                 "code": 200,
@@ -178,7 +178,7 @@ def delete_staff_role(staff_id, staff_role):
 @app.route("/getStaffRolesOfSpecificStaff/<int:staff_id>")
 def get_all_staff_roles_by_staff(staff_id):
     staff_roles = StaffRole.query.filter_by(staff_id=staff_id).all()
-    if len(staff_roles):
+    if staff_roles:
         return jsonify(
             {
                 "code": 200,
