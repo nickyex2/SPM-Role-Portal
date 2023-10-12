@@ -67,7 +67,7 @@ def create_role_skills():
 @app.route("/getAllRoleSkills")
 def get_all_role_skills():
     role_skills = RoleSkills.query.all()
-    if len(role_skills):
+    if role_skills:
         return jsonify(
             {
                 "code": 200,
@@ -87,7 +87,7 @@ def get_all_role_skills():
 @app.route("/getRoleSkills/<int:role_id>")
 def get_role_skills_by_role_id(role_id):
     role_skills = RoleSkills.query.filter_by(role_id=role_id).all()
-    if len(role_skills):
+    if role_skills:
         return jsonify(
             {
                 "code": 200,

@@ -49,7 +49,7 @@ class Staff(db.Model):
 @app.route("/getAllStaff")
 def get_all():
     staffProfile = Staff.query.all()
-    if len(staffProfile):
+    if staffProfile:
         return jsonify(
             {
                 "code": 200,
