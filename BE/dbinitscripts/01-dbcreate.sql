@@ -95,6 +95,7 @@ CREATE TABLE IF NOT EXISTS ROLE_APPLICATIONS (
   role_listing_id int NOT NULL,
   staff_id int NOT NULL,
   role_app_status ENUM ('applied', 'withdrawn') NOT NULL,
+  role_app_ts_create TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (role_app_id),
   FOREIGN KEY (role_listing_id) REFERENCES ROLE_LISTINGS(role_listing_id),
   FOREIGN KEY (staff_id) REFERENCES STAFF_DETAILS(staff_id)

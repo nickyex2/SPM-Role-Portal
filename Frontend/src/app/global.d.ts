@@ -3,7 +3,7 @@
 // Declare global variables
 
 type TStaff = {
-    id: number;
+    staff_id: number;
     fname: string;
     lname: string;
     dept: string;
@@ -88,4 +88,12 @@ type TStaffRole = {
   staff_role: number,
   role_type: string,
   sr_status: string
+}
+
+type TRoleApplicant = {
+  role_app_id: number,
+  role_listing_id: number,
+  staff_id: number,
+  role_app_status: string,
+  role_app_ts_create: EpochTimeStamp
 }
