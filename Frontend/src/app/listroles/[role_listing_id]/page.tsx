@@ -3,15 +3,17 @@ import React from "react";
 import axios, { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Badge, Button, Modal } from "flowbite-react";
+import { Badge, Button, Modal, Toast } from "flowbite-react";
 import { useRouter } from "next/navigation";
 import R_Navbar from "@/app/_components/R_Navbar";
-import { HiOutlineCheckCircle } from 'react-icons/hi'
+import { HiOutlineCheckCircle, HiCheck } from 'react-icons/hi'
+import EditListing from "@/app/_components/EditListing";
 
 export default function Role_Listing_Profile( { params } : { params: { role_listing_id: string } }) {
   const router = useRouter();
-  const [openModal, setOpenModal] = useState<string | undefined>();
-  const props = { openModal, setOpenModal };
+  const [openModal, setOpenModal] = useState<string | undefined>(undefined);
+  const [showToast, setShowToast] = useState(false);
+  const props = { openModal, setOpenModal, showToast, setShowToast };
   const [currUserSkills, setCurrUserSkills] = useState<Array<Number>>([]);
   const [skillMatchCounter, setSkillMatchCounter] = useState<number>(0);
   const [role, setRole] = useState<TRoleListing>();
@@ -281,21 +283,11 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
             View Applicants
           </Button>
           <Button onClick={() => {
-            router.push(`/listroles/${params.role_listing_id}/edit`)
+            props.setOpenModal('pop-up-edit');
           }}>
             <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 30 30" width="30px" height="30px">    <path d="M 22.828125 3 C 22.316375 3 21.804562 3.1954375 21.414062 3.5859375 L 19 6 L 24 11 L 26.414062 8.5859375 C 27.195062 7.8049375 27.195062 6.5388125 26.414062 5.7578125 L 24.242188 3.5859375 C 23.851688 3.1954375 23.339875 3 22.828125 3 z M 17 8 L 5.2597656 19.740234 C 5.2597656 19.740234 6.1775313 19.658 6.5195312 20 C 6.8615312 20.342 6.58 22.58 7 23 C 7.42 23.42 9.6438906 23.124359 9.9628906 23.443359 C 10.281891 23.762359 10.259766 24.740234 10.259766 24.740234 L 22 13 L 17 8 z M 4 23 L 3.0566406 25.671875 A 1 1 0 0 0 3 26 A 1 1 0 0 0 4 27 A 1 1 0 0 0 4.328125 26.943359 A 1 1 0 0 0 4.3378906 26.939453 L 4.3632812 26.931641 A 1 1 0 0 0 4.3691406 26.927734 L 7 26 L 5.5 24.5 L 4 23 z"/>
             </svg>
           </Button>
-          {/* <h1>Change Log</h1>
-          {roleListingChanges?.map((roleListingChange, idx) => {
-            return (
-              <div key={idx}>
-                <h2>{roleListingChange.changed_field}</h2>
-                <h3>{`${roleListingChange.old_value} => ${roleListingChange.new_value}`}</h3>
-                <h4>{roleListingChange.log_time}</h4>
-              </div>
-            );
-          })} */}
         </div>
       ): null}
       <Button type="button" onClick={()=>{router.push('/listroles')}}>Return to All Listings</Button>
@@ -331,6 +323,18 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
           </div>
         </Modal.Body>
       </Modal>
+      <EditListing roleListing={role as TRoleListing} role_listing_id={role?.role_listing_id as number} props={props} />
+      {showToast ? (
+        <Toast className="fixed bottom-5 right-5">
+        <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
+          <HiCheck className="h-5 w-5" />
+        </div>
+        <div className="ml-3 text-sm font-normal">
+          Role Listing edited successfully. Refresh page to see changes.
+        </div>
+        <Toast.Toggle onDismiss={() => props.setShowToast(false)} />
+      </Toast>
+      ): null}
     </div>
   )
   );
