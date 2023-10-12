@@ -144,7 +144,7 @@ def create_role_listing():
 @app.route("/getAllRoleListings")
 def get_all_role_listings():
     role_listings = RoleListing.query.all()
-    if len(role_listings):
+    if role_listings:
         return jsonify(
             {
                 "code": 200,
@@ -257,7 +257,7 @@ def update_role_listing(role_listing_id):
 @app.route("/getRoleListingChanges/<int:role_listing_id>")
 def getRoleListingChanges(role_listing_id):
     role_listing_changes = RoleListingChanges.query.filter_by(role_listing_id=role_listing_id).all()
-    if len(role_listing_changes):
+    if role_listing_changes:
         return jsonify(
             {
                 "code": 200,

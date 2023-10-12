@@ -38,7 +38,7 @@ class Skill(db.Model):
 @app.route("/getAllSkills")
 def get_all():
     Skills = Skill.query.all()
-    if len(Skills):
+    if Skills:
         return jsonify(
             {
                 "code": 200,
