@@ -3,7 +3,7 @@ import React from "react";
 import axios, { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Button, Modal } from "flowbite-react";
+import { Badge, Button, Modal } from "flowbite-react";
 import { useRouter } from "next/navigation";
 import R_Navbar from "@/app/_components/R_Navbar";
 import { HiOutlineCheckCircle } from 'react-icons/hi'
@@ -12,9 +12,11 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
   const router = useRouter();
   const [openModal, setOpenModal] = useState<string | undefined>();
   const props = { openModal, setOpenModal };
+  const [currUserSkills, setCurrUserSkills] = useState<Array<Number>>([]);
+  const [skillMatchCounter, setSkillMatchCounter] = useState<number>(0);
   const [role, setRole] = useState<TRoleListing>();
   const [roleDetails, setRoleDetails] = useState<TRoleDetails>();
-  const [roleSkillsDetails, setRoleSkillsDetails] = useState<Array<TSkillDetails>>([]); // [ { skill_id: 1, skill_name: "skill1" }, { skill_id: 2, skill_name: "skill2" }
+  const [roleSkillsDetails, setRoleSkillsDetails] = useState<Array<TSkillDetails>>([]);
   const [roleListingChanges, setRoleListingChanges] = useState<Array<TRoleListingChanges>>([]);
   const [appliedRole, setAppliedRole] = useState<TRoleApplication | undefined>(undefined);
   const [loading, setLoading] = useState(true);
@@ -42,10 +44,18 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
     return response.data.data;
   }
   async function getRoleListingChanges(): Promise<Array<TRoleListingChanges>> {
+    try {
     const response: AxiosResponse<TResponseData> = await axios.get(
       `http://localhost:5002/getRoleListingChanges/${params.role_listing_id}`
     );
     return response.data.data?.role_listing_changes;
+    }
+    catch (error: any) {
+      if (error.response.status === 404){
+        console.log("No role listing changes found");
+      }
+      return [];
+    }
   }
   async function getAppliedRole(): Promise<TRoleApplication | undefined> {
     try {
@@ -54,7 +64,10 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
       );
       return response.data.data;
     }
-    catch (error) {
+    catch (error: any) {
+      if (error.response.status === 404){
+        console.log("No role application found");
+      }
       return undefined;
     }
   }
@@ -92,6 +105,7 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
       return response.data.data;
     }
     setLoading(true);
+    setCurrUserSkills(JSON.parse(sessionStorage.getItem("skills") as string));
     getRoleListing().then((data) => {
       setRole(data);
       console.log(data);
@@ -111,6 +125,13 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
       });
       getSkillDetails(skills).then((data) => {
         setRoleSkillsDetails(data);
+        var counter = 0;
+        data.map((skill) => {
+          if (currUserSkills.includes(skill.skill_id)) {
+            counter += 1;
+          }
+        })
+        setSkillMatchCounter(counter);
         console.log(data);
       });
     });
@@ -130,7 +151,28 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
     loading ? ( <h1>Loading...</h1> ) : (
     <div>
       <R_Navbar></R_Navbar>
-      <form>
+      <div className="mt-5 flex mb-3">
+        {roleSkillsDetails.map((roleSkill, idx) => {
+          if (currUserSkills.includes(roleSkill.skill_id)) {
+            return (
+              <Badge color="success" key={idx} className="mx-3">
+                {roleSkill.skill_name}
+              </Badge>
+            )
+          }
+          return (
+            <Badge color="failure" key={idx} className="mx-3">
+              {roleSkill.skill_name}
+            </Badge>
+          )
+        })}
+      </div>
+      <span className="m-3">
+        {
+          Math.round((skillMatchCounter / roleSkillsDetails.length) * 100) + "% Match"
+        }
+      </span>
+      <form className="mt-5">
         <div className="grid md:grid-cols-2 md:gap-6">
           <div className="mb-6">
             <label htmlFor="role_id" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Role ID</label>
@@ -222,13 +264,6 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
             />
           </div>          
         </div>
-
-        <button
-          type="submit"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        >
-          Submit
-        </button>
       </form>
       {appliedRole && appliedRole.role_app_status !== "withdrawn" ? (
         <Button onClick={() => {
@@ -245,12 +280,13 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
           }}>
             View Applicants
           </Button>
-          <Link type="button" href={ `./${params.role_listing_id}/edit` } className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+          <Button onClick={() => {
+            router.push(`/listroles/${params.role_listing_id}/edit`)
+          }}>
             <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 30 30" width="30px" height="30px">    <path d="M 22.828125 3 C 22.316375 3 21.804562 3.1954375 21.414062 3.5859375 L 19 6 L 24 11 L 26.414062 8.5859375 C 27.195062 7.8049375 27.195062 6.5388125 26.414062 5.7578125 L 24.242188 3.5859375 C 23.851688 3.1954375 23.339875 3 22.828125 3 z M 17 8 L 5.2597656 19.740234 C 5.2597656 19.740234 6.1775313 19.658 6.5195312 20 C 6.8615312 20.342 6.58 22.58 7 23 C 7.42 23.42 9.6438906 23.124359 9.9628906 23.443359 C 10.281891 23.762359 10.259766 24.740234 10.259766 24.740234 L 22 13 L 17 8 z M 4 23 L 3.0566406 25.671875 A 1 1 0 0 0 3 26 A 1 1 0 0 0 4 27 A 1 1 0 0 0 4.328125 26.943359 A 1 1 0 0 0 4.3378906 26.939453 L 4.3632812 26.931641 A 1 1 0 0 0 4.3691406 26.927734 L 7 26 L 5.5 24.5 L 4 23 z"/>
             </svg>
-            <span className="sr-only">Edit Icon</span>
-          </Link>
-          <h1>Change Log</h1>
+          </Button>
+          {/* <h1>Change Log</h1>
           {roleListingChanges?.map((roleListingChange, idx) => {
             return (
               <div key={idx}>
@@ -259,26 +295,9 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
                 <h4>{roleListingChange.log_time}</h4>
               </div>
             );
-          })}
+          })} */}
         </div>
       ): null}
-      <div>
-      </div>
-      {/* <h3>{role?.role_listing_open.toString()}</h3>
-      <h4>
-        {role?.role_listing_ts_create && new Date(role?.role_listing_ts_create)?.toLocaleString(
-          "en-GB",
-          { timeZone: "Asia/Singapore" }
-        )}
-      </h4>
-      <h1> Skills </h1>
-      {roleSkills?.map((roleSkill, idx) => {
-        return (
-          <div key={idx}>
-            <h2>{roleSkill.skill_id}</h2>
-          </div>
-        );
-      })} */}
       <Button type="button" onClick={()=>{router.push('/listroles')}}>Return to All Listings</Button>
       <Modal show={props.openModal === 'pop-up-applied'} size="md" popup onClose={() => props.setOpenModal(undefined)}>
         <Modal.Header />
