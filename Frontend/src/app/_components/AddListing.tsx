@@ -7,6 +7,7 @@ import { Button, Checkbox, Label, TextInput, Textarea } from "flowbite-react";
 
 export default function Add_New_Role_Listing({
   props,
+  staff_id
 }: {
   props: {
     openModal: string | undefined;
@@ -14,6 +15,7 @@ export default function Add_New_Role_Listing({
     showToast: boolean;
     setShowToast: React.Dispatch<React.SetStateAction<boolean>>;
   };
+  staff_id: number;
 }) {
   const todayDate = new Date();
   const [roleListing, setRoleListing] = useState<TRoleListing>({
@@ -28,18 +30,11 @@ export default function Add_New_Role_Listing({
       todayDate.getMonth() + 1
     }-${todayDate.getDate()}`,
     role_listing_status: "active",
-    role_listing_creator: 0,
+    role_listing_creator: staff_id,
     role_listing_ts_create: 0,
-    role_listing_updater: 0,
+    role_listing_updater: staff_id,
     role_listing_ts_update: 0,
   });
-  useEffect(() => {
-    setRoleListing({
-      ...roleListing,
-      role_listing_creator: parseInt(sessionStorage.getItem("staff_id") as string),
-      role_listing_updater: parseInt(sessionStorage.getItem("staff_id") as string)
-    })
-  }, [roleListing]);
   async function handleAddRoleListing() {
     console.log(roleListing);
     const response: AxiosResponse<TResponseData> = await axios.post(

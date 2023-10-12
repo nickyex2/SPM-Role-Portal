@@ -137,7 +137,7 @@ export default function List_Roles() {
             );
           })}
         </div>
-        <AddListing props={props} />
+        <AddListing props={props} staff_id={parseInt(sessionStorage.getItem("staff_id") as string)} />
         {showToast ? (
         <Toast className="fixed bottom-5 right-5">
         <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
