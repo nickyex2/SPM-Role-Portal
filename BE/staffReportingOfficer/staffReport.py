@@ -68,7 +68,7 @@ def create_staff_reporting_officer():
 # @app.route("/getAllStaffReportingOfficers")
 # def get_all_staff_reporting_officers():
 #     staff_reporting_officers = StaffReportingOfficer.query.all()
-#     if len(staff_reporting_officers):
+#     if staff_reporting_officers:
 #         return jsonify(
 #             {
 #                 "code": 200,

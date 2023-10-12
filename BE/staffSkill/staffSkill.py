@@ -74,7 +74,7 @@ def create_staff_skill():
 @app.route("/getAllStaffSkills")
 def get_all_staff_skills():
     staff_skills = StaffSkill.query.all()
-    if len(staff_skills):
+    if staff_skills:
         return jsonify(
             {
                 "code": 200,
@@ -94,7 +94,7 @@ def get_all_staff_skills():
 @app.route("/getStaffSkills/<int:staff_id>")
 def get_staff_skills(staff_id):
     staff_skills = StaffSkill.query.filter_by(staff_id=staff_id).all()
-    if len(staff_skills):
+    if staff_skills:
         return jsonify(
             {
                 "code": 200,
@@ -178,7 +178,7 @@ def update_staff_skill(staff_id, skill_id):
 def get_staff_skills_by_skill(skill_id):
     staff_skills = StaffSkill.query.filter_by(skill_id=skill_id).all()
     
-    if len(staff_skills):
+    if staff_skills:
         return jsonify(
             {
                 "code": 200,
