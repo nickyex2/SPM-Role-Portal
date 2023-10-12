@@ -37,7 +37,9 @@ export default function List_Roles() {
 
   useEffect(() => {
     setLoading(true);
-    
+    if (sessionStorage.getItem("staff_id") === null || sessionStorage.getItem("staff_id") === undefined) {
+      router.push("/login");
+    }
     getAllRoles()
       .then((data) => {
         // Fetch details for all roles concurrently using Promise.all
@@ -57,7 +59,7 @@ export default function List_Roles() {
         console.error("Error fetching roles:", error);
         setLoading(false);
       });
-  }, []);
+  }, [router]);
   
   useEffect(() => {
     setSysRole(sessionStorage.getItem("sys_role") as string);
