@@ -8,10 +8,19 @@ import { useRouter } from 'next/navigation';
 import { Button } from 'flowbite-react';
 
 const Login:React.FC = () => {
-
   const router = useRouter();
   const check_staff_url = "http://localhost:5000/getAllStaff";
   const [email, setEmail] = useState<string>("");
+  async function getStaffSkills(staff_id: number): Promise<Array<Number>> {
+    const response = await axios.get(`http://localhost:5004/getStaffSkills/${staff_id}`)
+    const staffSkills: Array<Number> = [];
+    response.data.data?.staff_skills.forEach((staffSkill: TStaffSkill) => {
+      if (staffSkill.ss_status === "active") {
+        staffSkills.push(staffSkill.skill_id);
+      }
+    });
+    return staffSkills;
+  }
   useEffect(() => {
     if (sessionStorage.getItem("staff_id")) {
       router.push("/listroles");
@@ -35,7 +44,9 @@ const Login:React.FC = () => {
           sessionStorage.setItem("phone", staff[i].phone);
           sessionStorage.setItem("biz_address", staff[i].biz_address);
           sessionStorage.setItem("sys_role", staff[i].sys_role);
-
+          getStaffSkills(staff[i].staff_id).then((staffSkills) => {
+            sessionStorage.setItem("skills", JSON.stringify(staffSkills));
+          });
           console.log("Login successful");
           router.push("/listroles");
           return;

@@ -6,11 +6,15 @@ import { useEffect, useState } from "react";
 import SearchBar from "@/app/_components/SearchBar";
 import R__Navbar from "@/app/_components/R_Navbar";
 import Link from "next/link";
-import { Button, Table } from "flowbite-react";
-import { error } from "console";
+import { Button, Toast } from "flowbite-react";
+import { HiCheck } from "react-icons/hi";
+import AddListing from "@/app/_components/AddListing";
 
 export default function List_Roles() {
   const router = useRouter();
+  const [openModal, setOpenModal] = useState<string | undefined>();
+  const [showToast, setShowToast] = useState(false);
+  const props = { openModal, setOpenModal, showToast, setShowToast };
   const [roles, setRoles] = useState<Array<TRoleListing>>([]);
   const [roleDetails, setRoleDetails] = useState<Array<TRoleDetails>>([]);
   const [loading, setLoading] = useState(true);
@@ -75,7 +79,7 @@ export default function List_Roles() {
             <Button
               type="button"
               onClick={() => {
-                router.push("/listroles/add");
+                props.setOpenModal("pop-up-add");
               }}
               className="my-5 mx-auto"
             >
@@ -128,20 +132,23 @@ export default function List_Roles() {
                     ? role.role_listing_desc.slice(0, 200) + "..."
                     : role.role_listing_desc}
                   </p>
-                  {/* <div className='grid justify-items-end '>
-                    <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-right mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                      <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                      </svg>
-                      <span className="sr-only">Icon description</span>
-                    </button>
-                  </div> */}
-                </div>                    
-                
+                </div>
             </Link>
             );
           })}
         </div>
+        <AddListing props={props} staff_id={parseInt(sessionStorage.getItem("staff_id") as string)} />
+        {showToast ? (
+        <Toast className="fixed bottom-5 right-5">
+        <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
+          <HiCheck className="h-5 w-5" />
+        </div>
+        <div className="ml-3 text-sm font-normal">
+          Role Listing added successfully. Refresh page to see changes.
+        </div>
+        <Toast.Toggle onDismiss={() => props.setShowToast(false)} />
+      </Toast>
+      ): null}
       </div>
     </div>
     )

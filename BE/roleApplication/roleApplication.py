@@ -24,6 +24,7 @@ class RoleApplication(db.Model):
     role_listing_id = db.Column(db.Integer, nullable=False)
     staff_id = db.Column(db.Integer, nullable=False)
     role_app_status = db.Column(db.Enum(AppliedEnum), nullable=False)
+    role_app_ts_create = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=False)
 
     def __init__(self, role_listing_id, staff_id, role_app_status):
         self.role_listing_id = role_listing_id
@@ -35,9 +36,9 @@ class RoleApplication(db.Model):
             "role_app_id": self.role_app_id,
             "role_listing_id": self.role_listing_id,
             "staff_id": self.staff_id,
-            "role_app_status": self.role_app_status.name
+            "role_app_status": self.role_app_status.name,
+            "role_app_ts_create": self.role_app_ts_create
         }
-    
 # Create a new RoleApplication
 @app.route("/createRoleApplication", methods=["POST"])
 def create_role_application():
@@ -94,12 +95,12 @@ def get_all_role_applications():
 # Get RoleApplications by role_listing_id
 @app.route("/getRoleApplicationsListing/<int:role_listing_id>")
 def get_role_application(role_listing_id):
-    role_application = RoleApplication.query.filter_by(role_listing_id=role_listing_id)
+    role_application = RoleApplication.query.filter_by(role_listing_id=role_listing_id).all()
     if role_application:
         return jsonify(
             {
                 "code": 200,
-                "data": role_application.json()
+                "data": [role_app.json() for role_app in role_application]
             }
         )
     return jsonify(

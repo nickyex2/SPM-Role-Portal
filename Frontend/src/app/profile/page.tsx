@@ -10,7 +10,7 @@ export default function Profile() {
   const router = useRouter();
   // get manager, skills, and roles
   const [reportingOfficer, setReportingOfficer] = useState<TStaff>({
-    id: 0,
+    staff_id: 0,
     fname: "",
     lname: "",
     dept: "",
@@ -22,7 +22,7 @@ export default function Profile() {
   const [staffRoles, setStaffRoles] = useState<Array<TRoleDetails>>([]);
   const [staffSkills, setStaffSkills] = useState<Array<TSkillDetails>>([]);
   const [userProfile, setUserProfile] = useState<TStaff>({
-    id: 0,
+    staff_id: 0,
     fname: "",
     lname: "",
     dept: "",
@@ -70,7 +70,7 @@ export default function Profile() {
     }
     const staff_id = Number(sessionStorage.getItem("staff_id"));
     setUserProfile({
-      id: staff_id,
+      staff_id: staff_id,
       fname: sessionStorage.getItem("fname") as string,
       lname: sessionStorage.getItem("lname") as string,
       dept: sessionStorage.getItem("dept") as string,
