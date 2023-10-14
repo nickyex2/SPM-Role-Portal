@@ -4,11 +4,15 @@ import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Button, Toast, Dropdown } from "flowbite-react";
+import { Button, Toast, Dropdown, Spinner } from "flowbite-react";
 import { HiCheck } from "react-icons/hi";
 import AddListing from "@/app/_components/AddListing";
 
 import 'flowbite'
+
+type TSpecificRoleSkills = {
+  role_id: Array<number>,
+}
 
 export default function List_Roles() {
   const router = useRouter();
@@ -17,13 +21,17 @@ export default function List_Roles() {
   const props = { openModal, setOpenModal, showToast, setShowToast };
   const [roles, setRoles] = useState<Array<TRoleListing>>([]);
   const [roleDetails, setRoleDetails] = useState<Array<TRoleDetails>>([]);
+  const [initialRoles, setInitialRoles] = useState<Array<TRoleListing>>([]);
   const [loading, setLoading] = useState(true);
   const [sysRole, setSysRole] = useState<string>("");
   const [searchBy, setSearchBy] = useState<string>("Search by");
   const [skills, setSkills] = useState<Array<TSkillDetails>>([]);
-  const [roleSkills, setRoleSkills] = useState<Array<TRoleSkills>>([]);
+  const [initialSkills, setInitialSkills] = useState<Array<TSkillDetails>>([]);
+  const [roleSkills, setRoleSkills] = useState<Array<TSpecificRoleSkills>>([]);
   const getAllRolesURL = "http://localhost:5002/getAllRoleListings";
   const getRoleDetailsURL = "http://localhost:5003/getRoles";
+  const getAllSkillsURL = "http://localhost:5001/getAllSkills";
+  const getAllRoleSkillsURL = "http://localhost:5002/getAllRoleSkills"
 
   async function getAllRoles(): Promise<Array<TRoleListing>> {
     const response: AxiosResponse<TResponseData> = await axios.get(
@@ -42,7 +50,63 @@ export default function List_Roles() {
     return response.data.data;
   }
 
-  async function getAllSkills()
+  async function getAllSkills(): Promise<Array<TSkillDetails>> {
+    const response: AxiosResponse<TResponseData> = await axios.get(
+      getAllSkillsURL
+    );
+    return response.data.data?.skills;
+  }
+
+  async function getAllRoleSkills(role_ids: Array<Number>): Promise<Array<TSpecificRoleSkills>> {
+    const response: AxiosResponse<TResponseData> = await axios.get(
+      getAllRoleSkillsURL
+    );
+    return response.data.data
+  }
+
+  function handleSearch(searchInput: string) {
+    // let search = document.getElementById("search-dropdown") as HTMLInputElement;
+    // console.log(search.value);
+
+    let search = searchInput
+
+    if (searchBy === "Roles") {
+      if (search === "") {
+        setRoles(initialRoles);
+        return;
+      } else {
+        let filteredRoles = roles.filter((role) => {
+          return roleDetails.find((roleDetail) => roleDetail.role_id === role.role_id)?.role_name.toLowerCase().includes(search.toLowerCase());
+        });
+        console.log(filteredRoles);
+        setRoles(filteredRoles);
+      }
+      
+    } 
+    // else if (searchBy === "Skills") {
+    //   if (search === "") {
+    //     setRoles(initialRoles);
+    //     setSkills(initialSkills);
+    //     return;
+    //   } else {
+    //     let filteredSkills = skills.filter((skill) => {
+    //       return skill.skill_name.toLowerCase().includes(search.toLowerCase());
+    //     });
+    //     console.log(filteredSkills);
+    //     setSkills(filteredSkills);
+
+    //     let filteredRoleSkills = roleSkills.filter((roleSkill) => {
+    //       return filteredSkills.find((filteredSkill) => filteredSkill.skill_id === roleSkill.skill_id);
+    //     });
+    //     console.log(filteredRoleSkills);
+    //     let filteredRoles = roles.filter((role) => {
+    //       return filteredRoleSkills.find((filteredRoleSkill) => filteredRoleSkill.role_id === role.role_id);
+    //     });
+    //     console.log(filteredRoles);
+    //     setRoles(filteredRoles);
+    //   }
+    // }
+  }
 
   useEffect(() => {
     setLoading(true);
@@ -53,6 +117,7 @@ export default function List_Roles() {
       .then((data) => {
         // Fetch details for all roles concurrently using Promise.all
         setRoles(data);
+        setInitialRoles(data);
         let role_ids: Array<Number> = [];
         data.forEach((role) => {
           role_ids.push(role.role_id);
@@ -62,35 +127,47 @@ export default function List_Roles() {
             setRoleDetails(data);
             console.log(data);
           })
-        setLoading(false);
+        getAllRoleSkills(role_ids)
+          .then((data) => {
+            setRoleSkills(data);
+            console.log(data);
+          })
       })
       .catch((error) => {
         console.error("Error fetching roles:", error);
         setLoading(false);
       });
+
+    // getAllSkills()
+    // .then((data) => {
+    //   // Fetch details for all roles concurrently using Promise.all
+    //   setSkills(data);
+    //   setInitialSkills(data);
+      
+    // })
+    // .catch((error) => {
+    //   console.error("Error fetching Skills:", error);
+    //   setLoading(false);
+    // });
+    
+    setLoading(false);
   }, [router]);
   
   useEffect(() => {
     setSysRole(sessionStorage.getItem("sys_role") as string);
   }, []);
 
-  function handleSearch() {
-    let search = document.getElementById("search-dropdown") as HTMLInputElement;
-    if (searchBy === "Roles") {
-      let filteredRoles = roles.filter((role) => {
-        return roleDetails.find((roleDetail) => roleDetail.role_id === role.role_id)?.role_name.toLowerCase().includes(search.value.toLowerCase());
-      });
-      setRoles(filteredRoles);
-    } else if (searchBy === "Skills") {
-      let filteredRoles = roles.filter((role) => {
-        return roleDetails.find((roleDetail) => roleDetail.role_id === role.role_id)?.role_skills.toLowerCase().includes(search.value.toLowerCase());
-      });
-      setRoles(filteredRoles);
-    }
-  }
+  
 
   return (
-    loading ? ( <h1>Loading...</h1> ) : (
+    loading ? ( 
+      <div className='text-center'>
+          <Spinner
+          aria-label="Extra large spinner example"
+          size="xl"
+        /><h1>Loading...</h1>
+      </div>
+     ) : (
     <div>
 
 
@@ -136,19 +213,8 @@ export default function List_Roles() {
                       <div className='grow'>
                       <input type="search" id="search-dropdown" className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg border-l-gray-50 border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-l-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" placeholder="Select Search parameters to start searching!" required 
                       
-                      onChange={() => {
-                        let search = document.getElementById("search-dropdown") as HTMLInputElement;
-                        if (searchBy === "Roles") {
-                          let filteredRoles = roles.filter((role) => {
-                            return roleDetails.find((roleDetail) => roleDetail.role_id === role.role_id)?.role_name.toLowerCase().includes(search.value.toLowerCase());
-                          });
-                          setRoles(filteredRoles);
-                        } else if (searchBy === "Skills") {
-                          let filteredRoles = roles.filter((role) => {
-                            return roleDetails.find((roleDetail) => roleDetail.role_id === role.role_id)?.role_skills.toLowerCase().includes(search.value.toLowerCase());
-                          });
-                          setRoles(filteredRoles);
-                        }
+                      onChange={(e) => {
+                        handleSearch(e.target.value);
                       }}
 
                       />
