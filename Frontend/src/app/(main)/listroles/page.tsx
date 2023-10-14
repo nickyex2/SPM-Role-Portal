@@ -3,8 +3,6 @@ import React from "react";
 import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-// import SearchBar from "@/app/_components/SearchBar";
-import R__Navbar from "@/app/_components/R_Navbar";
 import Link from "next/link";
 import { Button, Toast, Dropdown } from "flowbite-react";
 import { HiCheck } from "react-icons/hi";
@@ -95,9 +93,6 @@ export default function List_Roles() {
     loading ? ( <h1>Loading...</h1> ) : (
     <div>
 
-    <script src="../node_modules/flowbite/dist/flowbite.min.js"></script>
-
-      <R__Navbar />
 
       {/* SearchBar */}
       <section className={`bg-center bg-no-repeat backgroundSearch bg-gray-700 bg-blend-multiply`}>
