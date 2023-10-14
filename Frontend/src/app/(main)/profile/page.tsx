@@ -3,7 +3,6 @@ import React from "react";
 import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import R__Navbar from "@/app/_components/R_Navbar";
 import { Button, Table } from "flowbite-react";
 
 export default function Profile() {
@@ -105,7 +104,6 @@ export default function Profile() {
   }, [router])
   return (
     <div>
-      <R__Navbar />
       <div className="mx-auto w-3/4 mt-5">
         <Table className="profile">
           <Table.Head>

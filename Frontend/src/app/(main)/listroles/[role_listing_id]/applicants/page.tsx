@@ -3,7 +3,6 @@ import React from 'react';
 import axios, { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
 import { Button, Modal, Table } from 'flowbite-react';
-import R_Navbar from '@/app/_components/R_Navbar';
 import { useRouter } from 'next/navigation';
 import { HiOutlineArrowLeft } from 'react-icons/hi';
 
@@ -45,7 +44,6 @@ export default function Role_Applicants( { params } : { params: { role_listing_i
   }, [role_listing_id])
   return (
     <div>
-      <R_Navbar/>
       <div className='mx-auto w-3/4 mt-10'>
         <Button className='mb-5' onClick={() => {
           router.push(`/listroles/${role_listing_id}`)
