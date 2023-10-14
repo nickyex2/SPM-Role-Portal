@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Badge, Button, Modal, Toast } from "flowbite-react";
 import { useRouter } from "next/navigation";
-import R_Navbar from "@/app/_components/R_Navbar";
 import { HiOutlineCheckCircle, HiCheck } from 'react-icons/hi'
 import EditListing from "@/app/_components/EditListing";
 
@@ -152,7 +151,6 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
   return (
     loading ? ( <h1>Loading...</h1> ) : (
     <div>
-      <R_Navbar></R_Navbar>
       <div className="mt-5 flex mb-3">
         {roleSkillsDetails.map((roleSkill, idx) => {
           if (currUserSkills.includes(roleSkill.skill_id)) {

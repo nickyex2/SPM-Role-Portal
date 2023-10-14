@@ -4,7 +4,6 @@ import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import SearchBar from "@/app/_components/SearchBar";
-import R__Navbar from "@/app/_components/R_Navbar";
 import Link from "next/link";
 import { Button, Toast } from "flowbite-react";
 import { HiCheck } from "react-icons/hi";
@@ -72,7 +71,6 @@ export default function List_Roles() {
   return (
     loading ? ( <h1>Loading...</h1> ) : (
     <div>
-      <R__Navbar />
       <SearchBar />
       <div className="flex items-stretch h-screen flex-col">
           {sysRole === "hr" || sysRole === "manager" ? (
