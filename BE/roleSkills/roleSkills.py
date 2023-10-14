@@ -132,6 +132,41 @@ def delete_role_skills(role_id, skill_id):
                 "message": f"Failed to delete RoleSkills association with role_id {role_id} and skill_id {skill_id}. Error: {str(e)}"
             }
         ), 400
+
+
+@app.route("/getSpecificRoleSkills", methods=["POST"])
+def get_specific_role_skills():
+    try:
+        data = request.get_json()
+        role_ids = data.get("role_id")
+        role_skills = RoleSkills.query.filter(RoleSkills.role_id.in_(role_ids)).all()
+        returnDict = {}
+        for rs in role_skills:
+            if rs.role_id in returnDict:
+                returnDict[rs.role_id].append(rs.json().get("skill_id"))
+            else:
+                returnDict[rs.role_id] = [rs.json().get("skill_id")]
+        if role_skills:
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": returnDict
+                }
+            ), 200
+        else:
+            return jsonify(
+                {
+                    "code": 404,
+                    "message": f"No RoleSkills association found with role_ids."
+                }
+            ), 404
+    except Exception as e:
+        return jsonify(
+            {
+                "code": 400,
+                "message": f"Error: {str(e)}"
+            }
+        ), 400
     
 if __name__ == '__main__':
 # host=’0.0.0.0’ allows the service to be accessible from any other in the network 
