@@ -8,6 +8,7 @@ type TStaff = {
     lname: string;
     dept: string;
     email: string;
+    biz_address: string;
     phone: string;
     sys_role: string;
 }

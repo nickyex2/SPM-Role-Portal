@@ -12,14 +12,14 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
   const router = useRouter();
   const [openModal, setOpenModal] = useState<string | undefined>(undefined);
   const [showToast, setShowToast] = useState(false);
-  const props = { openModal, setOpenModal, showToast, setShowToast };
   const [currUserSkills, setCurrUserSkills] = useState<Array<Number>>([]);
   const [skillMatchCounter, setSkillMatchCounter] = useState<number>(0);
-  const [role, setRole] = useState<TRoleListing>();
+  const [role, setRole] = useState<TRoleListing>({} as TRoleListing);
   const [roleDetails, setRoleDetails] = useState<TRoleDetails>();
   const [roleSkillsDetails, setRoleSkillsDetails] = useState<Array<TSkillDetails>>([]);
   const [roleListingChanges, setRoleListingChanges] = useState<Array<TRoleListingChanges>>([]);
   const [appliedRole, setAppliedRole] = useState<TRoleApplication | undefined>(undefined);
+  const props = { openModal, setOpenModal, showToast, setShowToast, setRole, setRoleListingChanges };
   const [loading, setLoading] = useState(true);
   async function getRoleDetails(): Promise<TRoleDetails> {
     const response: AxiosResponse<TResponseData> = await axios.get(
@@ -328,7 +328,7 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
           <HiCheck className="h-5 w-5" />
         </div>
         <div className="ml-3 text-sm font-normal">
-          Role Listing edited successfully. Refresh page to see changes.
+          Role Listing edited successfully.
         </div>
         <Toast.Toggle onDismiss={() => props.setShowToast(false)} />
       </Toast>

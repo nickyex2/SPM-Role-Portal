@@ -13,11 +13,11 @@ export default function List_Roles() {
   const router = useRouter();
   const [openModal, setOpenModal] = useState<string | undefined>();
   const [showToast, setShowToast] = useState(false);
-  const props = { openModal, setOpenModal, showToast, setShowToast };
   const [roles, setRoles] = useState<Array<TRoleListing>>([]);
   const [roleDetails, setRoleDetails] = useState<Array<TRoleDetails>>([]);
   const [loading, setLoading] = useState(true);
   const [sysRole, setSysRole] = useState<string>("");
+  const props = { openModal, setOpenModal, showToast, setShowToast, setRoles, setRoleDetails };
   const getAllRolesURL = "http://localhost:5002/getAllRoleListings";
   const getRoleDetailsURL = "http://localhost:5003/getRoles";
 
@@ -142,7 +142,7 @@ export default function List_Roles() {
           <HiCheck className="h-5 w-5" />
         </div>
         <div className="ml-3 text-sm font-normal">
-          Role Listing added successfully. Refresh page to see changes.
+          Role Listing added successfully.
         </div>
         <Toast.Toggle onDismiss={() => props.setShowToast(false)} />
       </Toast>
