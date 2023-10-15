@@ -18,7 +18,7 @@ export default function Role_Listing_Edit({
     setOpenModal: React.Dispatch<React.SetStateAction<string | undefined>>;
     showToast: boolean;
     setShowToast: React.Dispatch<React.SetStateAction<boolean>>;
-    setRole: React.Dispatch<React.SetStateAction<TRoleListing>>;
+    setRole: React.Dispatch<React.SetStateAction<TRoleListing|undefined>>;
     setRoleListingChanges: React.Dispatch<React.SetStateAction<TRoleListingChanges[]>>;
   };
 }) {

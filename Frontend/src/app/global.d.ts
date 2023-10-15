@@ -102,3 +102,7 @@ type TRoleApplicant = {
 type TSpecificRoleSkills = {
   [key: string]: number[]
 }
+
+type TSpecificStaffSkills = {
+  [key: string]: number[]
+}

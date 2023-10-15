@@ -195,5 +195,38 @@ def get_staff_skills_by_skill(skill_id):
         }
     ), 404
     
+@app.route("/getSpecificStaffSkills", methods=["POST"])
+def get_specific_staff_skills():
+    try:
+        data = request.get_json()
+        staff_ids = data.get("staff_ids")
+        staff_skills = StaffSkill.query.filter(StaffSkill.staff_id.in_(staff_ids)).all()
+        returnDict = {ss: [] for ss in staff_ids}
+        for ss in staff_skills:
+            if ss.staff_id in returnDict:
+                returnDict[ss.staff_id].append(ss.json().get("skill_id"))
+            else:
+                returnDict[ss.staff_id] = [ss.json().get("skill_id")]
+        if staff_skills:
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": returnDict
+                }
+            ), 200
+        else:
+            return jsonify(
+                {
+                    "code": 404,
+                    "message": f"No StaffSkills association found with staff_ids."
+                }
+            ), 404
+    except Exception as e:
+        return jsonify(
+            {
+                "code": 400,
+                "message": f"Error: {str(e)}"
+            }
+        ), 400
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=os.environ.get('PORT'), debug=True)
