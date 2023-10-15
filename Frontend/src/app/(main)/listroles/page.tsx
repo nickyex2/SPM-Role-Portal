@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Button, Toast, Dropdown, Spinner } from "flowbite-react";
 import { HiCheck } from "react-icons/hi";
 import AddListing from "@/app/_components/AddListing";
+import Loading from "@/app/_components/Loading";
 
 import 'flowbite'
 
@@ -161,12 +162,7 @@ export default function List_Roles() {
 
   return (
     loading ? ( 
-      <div className='text-center'>
-          <Spinner
-          aria-label="Extra large spinner example"
-          size="xl"
-        /><h1>Loading...</h1>
-      </div>
+      <Loading />
      ) : (
     <div>
 
@@ -204,7 +200,7 @@ export default function List_Roles() {
                         
                     <div className="relative w-full flex flex-row">
                       <div>
-                      <Dropdown label={searchBy} dismissOnClick={true}>
+                      <Dropdown label={searchBy} dismissOnClick={true} className='rounded-r-none'>
                           <Dropdown.Item onClick={() => setSearchBy("Roles")}>Roles</Dropdown.Item>
                           <Dropdown.Item onClick={() => setSearchBy("Skills")}>Skills</Dropdown.Item>
                       </Dropdown>
