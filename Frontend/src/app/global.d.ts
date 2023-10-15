@@ -98,3 +98,7 @@ type TRoleApplicant = {
   role_app_status: string,
   role_app_ts_create: EpochTimeStamp
 }
+
+type TSpecificRoleSkills = {
+  [key: string]: number[]
+}
