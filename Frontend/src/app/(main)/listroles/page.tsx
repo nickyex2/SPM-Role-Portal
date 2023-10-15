@@ -32,6 +32,7 @@ export default function List_Roles() {
   const [roleSkills, setRoleSkills] = useState<TSpecificRoleSkills>({});
   const [initailRoleSkills, setInitialRoleSkills] =
     useState<TSpecificRoleSkills>({});
+  const [currUserSkills, setCurrUserSkills] = useState<Array<number>>([]);
   const getAllRolesURL = "http://localhost:5002/getAllRoleListings";
   const getRoleDetailsURL = "http://localhost:5003/getRoles";
   const getAllSkillsURL = "http://localhost:5001/getAllSkills";
@@ -137,6 +138,7 @@ export default function List_Roles() {
     ) {
       router.push("/login");
     }
+    setCurrUserSkills(JSON.parse(sessionStorage.getItem("skills") as string));
     getAllRoles()
       .then((data) => {
         // Fetch details for all roles concurrently using Promise.all
@@ -376,6 +378,18 @@ export default function List_Roles() {
                     {role.role_listing_desc.length > 200
                       ? role.role_listing_desc.slice(0, 200) + "..."
                       : role.role_listing_desc}
+                  </p>
+                </div>
+                {/* role skill match % */}
+                <div className="col-span-3">
+                  <p className="font-normal text-gray-700 dark:text-gray-400">
+                    Skill Match %:
+                    <br />
+                    {
+                      (roleSkills[role.role_id]?.filter((skill) =>
+                        currUserSkills.includes(skill)
+                      ).length / roleSkills[role.role_id]?.length * 100 || 0) 
+                    } %
                   </p>
                 </div>
               </Link>
