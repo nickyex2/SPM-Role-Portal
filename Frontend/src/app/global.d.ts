@@ -8,6 +8,7 @@ type TStaff = {
     lname: string;
     dept: string;
     email: string;
+    biz_address: string;
     phone: string;
     sys_role: string;
 }
@@ -96,4 +97,12 @@ type TRoleApplicant = {
   staff_id: number,
   role_app_status: string,
   role_app_ts_create: EpochTimeStamp
+}
+
+type TSpecificRoleSkills = {
+  [key: string]: number[]
+}
+
+type TSpecificStaffSkills = {
+  [key: string]: number[]
 }

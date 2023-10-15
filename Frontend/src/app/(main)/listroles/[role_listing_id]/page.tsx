@@ -12,14 +12,14 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
   const router = useRouter();
   const [openModal, setOpenModal] = useState<string | undefined>(undefined);
   const [showToast, setShowToast] = useState(false);
-  const props = { openModal, setOpenModal, showToast, setShowToast };
   const [currUserSkills, setCurrUserSkills] = useState<Array<Number>>([]);
   const [skillMatchCounter, setSkillMatchCounter] = useState<number>(0);
-  const [role, setRole] = useState<TRoleListing>();
-  const [roleDetails, setRoleDetails] = useState<TRoleDetails>();
+  const [role, setRole] = useState<TRoleListing | undefined>(undefined);
+  const [roleDetails, setRoleDetails] = useState<TRoleDetails | undefined>(undefined);
   const [roleSkillsDetails, setRoleSkillsDetails] = useState<Array<TSkillDetails>>([]);
   const [roleListingChanges, setRoleListingChanges] = useState<Array<TRoleListingChanges>>([]);
   const [appliedRole, setAppliedRole] = useState<TRoleApplication | undefined>(undefined);
+  const props = { openModal, setOpenModal, showToast, setShowToast, setRole, setRoleListingChanges };
   const [loading, setLoading] = useState(true);
   async function getRoleDetails(): Promise<TRoleDetails> {
     const response: AxiosResponse<TResponseData> = await axios.get(
@@ -247,7 +247,7 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
               id="role_listing_open" 
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
               placeholder="Role Opening Date"
-              defaultValue={role?.role_listing_open.toString() || ''} 
+              defaultValue={role?.role_listing_open || ''} 
               required 
             />
           </div>
@@ -259,7 +259,7 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
               id="skills_required" 
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
               placeholder="Skills Required"
-              defaultValue={role?.role_listing_open.toString() || ''} 
+              defaultValue={role?.role_listing_open || ''} 
               required 
             />
           </div>          
@@ -328,7 +328,7 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
           <HiCheck className="h-5 w-5" />
         </div>
         <div className="ml-3 text-sm font-normal">
-          Role Listing edited successfully. Refresh page to see changes.
+          Role Listing edited successfully.
         </div>
         <Toast.Toggle onDismiss={() => props.setShowToast(false)} />
       </Toast>

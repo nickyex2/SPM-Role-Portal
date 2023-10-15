@@ -5,16 +5,40 @@ import { useEffect, useState } from "react";
 import { Button, Modal, Table } from 'flowbite-react';
 import { useRouter } from 'next/navigation';
 import { HiOutlineArrowLeft } from 'react-icons/hi';
+import Modal_Staff from '@/app/_components/ModalStaff';
 
 export default function Role_Applicants( { params } : { params: { role_listing_id: string } }) {
   const router = useRouter();
   const role_listing_id = params.role_listing_id;
   const [openModal, setOpenModal] = useState<string | undefined>();
-  const props = { openModal, setOpenModal };
   const [modalStaff, setModalStaff] = useState<TStaff>();
+  const [modalSkills, setModalSkills] = useState<TSkillDetails[]>([]);
   const [roleApplicants, setRoleApplicants] = useState<Array<TRoleApplicant>>([]);
-  const [applicantDetails, setApplicantDetails] = useState<Array<TStaff>>([]); 
+  const [applicantDetails, setApplicantDetails] = useState<Array<TStaff>>([]);
+  const [applicantSkills, setApplicantSkills] = useState<TSpecificStaffSkills>({}); // [ { staff_id: 1, skills: [ { skill_id: 1, skill_name: 'skill_name', skill_level: 1 } ] }
+  const [role, setRole] = useState<TRoleListing | undefined>(undefined);
+  const [roleSkills, setRoleSkills] = useState<Array<TRoleSkills>>([]); 
+  const [skills, setSkills] = useState<Array<TSkillDetails>>([]);
   const [loading, setLoading] = useState(true);
+  const props = { openModal, setOpenModal, modalStaff, modalSkills };
+  async function getAllSkills(): Promise<Array<TSkillDetails>> {
+    const response: AxiosResponse<TResponseData> = await axios.get(
+      `http://localhost:5001/getAllSkills`
+    );
+    return response.data.data?.skills;
+  }
+  async function getRoleListing(role_listing_id: number): Promise<TRoleListing> {
+    const response: AxiosResponse<TResponseData> = await axios.get(
+      `http://localhost:5002/getRoleListing/${role_listing_id}`
+    );
+    return response.data.data;
+  }
+  async function getRoleSkills(role_id: number): Promise<Array<TRoleSkills>> {
+    const response: AxiosResponse<TResponseData> = await axios.get(
+      `http://localhost:5008/getRoleSkills/${role_id}`
+    );
+    return response.data.data?.role_skills;
+  }
   async function getRoleApplicants(role_listing_id: number): Promise<Array<TRoleApplicant>> {
     const response: AxiosResponse<TResponseData> = await axios.get(
       `http://localhost:5005/getRoleApplicationsListing/${role_listing_id}`
@@ -28,8 +52,24 @@ export default function Role_Applicants( { params } : { params: { role_listing_i
     );
     return response.data.data?.staff;
   }
+  async function getMultipleStaffSkills(staff_ids: Array<number>): Promise<TSpecificStaffSkills> {
+    const response: AxiosResponse<TResponseData> = await axios.post(
+      `http://localhost:5004/getSpecificStaffSkills`,
+      { staff_ids: staff_ids }
+    );
+    return response.data.data;
+  }
   useEffect(() => {
     setLoading(true);
+    getAllSkills().then((skills: Array<TSkillDetails>) => {
+      setSkills(skills);
+    });
+    getRoleListing(Number(role_listing_id)).then((role: TRoleListing) => {
+      setRole(role);
+      getRoleSkills(role.role_id).then((roleSkills: Array<TRoleSkills>) => {
+        setRoleSkills(roleSkills);
+      });
+    });
     getRoleApplicants(Number(role_listing_id)).then((roleApplicants: Array<TRoleApplicant>) => {
       setRoleApplicants(roleApplicants);
       const staff_ids: Array<number> = [];
@@ -38,6 +78,9 @@ export default function Role_Applicants( { params } : { params: { role_listing_i
       });
       getMultipleStaff(staff_ids).then((staff: Array<TStaff>) => {
         setApplicantDetails(staff);
+      });
+      getMultipleStaffSkills(staff_ids).then((staffSkills: TSpecificStaffSkills) => {
+        setApplicantSkills(staffSkills);
       });
       setLoading(false);
     });
@@ -87,9 +130,28 @@ export default function Role_Applicants( { params } : { params: { role_listing_i
             ) : (
               roleApplicants.map((roleApplicant: TRoleApplicant) => {
                 const applicantDetail: TStaff | undefined = applicantDetails.find((staff: TStaff) => {
-                  console.log(staff.staff_id, roleApplicant.staff_id)
                   return staff.staff_id === roleApplicant.staff_id;
                 });
+                const applicantSkill: number[] = applicantSkills[roleApplicant.staff_id];
+                const applicantSkillDetails: TSkillDetails[] = [];
+                let applicantSkillPercentage: number = 0;
+                if (applicantSkill) {
+                  applicantSkill.forEach((skill_id: number) => {
+                    const skillDetail: TSkillDetails | undefined = skills.find((skill: TSkillDetails) => {
+                      return skill.skill_id === skill_id;
+                    });
+                    if (skillDetail) {
+                      applicantSkillDetails.push(skillDetail);
+                    }
+                  });
+                  let matchSkills = [];
+                  roleSkills.forEach((roleSkill: TRoleSkills) => {
+                    if (applicantSkill.includes(roleSkill.skill_id)) {
+                      matchSkills.push(roleSkill);
+                    }
+                  });
+                  applicantSkillPercentage = (matchSkills.length / roleSkills.length) * 100;
+                }
                 return (
                   <Table.Row key={roleApplicant.role_app_id}>
                     <Table.Cell>
@@ -111,11 +173,12 @@ export default function Role_Applicants( { params } : { params: { role_listing_i
                       <span>{roleApplicant.role_app_ts_create.toLocaleString()}</span>
                     </Table.Cell>
                     <Table.Cell>
-                      
+                      {applicantSkillPercentage}%
                     </Table.Cell>
                     <Table.Cell>
                       <Button size="xs" onClick={() => {
                         setModalStaff(applicantDetail as TStaff);
+                        setModalSkills(applicantSkillDetails);
                         props.setOpenModal('pop-up-profile');
                       }}>View Profile</Button>
                     </Table.Cell>
@@ -125,23 +188,7 @@ export default function Role_Applicants( { params } : { params: { role_listing_i
             )}
           </Table.Body>
         </Table>
-        <Modal show={props.openModal === 'pop-up-profile'} size="md" popup onClose={() => props.setOpenModal(undefined)}>
-          <Modal.Header />
-          <Modal.Body>
-            <div className="text-center">
-              <h1 className="text-3xl font-bold">Profile</h1>
-              <p>{modalStaff?.lname} {modalStaff?.fname}</p>
-              <p>{modalStaff?.email}</p>
-              <p>{modalStaff?.dept}</p>
-              <p>{modalStaff?.phone}</p>
-              <div className="flex justify-center gap-4">
-                <Button onClick={() => props.setOpenModal(undefined)}>
-                  {`Back To All Applicants`}
-                </Button>
-              </div>
-            </div>
-          </Modal.Body>
-        </Modal>
+        <Modal_Staff props={props} />
       </div>
     </div>
   )
