@@ -14,6 +14,8 @@ export default function Add_New_Role_Listing({
     setOpenModal: React.Dispatch<React.SetStateAction<string | undefined>>;
     showToast: boolean;
     setShowToast: React.Dispatch<React.SetStateAction<boolean>>;
+    setRoles: React.Dispatch<React.SetStateAction<TRoleListing[]>>;
+    setRoleDetails: React.Dispatch<React.SetStateAction<TRoleDetails[]>>;
   };
   staff_id: number;
 }) {
@@ -35,14 +37,26 @@ export default function Add_New_Role_Listing({
     role_listing_updater: staff_id,
     role_listing_ts_update: 0,
   });
+  async function getRoleDetails(role_id: number): Promise<TRoleDetails> {
+    const response: AxiosResponse<TResponseData> = await axios.get(
+      `http://localhost:5003/getRole/${role_id}`
+    );
+    return response.data.data;
+  }
   async function handleAddRoleListing() {
     console.log(roleListing);
     const response: AxiosResponse<TResponseData> = await axios.post(
       "http://localhost:5002/createRoleListing",
       roleListing
     );
-    if (response.status === 201) {
+    const role_details: TRoleDetails | undefined = await getRoleDetails(roleListing.role_id);
+    if (response.status === 201 && role_details ) {
       props.setOpenModal(undefined);
+      props.setRoles((prevRoles) => [roleListing, ...prevRoles]);
+      props.setRoleDetails((prevDetails) => [
+        role_details,
+        ...prevDetails
+      ]);
       props.setShowToast(true);
     }
   }

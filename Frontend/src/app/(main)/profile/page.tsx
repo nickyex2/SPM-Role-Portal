@@ -16,6 +16,7 @@ export default function Profile() {
     dept: "",
     email: "",
     phone: "",
+    biz_address: "",
     sys_role: ""
   });
   const [staffRoleIDs, setStaffRoleIDs] = useState<Array<TStaffRole>>([]);
@@ -28,6 +29,7 @@ export default function Profile() {
     dept: "",
     email: "",
     phone: "",
+    biz_address: "",
     sys_role: ""
   });
   const [loading, setLoading] = useState(true);
@@ -76,7 +78,8 @@ export default function Profile() {
       dept: sessionStorage.getItem("dept") as string,
       email: sessionStorage.getItem("email") as string,
       phone: sessionStorage.getItem("phone") as string,
-      sys_role: sessionStorage.getItem("sys_role") as string
+      sys_role: sessionStorage.getItem("sys_role") as string,
+      biz_address: sessionStorage.getItem("biz_address") as string
     });
     getReportingOfficer(staff_id)
       .then((data) => {

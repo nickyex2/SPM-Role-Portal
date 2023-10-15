@@ -18,6 +18,8 @@ export default function Role_Listing_Edit({
     setOpenModal: React.Dispatch<React.SetStateAction<string | undefined>>;
     showToast: boolean;
     setShowToast: React.Dispatch<React.SetStateAction<boolean>>;
+    setRole: React.Dispatch<React.SetStateAction<TRoleListing|undefined>>;
+    setRoleListingChanges: React.Dispatch<React.SetStateAction<TRoleListingChanges[]>>;
   };
 }) {
   const router = useRouter();
@@ -26,6 +28,12 @@ export default function Role_Listing_Edit({
   useEffect(() => {
     setEditingStaffID(sessionStorage.getItem("staff_id") as string);
   }, []);
+  async function getChanges(role_listing_id: number): Promise<Array<TRoleListingChanges>> {
+    const response: AxiosResponse<TResponseData> = await axios.get(
+      `http://localhost:5002/getRoleListingChanges/${role_listing_id}`
+    );
+    return response.data.data?.role_listing_changes;
+  }
   async function submitEditedRoleListing() {
     // need to add in updater id and updater timestamp into state
     console.log(role);
@@ -39,28 +47,17 @@ export default function Role_Listing_Edit({
         role
       );
       if (response.data.code === 200) {
+        const changes: Array<TRoleListingChanges> = await getChanges(role_listing_id);
         props.setOpenModal(undefined);
+        props.setRole(role);
+        props.setRoleListingChanges(changes);
         props.setShowToast(true);
       };
     }
     catch (error) {
       console.log(error);
     };
-  }
-  // useEffect(() => {
-  //   async function getRoleListing(): Promise<TRoleListing> {
-  //     const response: AxiosResponse<TResponseData> = await axios.get(
-  //       `http://localhost:5002/getRoleListing/${params.role_listing_id}`
-  //     );
-  //     return response.data.data;
-  //   }
-  //   setLoading(true);
-  //   getRoleListing().then((data) => {
-  //     setRole(data);
-  //     console.log(data);
-  //   });
-  //   setLoading(false);
-  // }, [params.role_listing_id]);
+  };
 
   return (
     <Modal
