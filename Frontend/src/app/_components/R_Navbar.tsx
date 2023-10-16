@@ -50,7 +50,7 @@ export default function R_Navbar() {
         <Navbar.Link href="/listroles">Jobs</Navbar.Link>
         <Navbar.Link href="/Skills">Skills</Navbar.Link>
         {staff.sys_role === "hr" ? (
-          <Navbar.Link href="/staff">Search</Navbar.Link>
+          <Navbar.Link href="/search">Search</Navbar.Link>
         ) : null}
       </Navbar.Collapse>
 
