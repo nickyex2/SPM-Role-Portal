@@ -13,6 +13,7 @@ export default function R_Navbar() {
     lname: "",
     email: "",
     staff_id: "",
+    sys_role: "",
   });
   useEffect(() => {
     setStaff({
@@ -20,6 +21,7 @@ export default function R_Navbar() {
       lname: sessionStorage.getItem("lname") as string,
       email: sessionStorage.getItem("email") as string,
       staff_id: sessionStorage.getItem("staff_id") as string,
+      sys_role: sessionStorage.getItem("sys_role") as string,
     })
   }, []);
   function logout() {
@@ -47,6 +49,9 @@ export default function R_Navbar() {
         </Navbar.Link>
         <Navbar.Link href="/listroles">Jobs</Navbar.Link>
         <Navbar.Link href="/Skills">Skills</Navbar.Link>
+        {staff.sys_role === "hr" ? (
+          <Navbar.Link href="/staff">Search</Navbar.Link>
+        ) : null}
       </Navbar.Collapse>
 
       <div className="flex md:order-2">
