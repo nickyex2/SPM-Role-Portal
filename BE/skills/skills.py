@@ -38,7 +38,7 @@ class Skill(db.Model):
 @app.route("/getAllSkills")
 def get_all():
     Skills = Skill.query.all()
-    if len(Skills):
+    if Skills:
         return jsonify(
             {
                 "code": 200,
@@ -69,6 +69,26 @@ def find_by_id(skill_id):
         {
             "code": 404,
             "message": "Skill not found."
+        }
+    ), 404
+
+#get skills by skill_ids
+@app.route("/getSkills", methods=['POST'])
+def find_by_ids():
+    data = request.get_json(force=True)
+    skill_ids = data['skill_ids']
+    skills = Skill.query.filter(Skill.skill_id.in_(skill_ids)).all()
+    if skills:
+        return jsonify(
+            {
+                "code": 200,
+                "data": [skill.json() for skill in skills]
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "Skills not found."
         }
     ), 404
 

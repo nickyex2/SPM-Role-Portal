@@ -10,20 +10,10 @@ import json
 
 load_dotenv()
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/spm'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('dbURL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# check os and change sql setting respectively
-# my_os=sys.platform
-# if my_os == "darwin":
-#     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/skillset'
-# elif my_os == "win32" or my_os == "win64":
-#     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/skillset'
-
 db = SQLAlchemy(app)
-
-CORS(app, allow_headers=['Content-Type', 'Access-Control-Allow-Origin',
-                        'Access-Control-Allow-Headers', 'Access-Control-Allow-Methods'])
+CORS(app)
 
 class RoleSkills(db.Model):
     __tablename__ = 'ROLE_SKILLS'
@@ -77,7 +67,7 @@ def create_role_skills():
 @app.route("/getAllRoleSkills")
 def get_all_role_skills():
     role_skills = RoleSkills.query.all()
-    if len(role_skills):
+    if role_skills:
         return jsonify(
             {
                 "code": 200,
@@ -97,7 +87,7 @@ def get_all_role_skills():
 @app.route("/getRoleSkills/<int:role_id>")
 def get_role_skills_by_role_id(role_id):
     role_skills = RoleSkills.query.filter_by(role_id=role_id).all()
-    if len(role_skills):
+    if role_skills:
         return jsonify(
             {
                 "code": 200,
@@ -113,6 +103,40 @@ def get_role_skills_by_role_id(role_id):
         }
     ), 404
 
+@app.route("/getSpecificRoleSkills", methods=["POST"])
+def get_specific_role_skills():
+    try:
+        data = request.get_json()
+        role_ids = data.get("role_ids")
+        role_skills = RoleSkills.query.filter(RoleSkills.role_id.in_(role_ids)).all()
+        returnDict = {rs: [] for rs in role_ids}
+        for rs in role_skills:
+            if rs.role_id in returnDict:
+                returnDict[rs.role_id].append(rs.json().get("skill_id"))
+            else:
+                returnDict[rs.role_id] = [rs.json().get("skill_id")]
+        if role_skills:
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": returnDict
+                }
+            ), 200
+        else:
+            return jsonify(
+                {
+                    "code": 404,
+                    "message": f"No RoleSkills association found with role_ids."
+                }
+            ), 404
+    except Exception as e:
+        return jsonify(
+            {
+                "code": 400,
+                "message": f"Error: {str(e)}"
+            }
+        ), 400
+    
 # Delete a RoleSkills association by role_id and skill_id
 @app.route("/deleteRoleSkills/<int:role_id>/<int:skill_id>", methods=["DELETE"])
 def delete_role_skills(role_id, skill_id):
@@ -146,4 +170,4 @@ def delete_role_skills(role_id, skill_id):
 if __name__ == '__main__':
 # host=’0.0.0.0’ allows the service to be accessible from any other in the network 
 # and not only from your own computer
-    app.run(host='0.0.0.0', port=5008, debug=True)
+    app.run(host='0.0.0.0', port=os.environ.get('PORT'), debug=True)

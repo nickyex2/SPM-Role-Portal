@@ -49,7 +49,7 @@ class Staff(db.Model):
 @app.route("/getAllStaff")
 def get_all():
     staffProfile = Staff.query.all()
-    if len(staffProfile):
+    if staffProfile:
         return jsonify(
             {
                 "code": 200,
@@ -74,6 +74,26 @@ def find_by_id(staff_id):
             {
                 "code": 200,
                 "data": staff.json()
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "Staff not found."
+        }
+    ), 404
+
+@app.route("/getMultipleStaff", methods=['POST'])
+def get_multiple_staff():
+    staff_id_list = request.get_json(force=True)['staff_ids']
+    staff = Staff.query.filter(Staff.staff_id.in_(staff_id_list)).all()
+    if staff:
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "staff": [staff.json() for staff in staff]
+                }
             }
         )
     return jsonify(
