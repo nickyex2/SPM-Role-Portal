@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import axios, { AxiosResponse } from "axios";
 import { Modal, Button } from "flowbite-react";
+import { HiUser } from "react-icons/hi";
 
 export default function Modal_Staff({
   props,
@@ -51,13 +52,7 @@ export default function Modal_Staff({
     <Modal show={props.openModal === 'pop-up-profile'} size="md" popup onClose={() => props.setOpenModal(undefined)}>
           <Modal.Header>
           <div className="flex flex-row items-right gap-4">
-                  <img
-                    alt="profile"
-                    className="mb-0 rounded-full shadow-lg"
-                    height="96"
-                    src="/images/people/profile-picture-3.jpg"
-                    width="96"
-                  />
+          <HiUser className='mb-3 rounded-full shadow-lg' size={96}/>
                   <div className='my-auto'>
                     <div className='flex flex-col'>
                       <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
@@ -70,7 +65,7 @@ export default function Modal_Staff({
                         {staffRoles.map((role, idx) => {
                           return (
                             
-                              <span>{role.role_name} </span>
+                              <span key={idx}>{role.role_name} </span>
                             
                           )
                         }

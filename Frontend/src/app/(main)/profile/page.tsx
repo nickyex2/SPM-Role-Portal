@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button, Table, Card, Badge } from "flowbite-react";
 import Loading from "../../_components/Loading";
+import { HiUser } from "react-icons/hi";
 
 export default function Profile() {
   const router = useRouter();
@@ -119,13 +120,15 @@ export default function Profile() {
             <Card>
               <div className="flex justify-center px-4 pt-4">
               <div className="flex flex-col items-center pb-10">
-                  <img
+                  {/* <Image
                     alt="profile"
                     className="mb-3 rounded-full shadow-lg"
-                    height="96"
-                    src="/images/people/profile-picture-3.jpg"
-                    width="96"
-                  />
+                    height={96}
+                    src="./././public/images/assets/vercel.svg"
+                    width={96}
+                  /> */}
+                  <HiUser className='mb-3 rounded-full shadow-lg' size={96}/>
+                  
                   <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
                     {userProfile.fname} {userProfile.lname}
                   </h5>
