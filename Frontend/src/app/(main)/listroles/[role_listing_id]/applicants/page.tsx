@@ -88,11 +88,12 @@ export default function Role_Applicants( { params } : { params: { role_listing_i
   return (
     <div>
       <div className='mx-auto w-3/4 mt-10'>
-        <Button className='mb-5' onClick={() => {
+        {/* <Button className='mb-5' onClick={() => {
           router.push(`/listroles/${role_listing_id}`)
         }}>
           <HiOutlineArrowLeft className="h-6 w-6" />
-        </Button>
+        </Button> */}
+        <h1 className='text-3xl font-bold mb-4'>All Applicants</h1>
         <Table>
           <Table.Head>
             <Table.HeadCell>
