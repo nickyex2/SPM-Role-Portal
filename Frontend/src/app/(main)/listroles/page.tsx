@@ -11,10 +11,6 @@ import Loading from "@/app/_components/Loading";
 
 import 'flowbite'
 
-type TSpecificRoleSkills = {
-  role_id: Array<number>,
-}
-
 export default function List_Roles() {
   const router = useRouter();
   const [openModal, setOpenModal] = useState<string | undefined>();
