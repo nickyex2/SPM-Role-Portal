@@ -29,7 +29,7 @@ export default function R_Navbar() {
     router.push("/Login");
   }
   return (
-    <Navbar fluid rounded className="sticky top-0 z-50 bg-blue-300">
+    <Navbar fluid rounded className="sticky top-0 z-50 bg-blue-300 rounded-none">
       <Navbar.Brand href="http://localhost:3000/listroles">
         {/* <img
           alt="Flowbite React Logo"
@@ -42,16 +42,15 @@ export default function R_Navbar() {
       </Navbar.Brand>
 
       <Navbar.Collapse>
-        <Navbar.Link active href="#">
-          {/* <p>
-            Home
-          </p> */}
-        </Navbar.Link>
         <Navbar.Link href="/listroles">Jobs</Navbar.Link>
         <Navbar.Link href="/Skills">Skills</Navbar.Link>
         {staff.sys_role === "hr" ? (
           <Navbar.Link href="/search">Search</Navbar.Link>
         ) : null}
+        <Navbar.Link active href="/profile" className="md:hidden">
+          View Profile
+        </Navbar.Link>
+        <Navbar.Link href="/login" className="md:hidden">Sign Out</Navbar.Link>
       </Navbar.Collapse>
 
       <div className="flex md:order-2">
