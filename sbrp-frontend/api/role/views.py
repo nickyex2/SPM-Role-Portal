@@ -4,7 +4,7 @@ from .models import Role
 from api import db
 
 # Get all Roles
-@role.route("/getAllRoles")
+@role.route("/getAll")
 def get_all_roles():
     roles = Role.query.all()
     if roles:
@@ -24,7 +24,7 @@ def get_all_roles():
     ), 404
 
 # Get a specific Role by role_id
-@role.route("/getRole/<int:role_id>")
+@role.route("/getOne/<int:role_id>")
 def get_role(role_id):
     role = Role.query.get(role_id)
     if role:
@@ -41,7 +41,7 @@ def get_role(role_id):
         }
     ), 404
 
-@role.route("/getRoles", methods=["POST"])
+@role.route("/getMulti", methods=["POST"])
 def get_roles():
     data = request.get_json()
     role_ids = data['role_ids']
@@ -61,7 +61,7 @@ def get_roles():
     ), 404
 
 # Update a specific Role by role_id
-@role.route("/updateRole/<int:role_id>", methods=["PUT"])
+@role.route("/update/<int:role_id>", methods=["PUT"])
 def update_role(role_id):
     try:
         data = request.get_json()
@@ -94,7 +94,7 @@ def update_role(role_id):
         ), 400
 
 # Create a new Role
-@role.route("/createRole", methods=["POST"])
+@role.route("/create", methods=["POST"])
 def create_role():
     try:
         data = request.get_json()

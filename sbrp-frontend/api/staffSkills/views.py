@@ -3,7 +3,7 @@ from . import staffSkills
 from .models import StaffSkills
 from api import db
 
-@staffSkills.route("/createStaffSkills", methods=["POST"])
+@staffSkills.route("/create", methods=["POST"])
 def create_staff_skill():
     try:
         data = request.get_json()
@@ -35,8 +35,8 @@ def create_staff_skill():
             }
         ), 400
     
-# Get all StaffSkillss
-@staffSkills.route("/getAllStaffSkillss")
+# Get all StaffSkills
+@staffSkills.route("/getAll")
 def get_all_staff_skills():
     staff_skills = StaffSkills.query.all()
     if staff_skills:
@@ -55,8 +55,8 @@ def get_all_staff_skills():
         }
     ), 404
 
-# Get StaffSkillss for a specific staff_id
-@staffSkills.route("/getStaffSkillss/<int:staff_id>")
+# Get StaffSkills for a specific staff_id
+@staffSkills.route("/getByStaff/<int:staff_id>")
 def get_staff_skills(staff_id):
     staff_skills = StaffSkills.query.filter_by(staff_id=staff_id).all()
     if staff_skills:
@@ -76,7 +76,7 @@ def get_staff_skills(staff_id):
     ), 404
 
 # Update a specific StaffSkills
-@staffSkills.route("/updateStaffSkills/<int:staff_id>/<int:skill_id>", methods=["PUT"])
+@staffSkills.route("/updateByStaffSkill/<int:staff_id>/<int:skill_id>", methods=["PUT"])
 def update_staff_skill(staff_id, skill_id):
     try:
         data = request.get_json()
@@ -109,7 +109,7 @@ def update_staff_skill(staff_id, skill_id):
             }
         ), 400
     
-@staffSkills.route("/getStaffSkillssBySkill/<int:skill_id>")
+@staffSkills.route("/getBySkill/<int:skill_id>")
 def get_staff_skills_by_skill(skill_id):
     staff_skills = StaffSkills.query.filter_by(skill_id=skill_id).all()
     
@@ -130,7 +130,7 @@ def get_staff_skills_by_skill(skill_id):
         }
     ), 404
     
-@staffSkills.route("/getSpecificStaffSkillss", methods=["POST"])
+@staffSkills.route("/getMulti", methods=["POST"])
 def get_specific_staff_skills():
     try:
         data = request.get_json()
@@ -165,7 +165,7 @@ def get_specific_staff_skills():
         ), 400
         
 # # Delete a specific StaffSkills
-# @staffSkills.route("/deleteStaffSkills/<int:staff_id>/<int:skill_id>", methods=["DELETE"])
+# @staffSkills.route("/delete/<int:staff_id>/<int:skill_id>", methods=["DELETE"])
 # def delete_staff_skill(staff_id, skill_id):
 #     try:
 #         staff_skill = StaffSkills.query.filter_by(staff_id=staff_id, skill_id=skill_id).first()

@@ -5,7 +5,7 @@ from api import db
 
 
 # Create a new RoleSkills association
-@roleSkills.route("/createRoleSkills", methods=["POST"])
+@roleSkills.route("/create", methods=["POST"])
 def create_role_skills():
     try:
         data = request.get_json()
@@ -36,7 +36,7 @@ def create_role_skills():
         ), 400
 
 # Get all RoleSkills associations
-@roleSkills.route("/getAllRoleSkills")
+@roleSkills.route("/getAll")
 def get_all_role_skills():
     role_skills = RoleSkills.query.all()
     if role_skills:
@@ -56,7 +56,7 @@ def get_all_role_skills():
     ), 404
 
 # Get RoleSkills associations for a specific role_id
-@roleSkills.route("/getRoleSkills/<int:role_id>")
+@roleSkills.route("/getByRole/<int:role_id>")
 def get_role_skills_by_role_id(role_id):
     role_skills = RoleSkills.query.filter_by(role_id=role_id).all()
     if role_skills:
@@ -75,7 +75,7 @@ def get_role_skills_by_role_id(role_id):
         }
     ), 404
 
-@roleSkills.route("/getSpecificRoleSkills", methods=["POST"])
+@roleSkills.route("/getMultiRole", methods=["POST"])
 def get_specific_role_skills():
     try:
         data = request.get_json()

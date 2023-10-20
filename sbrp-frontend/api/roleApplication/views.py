@@ -5,7 +5,7 @@ from api import db
 
 
 # Create a new RoleApplication
-@roleApplication.route("/createRoleApplication", methods=["POST"])
+@roleApplication.route("/create", methods=["POST"])
 def create_role_application():
     try:
         data = request.get_json()
@@ -38,7 +38,7 @@ def create_role_application():
         ), 400
 
 # Get all RoleApplications
-@roleApplication.route("/getAllRoleApplications")
+@roleApplication.route("/getAll")
 def get_all_role_applications():
     role_applications = RoleApplication.query.all()
     if role_applications:
@@ -57,8 +57,8 @@ def get_all_role_applications():
         }
     ), 404
 
-# Get RoleApplications by role_listing_id
-@roleApplication.route("/getRoleApplicationsListing/<int:role_listing_id>")
+# Get RoleApplication by role_listing_id
+@roleApplication.route("/getOne/<int:role_listing_id>")
 def get_role_application(role_listing_id):
     role_application = RoleApplication.query.filter_by(role_listing_id=role_listing_id).all()
     if role_application:
@@ -75,7 +75,7 @@ def get_role_application(role_listing_id):
         }
     ), 404
 
-@roleApplication.route("/getRoleApplicationsStaff/<int:staff_id>")
+@roleApplication.route("/getByStaff/<int:staff_id>")
 def get_applications_staff(staff_id):
     role_applications = RoleApplication.query.filter_by(staff_id=staff_id)
     if role_applications:
@@ -95,7 +95,7 @@ def get_applications_staff(staff_id):
     ), 404
 
 # get role application by role_listing_id and staff_id
-@roleApplication.route("/getRoleApplication/<int:role_listing_id>/<int:staff_id>")
+@roleApplication.route("/getByRoleLStaff/<int:role_listing_id>/<int:staff_id>")
 def get_applications_staff_role(role_listing_id, staff_id):
     role_application = RoleApplication.query.filter_by(role_listing_id=role_listing_id, staff_id=staff_id).first()
     if role_application:
@@ -113,7 +113,7 @@ def get_applications_staff_role(role_listing_id, staff_id):
     ), 404
 
 # Update a specific RoleApplication by role_app_id
-@roleApplication.route("/updateRoleApplication/<int:role_app_id>", methods=["PUT"])
+@roleApplication.route("/update/<int:role_app_id>", methods=["PUT"])
 def update_role_application(role_app_id):
     try:
         data = request.get_json()
@@ -147,7 +147,7 @@ def update_role_application(role_app_id):
         ), 400
 
 # # Delete a specific RoleApplication by role_app_id
-# @roleApplication.route("/deleteRoleApplication/<int:role_app_id>", methods=["DELETE"])
+# @roleApplication.route("/delete/<int:role_app_id>", methods=["DELETE"])
 # def delete_role_application(role_app_id):
 #     try:
 #         role_application = RoleApplication.query.get(role_app_id)

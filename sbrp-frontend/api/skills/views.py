@@ -5,7 +5,7 @@ from api import db
 
 
 # get all skills from db
-@skills.route("/getAllSkills")
+@skills.route("/getAll")
 def get_all():
     Skills = Skill.query.all()
     if Skills:
@@ -25,7 +25,7 @@ def get_all():
     ),404
 
 # get skill by id
-@skills.route("/getSkill/<int:skill_id>")
+@skills.route("/getOne/<int:skill_id>")
 def find_by_id(skill_id):
     skill = Skill.query.filter_by(skill_id=skill_id).first()
     if skill:
@@ -43,7 +43,7 @@ def find_by_id(skill_id):
     ), 404
 
 #get skills by skill_ids
-@skills.route("/getSkills", methods=['POST'])
+@skills.route("/getMulti", methods=['POST'])
 def find_by_ids():
     data = request.get_json(force=True)
     skill_ids = data['skill_ids']
@@ -63,7 +63,7 @@ def find_by_ids():
     ), 404
 
 # create new skill
-@skills.route("/addSkill/<int:skill_id>", methods=['POST'])
+@skills.route("/create/<int:skill_id>", methods=['POST'])
 def create_skill(skill_id):
     if Skill.query.filter_by(skill_id=skill_id).first():
         return jsonify(
@@ -102,7 +102,7 @@ def create_skill(skill_id):
     ), 201
 
 # update skillset by skill_id
-@skills.route("/updateSkill/<int:skill_id>", methods=['PUT'])
+@skills.route("/update/<int:skill_id>", methods=['PUT'])
 def update_skill(skill_id):
     skill = Skill.query.filter_by(skill_id=skill_id).first()
     if skill:
@@ -130,7 +130,7 @@ def update_skill(skill_id):
     ), 202
 
 # # delete skillset by skill_id
-# @skills.route("/skill/<int:skill_id>", methods=['POST'])
+# @skills.route("/delete/<int:skill_id>", methods=['POST'])
 # def delete_skill(skill_id):
 #     # Check if the skill with the given skill_id exists
 #     skill = Skill.query.get(skill_id)

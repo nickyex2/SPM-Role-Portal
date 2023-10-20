@@ -5,7 +5,7 @@ from api import db
 
 
 # Create a new StaffReportingOfficer
-@staffRO.route("/createStaffReportingOfficer", methods=["POST"])
+@staffRO.route("/create", methods=["POST"])
 def create_staff_reporting_officer():
     try:
         data = request.get_json()
@@ -35,7 +35,7 @@ def create_staff_reporting_officer():
             }
         ), 400
 
-@staffRO.route("/getStaffReportingOfficer/<int:staff_id>")
+@staffRO.route("/getOne/<int:staff_id>")
 def get_staff_reporting_officers_by_staff_id(staff_id):
     staff_reporting_officers = StaffReportingOfficer.query.filter_by(staff_id=staff_id).first()
     if staff_reporting_officers:
@@ -52,25 +52,25 @@ def get_staff_reporting_officers_by_staff_id(staff_id):
         }
     ), 404
 
-# # Get all StaffReportingOfficers
-# @staffRO.route("/getAllStaffReportingOfficers")
-# def get_all_staff_reporting_officers():
-#     staff_reporting_officers = StaffReportingOfficer.query.all()
-#     if staff_reporting_officers:
-#         return jsonify(
-#             {
-#                 "code": 200,
-#                 "data": {
-#                     "staff_reporting_officers": [sro.json() for sro in staff_reporting_officers]
-#                 }
-#             }
-#         )
-#     return jsonify(
-#         {
-#             "code": 404,
-#             "message": "No staff reporting officers in the database."
-#         }
-#     ), 404
+# Get all StaffReportingOfficers
+@staffRO.route("/getAll")
+def get_all_staff_reporting_officers():
+    staff_reporting_officers = StaffReportingOfficer.query.all()
+    if staff_reporting_officers:
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "staff_reporting_officers": [sro.json() for sro in staff_reporting_officers]
+                }
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "No staff reporting officers in the database."
+        }
+    ), 404
 
 # # Get a specific StaffReportingOfficer by staff_id and RO_id
 # @staffRO.route("/getStaffReportingOfficer/<int:staff_id>/<int:RO_id>")

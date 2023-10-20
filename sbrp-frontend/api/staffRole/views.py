@@ -4,7 +4,7 @@ from .models import StaffRole
 from api import db
 
 # Create a new StaffRole
-@staffRole.route("/createStaffRole", methods=["POST"])
+@staffRole.route("/create", methods=["POST"])
 def create_staff_role():
     try:
         data = request.get_json()
@@ -39,7 +39,7 @@ def create_staff_role():
         ), 400
 
 # Get all StaffRoles
-@staffRole.route("/getAllStaffRoles")
+@staffRole.route("/getAll")
 def get_all_staff_roles():
     staff_roles = StaffRole.query.all()
     if staff_roles:
@@ -59,7 +59,7 @@ def get_all_staff_roles():
     ), 404
 
 # Get a specific StaffRole by staff_id and staff_role
-@staffRole.route("/getStaffRole/<int:staff_id>/<int:staff_role>")
+@staffRole.route("/getOne/<int:staff_id>/<int:staff_role>")
 def get_staff_role(staff_id, staff_role):
     staff_role = StaffRole.query.filter_by(staff_id=staff_id, staff_role=staff_role).first()
     if staff_role:
@@ -77,7 +77,7 @@ def get_staff_role(staff_id, staff_role):
     ), 404
 
 # Update a specific StaffRole by staff_id and staff_role
-@staffRole.route("/updateStaffRole/<int:staff_id>/<int:staff_role>", methods=["PUT"])
+@staffRole.route("/updateOne/<int:staff_id>/<int:staff_role>", methods=["PUT"])
 def update_staff_role(staff_id, staff_role):
     try:
         data = request.get_json()
@@ -112,7 +112,7 @@ def update_staff_role(staff_id, staff_role):
             }
         ), 400
     
-@staffRole.route("/getStaffRolesOfSpecificStaff/<int:staff_id>")
+@staffRole.route("/getByStaff/<int:staff_id>")
 def get_all_staff_roles_by_staff(staff_id):
     staff_roles = StaffRole.query.filter_by(staff_id=staff_id).all()
     if staff_roles:

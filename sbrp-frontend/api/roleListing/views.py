@@ -4,7 +4,7 @@ from .models import RoleListing, RoleListingChanges
 from api import db
 
 
-@roleListing.route("/createRoleListing", methods=["POST"])
+@roleListing.route("/create", methods=["POST"])
 def create_role_listing():
     try:
         data = request.get_json()
@@ -49,9 +49,7 @@ def create_role_listing():
         ), 400
 
 # Get all RoleListings
-
-
-@roleListing.route("/getAllRoleListings")
+@roleListing.route("/getAll")
 def get_all_role_listings():
     role_listings = RoleListing.query.all()
     if role_listings:
@@ -71,9 +69,7 @@ def get_all_role_listings():
     ), 404
 
 # Get a specific RoleListing by role_listing_id
-
-
-@roleListing.route("/getRoleListing/<int:role_listing_id>")
+@roleListing.route("/getOne/<int:role_listing_id>")
 def get_role_listing(role_listing_id):
     role_listing = RoleListing.query.get(role_listing_id)
     if role_listing:
@@ -91,7 +87,7 @@ def get_role_listing(role_listing_id):
     ), 404
 
 # Update a specific RoleListing by role_listing_id
-@roleListing.route("/updateRoleListing/<int:role_listing_id>", methods=["PUT"])
+@roleListing.route("/update/<int:role_listing_id>", methods=["PUT"])
 def update_role_listing(role_listing_id):
     try:
         data = request.get_json()
@@ -132,7 +128,7 @@ def update_role_listing(role_listing_id):
             }
         ), 400
 
-@roleListing.route("/getRoleListingChanges/<int:role_listing_id>")
+@roleListing.route("/getChanges/<int:role_listing_id>")
 def getRoleListingChanges(role_listing_id):
     role_listing_changes = RoleListingChanges.query.filter_by(role_listing_id=role_listing_id).all()
     if role_listing_changes:
@@ -152,7 +148,7 @@ def getRoleListingChanges(role_listing_id):
     ), 404
 
 # # delete a rolelisting base on role listing id
-# @roleListing.route("/deleteRoleListing/<int:role_listing_id>", methods=["DELETE"])
+# @roleListing.route("/delete/<int:role_listing_id>", methods=["DELETE"])
 # def delete_role_listing(role_listing_id):
 #     try:
 #         role_listing = RoleListing.query.get(role_listing_id)

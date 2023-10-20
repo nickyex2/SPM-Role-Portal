@@ -4,7 +4,7 @@ from .models import Staff
 from api import db
 
 
-@staff.route("/getAllStaff")
+@staff.route("/getAll")
 def get_all():
     staffProfile = Staff.query.all()
     try:
@@ -34,7 +34,7 @@ def get_all():
     # get staff by id
 
 
-@staff.route("/getStaff/<string:staff_id>")
+@staff.route("/getOne/<string:staff_id>")
 def find_by_id(staff_id):
     staff = Staff.query.filter_by(staff_id=staff_id).first()
     if staff:
@@ -52,7 +52,7 @@ def find_by_id(staff_id):
     ), 404
 
 
-@staff.route("/getMultipleStaff", methods=['POST'])
+@staff.route("/getMulti", methods=['POST'])
 def get_multiple_staff():
     staff_id_list = request.get_json(force=True)['staff_ids']
     staff = Staff.query.filter(Staff.staff_id.in_(staff_id_list)).all()
@@ -75,7 +75,7 @@ def get_multiple_staff():
 # create new staff redundant
 
 
-@staff.route("/createStaff/<string:staff_id>", methods=['POST'])
+@staff.route("/create/<string:staff_id>", methods=['POST'])
 def create_staff(staff_id):
     if Staff.query.filter_by(staff_id=staff_id).first():
         return jsonify(
