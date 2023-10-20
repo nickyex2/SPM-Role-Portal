@@ -12,7 +12,7 @@ const Login:React.FC = () => {
   const check_staff_url = "/api/staff/getAllStaff";
   const [email, setEmail] = useState<string>("");
   async function getStaffSkills(staff_id: number): Promise<Array<Number>> {
-    const response = await axios.get(`http://localhost:5004/getStaffSkills/${staff_id}`)
+    const response = await axios.get(`/api/staffSkills/getByStaff/${staff_id}`)
     const staffSkills: Array<Number> = [];
     response.data.data?.staff_skills.forEach((staffSkill: TStaffSkill) => {
       if (staffSkill.ss_status === "active") {
@@ -35,7 +35,7 @@ const Login:React.FC = () => {
       console.log(staff);
       for (var i = 0; i < staff.length; i++) {
         if (staff[i].email == email) {
-          // Set local storage
+          // Set session storage
           sessionStorage.setItem("staff_id", staff[i].staff_id);
           sessionStorage.setItem("fname", staff[i].fname);
           sessionStorage.setItem("lname", staff[i].lname);

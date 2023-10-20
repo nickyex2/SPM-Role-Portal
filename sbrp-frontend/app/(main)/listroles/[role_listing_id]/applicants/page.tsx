@@ -23,38 +23,38 @@ export default function Role_Applicants( { params } : { params: { role_listing_i
   const props = { openModal, setOpenModal, modalStaff, modalSkills };
   async function getAllSkills(): Promise<Array<TSkillDetails>> {
     const response: AxiosResponse<TResponseData> = await axios.get(
-      `http://localhost:5001/getAllSkills`
+      `/api/skills/getAll`
     );
     return response.data.data?.skills;
   }
   async function getRoleListing(role_listing_id: number): Promise<TRoleListing> {
     const response: AxiosResponse<TResponseData> = await axios.get(
-      `http://localhost:5002/getRoleListing/${role_listing_id}`
+      `/api/roleListing/getOne/${role_listing_id}`
     );
     return response.data.data;
   }
   async function getRoleSkills(role_id: number): Promise<Array<TRoleSkills>> {
     const response: AxiosResponse<TResponseData> = await axios.get(
-      `http://localhost:5008/getRoleSkills/${role_id}`
+      `/api/roleSkills/getByRole/${role_id}`
     );
     return response.data.data?.role_skills;
   }
   async function getRoleApplicants(role_listing_id: number): Promise<Array<TRoleApplicant>> {
     const response: AxiosResponse<TResponseData> = await axios.get(
-      `http://localhost:5005/getRoleApplicationsListing/${role_listing_id}`
+      `/api/roleApplication/getOne/${role_listing_id}`
     );
     return response.data.data;
   }
   async function getMultipleStaff(staff_ids: Array<number>): Promise<Array<TStaff>> {
     const response: AxiosResponse<TResponseData> = await axios.post(
-      `http://localhost:5000/getMultipleStaff`,
+      `/api/staff/getMulti`,
       { staff_ids: staff_ids }
     );
     return response.data.data?.staff;
   }
   async function getMultipleStaffSkills(staff_ids: Array<number>): Promise<TSpecificStaffSkills> {
     const response: AxiosResponse<TResponseData> = await axios.post(
-      `http://localhost:5004/getSpecificStaffSkills`,
+      `/api/staffSkills/getMulti`,
       { staff_ids: staff_ids }
     );
     return response.data.data;

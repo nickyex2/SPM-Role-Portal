@@ -36,15 +36,15 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   async function getReportingOfficer(staff_id: number): Promise<TStaff> {
     const response: AxiosResponse<TResponseData> = await axios.get(
-      `http://localhost:5007/getStaffReportingOfficer/${staff_id}`
+      `/api/staffRO/getOne/${staff_id}`
     );
     const reportingOfficer: TReportingOfficer = response.data.data
-    const res = await axios.get(`http://localhost:5000/getStaff/${reportingOfficer.RO_id}`)
+    const res = await axios.get(`/api/staff/getOne/${reportingOfficer.RO_id}`)
     return res.data.data;
   }
   async function getStaffRoles(staff_id: number): Promise<Array<TRoleDetails>> {
     const response: AxiosResponse<TResponseData> = await axios.get(
-      `http://localhost:5006/getStaffRolesOfSpecificStaff/${staff_id}`
+      `/api/staffRole/getByStaff/${staff_id}`
     );
     setStaffRoleIDs(response.data.data?.staff_roles);
     console.log(response.data.data?.staff_roles)
@@ -52,18 +52,18 @@ export default function Profile() {
     response.data.data?.staff_roles.forEach((staffRole: TStaffRole) => {
       staffRoles.push(staffRole.staff_role);
     });
-    const res = await axios.post(`http://localhost:5003/getRoles`, { role_ids: staffRoles })
+    const res = await axios.post(`/api/role/getMulti`, { role_ids: staffRoles })
     return res.data.data;
   }
   async function getStaffSkills(staff_id: number): Promise<Array<TSkillDetails>> {
     const response: AxiosResponse<TResponseData> = await axios.get(
-      `http://localhost:5004/getStaffSkills/${staff_id}`
+      `/api/staffSkills/getByStaff/${staff_id}`
     );
     const staffSkills: Array<Number> = [];
     response.data.data?.staff_skills.forEach((staffSkill: TStaffSkill) => {
       staffSkills.push(staffSkill.skill_id);
     });
-    const res = await axios.post(`http://localhost:5001/getSkills`, { skill_ids: staffSkills })
+    const res = await axios.post(`/api/skills/getMulti`, { skill_ids: staffSkills })
     return res.data.data;
   }
   useEffect(() => {

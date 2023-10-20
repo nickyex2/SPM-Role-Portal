@@ -16,7 +16,7 @@ export default function SearchStaff() {
   const [loading, setLoading] = useState<boolean>(true);
   async function getAllStaff(): Promise<TStaff[]> {
     const res: AxiosResponse<TResponseData> = await axios.get(
-      "http://localhost:5000/getAllStaff"
+      "/api/staff/getAll"
     );
     return res.data.data?.staffs;
   }
@@ -24,14 +24,14 @@ export default function SearchStaff() {
     staff_ids: Array<number>
   ): Promise<TSpecificStaffSkills> {
     const response: AxiosResponse<TResponseData> = await axios.post(
-      `http://localhost:5004/getSpecificStaffSkills`,
+      `/api/staffSkills/getMulti`,
       { staff_ids: staff_ids }
     );
     return response.data.data;
   }
   async function getAllSkills(): Promise<Array<TSkillDetails>> {
     const response: AxiosResponse<TResponseData> = await axios.get(
-      "http://localhost:5001/getAllSkills"
+      "/api/skills/getAll"
     );
     return response.data.data?.skills;
   }

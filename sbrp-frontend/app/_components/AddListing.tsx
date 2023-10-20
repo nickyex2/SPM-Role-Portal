@@ -39,14 +39,14 @@ export default function Add_New_Role_Listing({
   });
   async function getRoleDetails(role_id: number): Promise<TRoleDetails> {
     const response: AxiosResponse<TResponseData> = await axios.get(
-      `http://localhost:5003/getRole/${role_id}`
+      `/api/role/getOne/${role_id}`
     );
     return response.data.data;
   }
   async function handleAddRoleListing() {
     console.log(roleListing);
     const response: AxiosResponse<TResponseData> = await axios.post(
-      "http://localhost:5002/createRoleListing",
+      "/api/roleListing/create",
       roleListing
     );
     const role_details: TRoleDetails | undefined = await getRoleDetails(roleListing.role_id);

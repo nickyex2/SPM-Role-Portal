@@ -7,7 +7,7 @@ import axios from 'axios'
 
 const SkillsPage = () => {
 
-  const skillsURL = 'http://localhost:5001/getAllSkills'
+  const skillsURL = '/api/skills/getAll'
 
   const [skills, setSkills] = React.useState<Array<TSkillDetails>>([]);
   const [loading, setLoading] = React.useState(false)
