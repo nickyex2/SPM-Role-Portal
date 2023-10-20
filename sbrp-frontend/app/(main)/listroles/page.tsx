@@ -36,7 +36,7 @@ export default function List_Roles() {
     useState<TSpecificRoleSkills>({});
   const [currUserSkills, setCurrUserSkills] = useState<Array<number>>([]);
   const getAllRolesURL = "/api/roleListing/getAll";
-  const getRoleDetailsURL = "/api/roleListing/getMulti";
+  const getRoleDetailsURL = "/api/role/getMulti";
   const getAllSkillsURL = "/api/skills/getAll";
   const getRoleSkillsURL = "/api/roleSkills/getMultiRole";
 

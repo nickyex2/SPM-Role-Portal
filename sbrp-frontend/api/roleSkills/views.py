@@ -84,7 +84,7 @@ def get_specific_role_skills():
         returnDict = {rs: [] for rs in role_ids}
         for rs in role_skills:
             if rs.role_id in returnDict:
-                returnDict[rs.role_id].roleSkillsend(rs.json().get("skill_id"))
+                returnDict[rs.role_id].append(rs.json().get("skill_id"))
             else:
                 returnDict[rs.role_id] = [rs.json().get("skill_id")]
         if role_skills:
