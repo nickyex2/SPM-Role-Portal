@@ -1,6 +1,5 @@
 from flask import jsonify, request
 from . import staff
-from .models import Staff
 from api import db
 import enum
 
