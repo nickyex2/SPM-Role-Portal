@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 .backgroundSearch {
-  background-image: url("../../public/assets/bg_image.jpg");
+  background-image: url("../public/assets/bg_image.jpg");
 }

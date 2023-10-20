@@ -9,7 +9,7 @@ import { Button } from 'flowbite-react';
 
 const Login:React.FC = () => {
   const router = useRouter();
-  const check_staff_url = "http://localhost:5000/getAllStaff";
+  const check_staff_url = "/api/staff/getAllStaff";
   const [email, setEmail] = useState<string>("");
   async function getStaffSkills(staff_id: number): Promise<Array<Number>> {
     const response = await axios.get(`http://localhost:5004/getStaffSkills/${staff_id}`)
