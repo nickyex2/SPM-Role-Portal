@@ -36,7 +36,7 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   async function getReportingOfficer(staff_id: number): Promise<TStaff> {
     const response: AxiosResponse<TResponseData> = await axios.get(
-      `/api/staffRO/getOne/${staff_id}`
+      `/api/staff/staffRO/getOne/${staff_id}`
     );
     const reportingOfficer: TReportingOfficer = response.data.data
     const res = await axios.get(`/api/staff/getOne/${reportingOfficer.RO_id}`)
@@ -44,7 +44,7 @@ export default function Profile() {
   }
   async function getStaffRoles(staff_id: number): Promise<Array<TRoleDetails>> {
     const response: AxiosResponse<TResponseData> = await axios.get(
-      `/api/staffRole/getByStaff/${staff_id}`
+      `/api/staff/staffRole/getByStaff/${staff_id}`
     );
     setStaffRoleIDs(response.data.data?.staff_roles);
     console.log(response.data.data?.staff_roles)
@@ -57,7 +57,7 @@ export default function Profile() {
   }
   async function getStaffSkills(staff_id: number): Promise<Array<TSkillDetails>> {
     const response: AxiosResponse<TResponseData> = await axios.get(
-      `/api/staffSkills/getByStaff/${staff_id}`
+      `/api/staff/staffSkills/getByStaff/${staff_id}`
     );
     const staffSkills: Array<Number> = [];
     response.data.data?.staff_skills.forEach((staffSkill: TStaffSkill) => {

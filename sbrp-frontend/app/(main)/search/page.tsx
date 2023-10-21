@@ -24,7 +24,7 @@ export default function SearchStaff() {
     staff_ids: Array<number>
   ): Promise<TSpecificStaffSkills> {
     const response: AxiosResponse<TResponseData> = await axios.post(
-      `/api/staffSkills/getMulti`,
+      `/api/staff/staffSkills/getMulti`,
       { staff_ids: staff_ids }
     );
     return response.data.data;

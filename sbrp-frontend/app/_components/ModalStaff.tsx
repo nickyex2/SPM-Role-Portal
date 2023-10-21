@@ -19,7 +19,7 @@ export default function Modal_Staff({
   const [loading, setLoading] = useState(true);
   async function getReportingOfficer(staff_id: number): Promise<TStaff> {
     const response: AxiosResponse<TResponseData> = await axios.get(
-      `/api/staffRO/getOne/${staff_id}`
+      `/api/staff/staffRO/getOne/${staff_id}`
     );
     const reportingOfficer: TReportingOfficer = response.data.data
     const res = await axios.get(`/api/staff/getOne/${reportingOfficer.RO_id}`)

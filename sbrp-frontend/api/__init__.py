@@ -4,14 +4,14 @@ from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 import os
 
+# load the .env file
+load_dotenv()
+
 app = Flask(__name__)
 CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("dbURL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-
-# load the .env file
-load_dotenv()
 
 # @app.route("/api/python")
 # def hello_world():

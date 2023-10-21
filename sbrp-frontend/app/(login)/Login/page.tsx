@@ -12,7 +12,7 @@ const Login:React.FC = () => {
   const check_staff_url = "/api/staff/getAll";
   const [email, setEmail] = useState<string>("");
   async function getStaffSkills(staff_id: number): Promise<Array<Number>> {
-    const response = await axios.get(`/api/staffSkills/getByStaff/${staff_id}`)
+    const response = await axios.get(`/api/staff/staffSkills/getByStaff/${staff_id}`)
     const staffSkills: Array<Number> = [];
     response.data.data?.staff_skills.forEach((staffSkill: TStaffSkill) => {
       if (staffSkill.ss_status === "active") {
