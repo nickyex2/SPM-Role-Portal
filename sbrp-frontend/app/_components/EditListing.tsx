@@ -30,7 +30,7 @@ export default function Role_Listing_Edit({
   }, []);
   async function getChanges(role_listing_id: number): Promise<Array<TRoleListingChanges>> {
     const response: AxiosResponse<TResponseData> = await axios.get(
-      `/api/roleListing/getChanges/${role_listing_id}`
+      `/api/role/roleListing/getChanges/${role_listing_id}`
     );
     return response.data.data?.role_listing_changes;
   }
@@ -43,7 +43,7 @@ export default function Role_Listing_Edit({
     });
     try {
       const response: AxiosResponse<TResponseData> = await axios.put(
-        `/api/roleListing/update/${role_listing_id}`,
+        `/api/role/roleListing/update/${role_listing_id}`,
         role
       );
       if (response.data.code === 200) {

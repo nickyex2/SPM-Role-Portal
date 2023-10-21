@@ -35,10 +35,10 @@ export default function List_Roles() {
   const [initailRoleSkills, setInitialRoleSkills] =
     useState<TSpecificRoleSkills>({});
   const [currUserSkills, setCurrUserSkills] = useState<Array<number>>([]);
-  const getAllRolesURL = "/api/roleListing/getAll";
+  const getAllRolesURL = "/api/role/roleListing/getAll";
   const getRoleDetailsURL = "/api/role/getMulti";
   const getAllSkillsURL = "/api/skills/getAll";
-  const getRoleSkillsURL = "/api/roleSkills/getMultiRole";
+  const getRoleSkillsURL = "/api/role/roleSkills/getMultiRole";
 
   async function getAllRoles(): Promise<Array<TRoleListing>> {
     const response: AxiosResponse<TResponseData> = await axios.get(

@@ -31,7 +31,7 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
 
   async function getRoleSkills(): Promise<Array<TRoleSkills>> {
     const response: AxiosResponse<TResponseData> = await axios.get(
-      `/api/roleSkills/getByRole/${role?.role_id}`
+      `/api/role/roleSkills/getByRole/${role?.role_id}`
     );
     return response.data.data?.role_skills;
   }
@@ -48,7 +48,7 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
   async function getRoleListingChanges(): Promise<Array<TRoleListingChanges>> {
     try {
     const response: AxiosResponse<TResponseData> = await axios.get(
-      `/api/roleListing/getChanges/${params.role_listing_id}`
+      `/api/role/roleListing/getChanges/${params.role_listing_id}`
     );
     return response.data.data?.role_listing_changes;
     }
@@ -62,7 +62,7 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
   async function getAppliedRole(): Promise<TRoleApplication | undefined> {
     try {
       const response: AxiosResponse<TResponseData> = await axios.get(
-        `/api/roleApplication/getByRoleLStaff/${params.role_listing_id}/${sessionStorage.getItem("staff_id")}`
+        `/api/role/roleApplication/getByRoleLStaff/${params.role_listing_id}/${sessionStorage.getItem("staff_id")}`
       );
       return response.data.data;
     }
@@ -80,7 +80,7 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
       role_app_status: "applied"
     }
     const response: AxiosResponse<TResponseData> = await axios.post(
-      `/api/roleApplication/create`,
+      `/api/role/roleApplication/create`,
       sendApplication
     );
     if (response.status === 201) {
@@ -89,7 +89,7 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
   }
   async function withdrawRole(roleApplication: TRoleApplication) {
     const response: AxiosResponse<TResponseData> = await axios.put(
-      `/api/roleApplication/update/${roleApplication.role_app_id}`,
+      `/api/role/roleApplication/update/${roleApplication.role_app_id}`,
       {
         ...roleApplication,
         role_app_status: "withdrawn"
@@ -102,7 +102,7 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
   useEffect(() => {
     async function getRoleListing(): Promise<TRoleListing> {
       const response: AxiosResponse<TResponseData> = await axios.get(
-        `/api/roleListing/getOne/${params.role_listing_id}`
+        `/api/role/roleListing/getOne/${params.role_listing_id}`
       );
       return response.data.data;
     }

@@ -46,7 +46,7 @@ export default function Add_New_Role_Listing({
   async function handleAddRoleListing() {
     console.log(roleListing);
     const response: AxiosResponse<TResponseData> = await axios.post(
-      "/api/roleListing/create",
+      "/api/role/roleListing/create",
       roleListing
     );
     const role_details: TRoleDetails | undefined = await getRoleDetails(roleListing.role_id);
