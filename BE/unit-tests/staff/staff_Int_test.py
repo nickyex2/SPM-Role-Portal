@@ -4,10 +4,9 @@ import json
 import os
 from dotenv import load_dotenv
 
-# this file test the staff API (read only access)
+# Create Staff Read-Only API Unit Tests
 load_dotenv()
 class TestStaffAPI(unittest.TestCase):
-    print("Running staff API tests...")
     def setUp(self):
         self.base_url = os.environ.get("BASE_URL") + "/api/staff"
         self.staff_id = "1"  # Change this to the staff ID you want to use for testing
@@ -17,17 +16,17 @@ class TestStaffAPI(unittest.TestCase):
         data = response.json()
         self.assertEqual(response.status_code, 200)
         self.assertTrue("staffs" in data["data"])
-        print("test_get_all_staff PASSED")
+        print("Test Case - Get All Staff - PASSED")
 
     def test_get_staff_by_id(self):
         response = requests.get(f"{self.base_url}/getOne/{self.staff_id}")
         if response.status_code == 200:
             data = response.json()
             self.assertEqual(data["data"]["staff_id"], int(self.staff_id))
-            print("test_get_staff_by_id PASSED")
+            print("Test Case - Get Staff by ID - PASSED")
         else:
             self.assertEqual(response.status_code, 404)
-            print("test_get_staff_by_id FAILED")
+            print("Test Case - Get Staff by ID - FAILED")
 
 
     def test_get_multiple_staff_data(self):
@@ -57,13 +56,12 @@ class TestStaffAPI(unittest.TestCase):
         data = response.json()
         self.assertEqual(response.status_code, 200)
         self.assertCountEqual(data['data']['staff'], existing_staff_data)
-        
-        print("test_get_multiple_staff_data PASSED")
+        print("Test Case - Get Multiple Staff Data - PASSED")
 
     def test_get_nonexistent_staff_by_id(self):
         response = requests.get(f"{self.base_url}/getStaff/1000")  # Nonexistent staff ID
         self.assertEqual(response.status_code, 404)
-        print("test_get_nonexistent_staff_by_id PASSED")
+        print("Test Case - Get Nonexistent Staff by ID - PASSED")
 
 if __name__ == '__main__':
     unittest.main()
