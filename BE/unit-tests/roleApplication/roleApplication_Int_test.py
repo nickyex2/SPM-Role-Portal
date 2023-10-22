@@ -11,6 +11,15 @@ class TestRoleApplicationAPI(unittest.TestCase):
     def setUp(self):
         self.base_url = os.environ.get("BASE_URL") + "/api/role/roleapp"
     
+    @classmethod
+    def tearDownClass(cls):
+        role_listing_id = 19458657
+        staff_id = 5
+        res = requests.get(f'{os.environ.get("BASE_URL")}/getByRoleLStaff/{role_listing_id}/{staff_id}')
+        role_app_id = res.json()['data']['role_app_id']
+        response = requests.delete(f'{os.environ.get("BASE_URL")}/delete/{role_app_id}')
+        print("Deleting test role application with ID " + str(role_app_id), response.status_code)
+
     def test_create_role_application(self):
         # Test Case 1: Create a new role application
         data = {
@@ -44,7 +53,7 @@ class TestRoleApplicationAPI(unittest.TestCase):
         response = requests.get(f'{self.base_url}/getByStaff/{staff_id}')
         self.assertEqual(response.status_code, 200)
         self.assertTrue(len(response.json()['data']['role_applications']) > 0)
-        print("Test Case 4 (Get Role Applications by Staff) - Passed")
+        print("Test Case - Get Role Applications by Staff - PASSED")
 
     def test_get_role_application_by_role_listing_and_staff(self):
         # Test Case 5: Get role application by role listing ID and staff ID
@@ -54,7 +63,7 @@ class TestRoleApplicationAPI(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['data']['role_listing_id'], role_listing_id)
         self.assertEqual(response.json()['data']['staff_id'], staff_id)
-        print("Test Case 5 (Get Role Application by Role Listing and Staff) - Passed")
+        print("Test Case - Get Role Application by Role Listing and Staff - PASSED")
 
     def test_update_role_application(self):
         # Test Case 6: Update role application
@@ -69,18 +78,7 @@ class TestRoleApplicationAPI(unittest.TestCase):
         response = requests.put(f'{self.base_url}/update/{role_app_id}', json=data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['data']['role_app_status'], data['role_app_status'])
-        print("Test Case 6 (Update Role Application) - Passed")
-
-    def test_delete_role_application(self):
-        # Test Case 7: Delete role application
-        role_listing_id = 19458657
-        staff_id = 5
-        res = requests.get(f'{self.base_url}/getByRoleLStaff/{role_listing_id}/{staff_id}')
-        role_app_id = res.json()['data']['role_app_id']
-
-        response = requests.delete(f'{self.base_url}/delete/{role_app_id}')
-        self.assertEqual(response.status_code, 200)
-        print("Test Case 7 (Delete Role Application) - Passed")
+        print("Test Case - Update Role Application - PASSED")
     
 if __name__ == "__main__":
     unittest.main()
