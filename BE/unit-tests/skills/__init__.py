@@ -1,1 +1,0 @@
-from skills_Int_test import *
