@@ -15,9 +15,9 @@ class TestRoleApplicationAPI(unittest.TestCase):
     def tearDownClass(cls):
         role_listing_id = 19458657
         staff_id = 5
-        res = requests.get(f'{os.environ.get("BASE_URL")}/getByRoleLStaff/{role_listing_id}/{staff_id}')
+        res = requests.get(f'{os.environ.get("BASE_URL")}/api/role/roleapp/getByRoleLStaff/{role_listing_id}/{staff_id}')
         role_app_id = res.json()['data']['role_app_id']
-        response = requests.delete(f'{os.environ.get("BASE_URL")}/delete/{role_app_id}')
+        response = requests.delete(f'{os.environ.get("BASE_URL")}/api/role/roleapp/delete/{role_app_id}')
         print("Deleting test role application with ID " + str(role_app_id), response.status_code)
 
     def test_create_role_application(self):

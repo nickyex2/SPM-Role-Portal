@@ -13,7 +13,7 @@ class TestRoleListingAPI(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         role_listing_id = 123456789
-        response = requests.delete(f'{os.environ.get("BASE_URL")}/delete/{role_listing_id}')
+        response = requests.delete(f'{os.environ.get("BASE_URL")}/api/role/roleListing/delete/{role_listing_id}')
         print("Deleting test role listing with ID 123456789", response.status_code)
 
 
