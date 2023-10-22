@@ -342,35 +342,35 @@ def update_role_application(role_app_id):
             }
         ), 400
 
-# # Delete a specific RoleApplication by role_app_id
-# @role.route("/roleapp/delete/<int:role_app_id>", methods=["DELETE"])
-# def delete_role_application(role_app_id):
-#     try:
-#         role_application = RoleApplication.query.get(role_app_id)
-#         if role_application:
-#             db.session.delete(role_application)
-#             db.session.commit()
+# Delete a specific RoleApplication by role_app_id (used for testing purposes only)
+@role.route("/roleapp/delete/<int:role_app_id>", methods=["DELETE"])
+def delete_role_application(role_app_id):
+    try:
+        role_application = RoleApplication.query.get(role_app_id)
+        if role_application:
+            db.session.delete(role_application)
+            db.session.commit()
 
-#             return jsonify(
-#                 {
-#                     "code": 200,
-#                     "message": f"RoleApplication with ID {role_app_id} deleted successfully."
-#                 }
-#             ), 200
-#         else:
-#             return jsonify(
-#                 {
-#                     "code": 404,
-#                     "message": f"RoleApplication with ID {role_app_id} not found. Nothing deleted."
-#                 }
-#             ), 404
-#     except Exception as e:
-#         return jsonify(
-#             {
-#                 "code": 400,
-#                 "message": f"Failed to delete RoleApplication with ID {role_app_id}. Error: {str(e)}"
-#             }
-#         ), 400
+            return jsonify(
+                {
+                    "code": 200,
+                    "message": f"RoleApplication with ID {role_app_id} deleted successfully."
+                }
+            ), 200
+        else:
+            return jsonify(
+                {
+                    "code": 404,
+                    "message": f"RoleApplication with ID {role_app_id} not found. Nothing deleted."
+                }
+            ), 404
+    except Exception as e:
+        return jsonify(
+            {
+                "code": 400,
+                "message": f"Failed to delete RoleApplication with ID {role_app_id}. Error: {str(e)}"
+            }
+        ), 400
 
 # Role Listing Class definition
 class RoleListing(db.Model):
@@ -589,35 +589,40 @@ def getRoleListingChanges(role_listing_id):
         }
     ), 404
 
-# # delete a rolelisting base on role listing id
-# @role.route("/roleListing/delete/<int:role_listing_id>", methods=["DELETE"])
-# def delete_role_listing(role_listing_id):
-#     try:
-#         role_listing = RoleListing.query.get(role_listing_id)
-#         if role_listing:
-#             db.session.delete(role_listing)
-#             db.session.commit()
+# delete a rolelisting base on role listing id (used for testing purposes only)
+@role.route("/roleListing/delete/<int:role_listing_id>", methods=["DELETE"])
+def delete_role_listing(role_listing_id):
+    try:
+        role_listing_changes = RoleListingChanges.query.filter_by(role_listing_id=role_listing_id).all()
+        if role_listing_changes:
+            for role_listing_change in role_listing_changes:
+                db.session.delete(role_listing_change)
+                db.session.commit()
+        role_listing = RoleListing.query.get(role_listing_id)
+        if role_listing:
+            db.session.delete(role_listing)
+            db.session.commit()
 
-#             return jsonify(
-#                 {
-#                     "code": 200,
-#                     "message": f"RoleListing with ID {role_listing_id} deleted successfully."
-#                 }
-#             ), 200
-#         else:
-#             return jsonify(
-#                 {
-#                     "code": 404,
-#                     "message": f"RoleListing with ID {role_listing_id} not found. Nothing deleted."
-#                 }
-#             ), 404
-#     except Exception as e:
-#         return jsonify(
-#             {
-#                 "code": 400,
-#                 "message": f"Failed to delete RoleListing with ID {role_listing_id}. Error: {str(e)}"
-#             }
-#         ), 400
+            return jsonify(
+                {
+                    "code": 200,
+                    "message": f"RoleListing with ID {role_listing_id} deleted successfully."
+                }
+            ), 200
+        else:
+            return jsonify(
+                {
+                    "code": 404,
+                    "message": f"RoleListing with ID {role_listing_id} not found. Nothing deleted."
+                }
+            ), 404
+    except Exception as e:
+        return jsonify(
+            {
+                "code": 400,
+                "message": f"Failed to delete RoleListing with ID {role_listing_id}. Error: {str(e)}"
+            }
+        ), 400
 
 # Role Skills Class definition
 class RoleSkills(db.Model):
