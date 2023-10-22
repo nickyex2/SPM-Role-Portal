@@ -2,15 +2,15 @@ import unittest
 import requests
 import os
 from dotenv import load_dotenv
-from staff.staff_Int_test import *
-from staffReportingOfficer.staffReportingOfficer_Int_test import *
-from staffRole.staffRole_Int_test import *
-from staffSkills.staffSkills_Int_test import *
-from skills.skills_Int_test import *
-from role.role_Int_test import *
-from roleApplication.roleApplication_Int_test import *
-from roleListing.roleListing_Int_test import *
-from roleSkills.roleSkills_Int_test import *
+from staff import *
+from staffReportingOfficer import *
+from staffRole import *
+from staffSkills import *
+from skills import *
+from role import *
+from roleApplication import *
+from roleListing import *
+from roleSkills import *
 
 load_dotenv()
 def main():
