@@ -84,65 +84,65 @@ def get_roles():
         }
     ), 404
 
-# Update a specific Role by role_id
-@role.route("/update/<int:role_id>", methods=["PUT"])
-def update_role(role_id):
-    try:
-        data = request.get_json()
-        role = Role.query.get(role_id)
-        if role:
-            role.role_name = data.get("role_name", role.role_name)
-            role.role_description = data.get("role_description", role.role_description)
-            role.role_status = data.get("role_status", role.role_status)
-            db.session.commit()
-            return jsonify(
-                {
-                    "code": 200,
-                    "message": f"Role with ID {role_id} updated successfully.",
-                    "data": role.json()
-                }
-            ), 200
-        else:
-            return jsonify(
-                {
-                    "code": 404,
-                    "message": f"Role with ID {role_id} not found. Nothing updated."
-                }
-            ), 404
-    except Exception as e:
-        return jsonify(
-            {
-                "code": 400,
-                "message": f"Failed to update Role with ID {role_id}. Error: {str(e)}"
-            }
-        ), 400
+# # Update a specific Role by role_id
+# @role.route("/update/<int:role_id>", methods=["PUT"])
+# def update_role(role_id):
+#     try:
+#         data = request.get_json()
+#         role = Role.query.get(role_id)
+#         if role:
+#             role.role_name = data.get("role_name", role.role_name)
+#             role.role_description = data.get("role_description", role.role_description)
+#             role.role_status = data.get("role_status", role.role_status)
+#             db.session.commit()
+#             return jsonify(
+#                 {
+#                     "code": 200,
+#                     "message": f"Role with ID {role_id} updated successfully.",
+#                     "data": role.json()
+#                 }
+#             ), 200
+#         else:
+#             return jsonify(
+#                 {
+#                     "code": 404,
+#                     "message": f"Role with ID {role_id} not found. Nothing updated."
+#                 }
+#             ), 404
+#     except Exception as e:
+#         return jsonify(
+#             {
+#                 "code": 400,
+#                 "message": f"Failed to update Role with ID {role_id}. Error: {str(e)}"
+#             }
+#         ), 400
 
-# Create a new Role
-@role.route("/create", methods=["POST"])
-def create_role():
-    try:
-        data = request.get_json()
-        role = Role(
-            role_name=data["role_name"],
-            role_description=data["role_description"],
-            role_status=data["role_status"]
-        )
-        db.session.add(role)
-        db.session.commit()
-        return jsonify(
-            {
-                "code": 201,
-                "message": "Role created successfully.",
-                "data": role.json()
-            }
-        ), 201
-    except Exception as e:
-        return jsonify(
-            {
-                "code": 400,
-                "message": f"Failed to create Role. Error: {str(e)}"
-            }
-        ), 400
+# # Create a new Role
+# @role.route("/create", methods=["POST"])
+# def create_role():
+#     try:
+#         data = request.get_json()
+#         role = Role(
+#             role_name=data["role_name"],
+#             role_description=data["role_description"],
+#             role_status=data["role_status"]
+#         )
+#         db.session.add(role)
+#         db.session.commit()
+#         return jsonify(
+#             {
+#                 "code": 201,
+#                 "message": "Role created successfully.",
+#                 "data": role.json()
+#             }
+#         ), 201
+#     except Exception as e:
+#         return jsonify(
+#             {
+#                 "code": 400,
+#                 "message": f"Failed to create Role. Error: {str(e)}"
+#             }
+#         ), 400
 
 # # Delete a specific Role by role_id
 # @role.route("/deleteRole/<int:role_id>", methods=["DELETE"])
@@ -635,36 +635,36 @@ class RoleSkills(db.Model):
             "skill_id": self.skill_id
         }
 
-# Create a new RoleSkills association
-@role.route("/roleSkills/create", methods=["POST"])
-def create_role_skills():
-    try:
-        data = request.get_json()
-        role_id = data.get("role_id")
-        skill_id = data.get("skill_id")
+# # Create a new RoleSkills association
+# @role.route("/roleSkills/create", methods=["POST"])
+# def create_role_skills():
+#     try:
+#         data = request.get_json()
+#         role_id = data.get("role_id")
+#         skill_id = data.get("skill_id")
 
-        role_skills = RoleSkills(
-            role_id=role_id,
-            skill_id=skill_id
-        )
+#         role_skills = RoleSkills(
+#             role_id=role_id,
+#             skill_id=skill_id
+#         )
 
-        db.session.add(role_skills)
-        db.session.commit()
+#         db.session.add(role_skills)
+#         db.session.commit()
 
-        response_data = {
-            "code": 201,
-            "message": "RoleSkills association created successfully.",
-            "data": role_skills.json()
-        }
+#         response_data = {
+#             "code": 201,
+#             "message": "RoleSkills association created successfully.",
+#             "data": role_skills.json()
+#         }
 
-        return jsonify(response_data), 201
-    except Exception as e:
-        return jsonify(
-            {
-                "code": 400,
-                "message": f"Failed to create RoleSkills association. Error: {str(e)}"
-            }
-        ), 400
+#         return jsonify(response_data), 201
+#     except Exception as e:
+#         return jsonify(
+#             {
+#                 "code": 400,
+#                 "message": f"Failed to create RoleSkills association. Error: {str(e)}"
+#             }
+#         ), 400
 
 # Get all RoleSkills associations
 @role.route("/roleSkills/getAll")

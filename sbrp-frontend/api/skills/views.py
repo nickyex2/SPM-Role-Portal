@@ -80,72 +80,72 @@ def find_by_ids():
         }
     ), 404
 
-# create new skill
-@skills.route("/create/<int:skill_id>", methods=['POST'])
-def create_skill(skill_id):
-    if Skill.query.filter_by(skill_id=skill_id).first():
-        return jsonify(
-            {
-                "code": 410,
-                "data": {
-                    "skill_id": skill_id
-                },
-                "message": "skill already exists."
-            }
-        ), 410
+# # create new skill
+# @skills.route("/create/<int:skill_id>", methods=['POST'])
+# def create_skill(skill_id):
+#     if Skill.query.filter_by(skill_id=skill_id).first():
+#         return jsonify(
+#             {
+#                 "code": 410,
+#                 "data": {
+#                     "skill_id": skill_id
+#                 },
+#                 "message": "skill already exists."
+#             }
+#         ), 410
 
-    data = request.get_json(force=True)
-    print("data is " + format(data))
-    skill = Skill(skill_id, **data)
+#     data = request.get_json(force=True)
+#     print("data is " + format(data))
+#     skill = Skill(skill_id, **data)
 
-    try:
-        db.session.add(skill)
-        db.session.commit()
-    except:
-        return jsonify(
-            {
-                "code": 501,
-                "data": {
-                    "skill_id": skill_id
-                },
-                "message": "An error occurred creating the skill."
-            }
-        ), 501
+#     try:
+#         db.session.add(skill)
+#         db.session.commit()
+#     except:
+#         return jsonify(
+#             {
+#                 "code": 501,
+#                 "data": {
+#                     "skill_id": skill_id
+#                 },
+#                 "message": "An error occurred creating the skill."
+#             }
+#         ), 501
 
-    return jsonify(
-        {
-            "code": 201,
-            "data": skill.json()
-        }
-    ), 201
+#     return jsonify(
+#         {
+#             "code": 201,
+#             "data": skill.json()
+#         }
+#     ), 201
 
-# update skillset by skill_id
-@skills.route("/update/<int:skill_id>", methods=['PUT'])
-def update_skill(skill_id):
-    skill = Skill.query.filter_by(skill_id=skill_id).first()
-    if skill:
-        skillStatus = request.get_json(force=True)
-        print("data is " + format(skillStatus))
-        skill.skill_status = skillStatus["skill_status"]
-    try:
-        db.session.commit()
-    except:
-        return jsonify(
-            {
-                "code": 502,
-                "data": {
-                    "skill_id": skill_id
-                },
-                "message": "An error occurred updating the skill."
-            }
-        ), 502
+# # update skillset by skill_id
+# @skills.route("/update/<int:skill_id>", methods=['PUT'])
+# def update_skill(skill_id):
+#     skill = Skill.query.filter_by(skill_id=skill_id).first()
+#     if skill:
+#         skillStatus = request.get_json(force=True)
+#         print("data is " + format(skillStatus))
+#         skill.skill_status = skillStatus["skill_status"]
+#     try:
+#         db.session.commit()
+#     except:
+#         return jsonify(
+#             {
+#                 "code": 502,
+#                 "data": {
+#                     "skill_id": skill_id
+#                 },
+#                 "message": "An error occurred updating the skill."
+#             }
+#         ), 502
     
-    return jsonify(
-        {
-            "code": 202,
-            "data": skill.json()
-        }
-    ), 202
+#     return jsonify(
+#         {
+#             "code": 202,
+#             "data": skill.json()
+#         }
+#     ), 202
 
 # # delete skillset by skill_id
 # @skills.route("/delete/<int:skill_id>", methods=['POST'])
