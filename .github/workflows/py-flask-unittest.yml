@@ -36,6 +36,9 @@ jobs:
         run: |
           echo "VERCEL_DEPLOYMENT_URL=${{ steps.vercel-preview-url.outputs.preview_url }}" >> $GITHUB_ENV
       - name: run-unittest-python
+        working-directory: ./BE/unit-tests
+        env:
+          BASE_URL: ${{ format('https://{0}', steps.vercel-preview-url.outputs.preview_url) }}
         run: |
-          python3 -m unittest BE/unit-tests/main_test.py
+          python3 -m unittest main_test.py
           

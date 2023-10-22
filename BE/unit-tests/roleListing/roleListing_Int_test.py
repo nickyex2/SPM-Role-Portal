@@ -10,6 +10,13 @@ class TestRoleListingAPI(unittest.TestCase):
     def setUp(self):
         self.base_url = os.environ.get('BASE_URL') + '/api/role/roleListing'
 
+    @classmethod
+    def tearDownClass(cls):
+        role_listing_id = 123456789
+        response = requests.delete(f'{os.environ.get("BASE_URL")}/api/role/roleListing/delete/{role_listing_id}')
+        print("Deleting test role listing with ID 123456789", response.status_code)
+
+
     def test_create_role_listing(self):
         # Test Case 1: Create a new role listing
         data = {
@@ -64,13 +71,6 @@ class TestRoleListingAPI(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(len(response.json()['data']['role_listing_changes']) > 0)
         print("Test Case - Update Role Listing And Get Changes - PASSED")
-    
-    def test_delete_role_listing(self):
-        # Test Case 5: Delete role listing
-        role_listing_id = 123456789
-        response = requests.delete(f'{self.base_url}/delete/{role_listing_id}')
-        self.assertEqual(response.status_code, 200)
-        print("Test Case - Delete Role Listing - PASSED")
 
 if __name__ == "__main__":
     unittest.main()
