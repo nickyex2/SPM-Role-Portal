@@ -38,7 +38,7 @@ jobs:
       - name: run-unittest-python
         working-directory: ./BE/unit-tests
         env:
-          BASE_URL: ${{ steps.vercel-preview-url.outputs.preview_url }}
+          BASE_URL: ${{ format('https://{0}', steps.vercel-preview-url.outputs.preview_url) }}
         run: |
           python3 -m unittest main_test.py
           
