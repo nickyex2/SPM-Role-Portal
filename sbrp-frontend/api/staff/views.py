@@ -106,43 +106,43 @@ def get_multiple_staff():
 # create new staff redundant
 
 
-@staff.route("/create/<string:staff_id>", methods=['POST'])
-def create_staff(staff_id):
-    if Staff.query.filter_by(staff_id=staff_id).first():
-        return jsonify(
-            {
-                "code": 410,
-                "data": {
-                    "staff_id": staff_id
-                },
-                "message": "Staff already exists."
-            }
-        ), 410
+# @staff.route("/create/<string:staff_id>", methods=['POST'])
+# def create_staff(staff_id):
+#     if Staff.query.filter_by(staff_id=staff_id).first():
+#         return jsonify(
+#             {
+#                 "code": 410,
+#                 "data": {
+#                     "staff_id": staff_id
+#                 },
+#                 "message": "Staff already exists."
+#             }
+#         ), 410
 
-    data = request.get_json(force=True)
-    print("data is " + format(data))
-    staff = Staff(staff_id, **data)
+#     data = request.get_json(force=True)
+#     print("data is " + format(data))
+#     staff = Staff(staff_id, **data)
 
-    try:
-        db.session.add(staff)
-        db.session.commit()
-    except:
-        return jsonify(
-            {
-                "code": 501,
-                "data": {
-                    "staff_id": staff_id
-                },
-                "message": "An error occurred creating the staff."
-            }
-        ), 501
+#     try:
+#         db.session.add(staff)
+#         db.session.commit()
+#     except:
+#         return jsonify(
+#             {
+#                 "code": 501,
+#                 "data": {
+#                     "staff_id": staff_id
+#                 },
+#                 "message": "An error occurred creating the staff."
+#             }
+#         ), 501
 
-    return jsonify(
-        {
-            "code": 201,
-            "data": staff.json()
-        }
-    ), 201
+#     return jsonify(
+#         {
+#             "code": 201,
+#             "data": staff.json()
+#         }
+#     ), 201
 
 # Staff RO Class Definition
 class StaffReportingOfficer(db.Model):
@@ -160,36 +160,36 @@ class StaffReportingOfficer(db.Model):
             "RO_id": self.RO_id
         }
 
-# Create a new StaffReportingOfficer
-@staff.route("/staffRO/create", methods=["POST"])
-def create_staff_reporting_officer():
-    try:
-        data = request.get_json()
-        staff_id = data.get("staff_id")
-        RO_id = data.get("RO_id")
+# # Create a new StaffReportingOfficer
+# @staff.route("/staffRO/create", methods=["POST"])
+# def create_staff_reporting_officer():
+#     try:
+#         data = request.get_json()
+#         staff_id = data.get("staff_id")
+#         RO_id = data.get("RO_id")
 
-        staff_reporting_officer = StaffReportingOfficer(
-            staff_id=staff_id,
-            RO_id=RO_id
-        )
+#         staff_reporting_officer = StaffReportingOfficer(
+#             staff_id=staff_id,
+#             RO_id=RO_id
+#         )
 
-        db.session.add(staff_reporting_officer)
-        db.session.commit()
+#         db.session.add(staff_reporting_officer)
+#         db.session.commit()
 
-        response_data = {
-            "code": 201,
-            "message": "StaffReportingOfficer created successfully.",
-            "data": staff_reporting_officer.json()
-        }
+#         response_data = {
+#             "code": 201,
+#             "message": "StaffReportingOfficer created successfully.",
+#             "data": staff_reporting_officer.json()
+#         }
 
-        return jsonify(response_data), 201
-    except Exception as e:
-        return jsonify(
-            {
-                "code": 400,
-                "message": f"Failed to create StaffReportingOfficer. Error: {str(e)}"
-            }
-        ), 400
+#         return jsonify(response_data), 201
+#     except Exception as e:
+#         return jsonify(
+#             {
+#                 "code": 400,
+#                 "message": f"Failed to create StaffReportingOfficer. Error: {str(e)}"
+#             }
+#         ), 400
 
 @staff.route("/staffRO/getOne/<int:staff_id>")
 def get_staff_reporting_officers_by_staff_id(staff_id):
@@ -303,39 +303,39 @@ class StaffRole(db.Model):
         }
 
 # Create a new StaffRole
-@staff.route("/staffRole/create", methods=["POST"])
-def create_staff_role():
-    try:
-        data = request.get_json()
-        staff_id = data.get("staff_id")
-        staff_role = data.get("staff_role")
-        role_type = data.get("role_type")
-        sr_status = data.get("sr_status")
+# @staff.route("/staffRole/create", methods=["POST"])
+# def create_staff_role():
+#     try:
+#         data = request.get_json()
+#         staff_id = data.get("staff_id")
+#         staff_role = data.get("staff_role")
+#         role_type = data.get("role_type")
+#         sr_status = data.get("sr_status")
 
-        staff_role = StaffRole(
-            staff_id=staff_id,
-            staff_role=staff_role,
-            role_type=role_type,
-            sr_status=sr_status
-        )
+#         staff_role = StaffRole(
+#             staff_id=staff_id,
+#             staff_role=staff_role,
+#             role_type=role_type,
+#             sr_status=sr_status
+#         )
 
-        db.session.add(staff_role)
-        db.session.commit()
+#         db.session.add(staff_role)
+#         db.session.commit()
 
-        response_data = {
-            "code": 201,
-            "message": "StaffRole created successfully.",
-            "data": staff_role.json()
-        }
+#         response_data = {
+#             "code": 201,
+#             "message": "StaffRole created successfully.",
+#             "data": staff_role.json()
+#         }
 
-        return jsonify(response_data), 201
-    except Exception as e:
-        return jsonify(
-            {
-                "code": 400,
-                "message": f"Failed to create StaffRole. Error: {str(e)}"
-            }
-        ), 400
+#         return jsonify(response_data), 201
+#     except Exception as e:
+#         return jsonify(
+#             {
+#                 "code": 400,
+#                 "message": f"Failed to create StaffRole. Error: {str(e)}"
+#             }
+#         ), 400
 
 # Get all StaffRoles
 @staff.route("/staffRole/getAll")
@@ -375,41 +375,41 @@ def get_staff_role(staff_id, staff_role):
         }
     ), 404
 
-# Update a specific StaffRole by staff_id and staff_role
-@staff.route("/staffRole/updateOne/<int:staff_id>/<int:staff_role>", methods=["PUT"])
-def update_staff_role(staff_id, staff_role):
-    try:
-        data = request.get_json()
-        role_type = data.get("role_type")
-        sr_status = data.get("sr_status")
+# # Update a specific StaffRole by staff_id and staff_role
+# @staff.route("/staffRole/updateOne/<int:staff_id>/<int:staff_role>", methods=["PUT"])
+# def update_staff_role(staff_id, staff_role):
+#     try:
+#         data = request.get_json()
+#         role_type = data.get("role_type")
+#         sr_status = data.get("sr_status")
 
-        staff_role_obj = StaffRole.query.filter_by(staff_id=staff_id, staff_role=staff_role).first()
-        if staff_role_obj:
-            staff_role_obj.role_type = role_type
-            staff_role_obj.sr_status = sr_status
-            db.session.commit()
+#         staff_role_obj = StaffRole.query.filter_by(staff_id=staff_id, staff_role=staff_role).first()
+#         if staff_role_obj:
+#             staff_role_obj.role_type = role_type
+#             staff_role_obj.sr_status = sr_status
+#             db.session.commit()
 
-            response_data = {
-                "code": 200,
-                "message": f"StaffRole with staff_id {staff_id} and staff_role {staff_role} updated successfully.",
-                "data": staff_role_obj.json()
-            }
+#             response_data = {
+#                 "code": 200,
+#                 "message": f"StaffRole with staff_id {staff_id} and staff_role {staff_role} updated successfully.",
+#                 "data": staff_role_obj.json()
+#             }
 
-            return jsonify(response_data), 200
-        else:
-            return jsonify(
-                {
-                    "code": 404,
-                    "message": f"StaffRole with staff_id {staff_id} and staff_role {staff_role} not found. Nothing updated."
-                }
-            ), 404
-    except Exception as e:
-        return jsonify(
-            {
-                "code": 400,
-                "message": f"Failed to update StaffRole with staff_id {staff_id} and staff_role {staff_role}. Error: {str(e)}"
-            }
-        ), 400
+#             return jsonify(response_data), 200
+#         else:
+#             return jsonify(
+#                 {
+#                     "code": 404,
+#                     "message": f"StaffRole with staff_id {staff_id} and staff_role {staff_role} not found. Nothing updated."
+#                 }
+#             ), 404
+#     except Exception as e:
+#         return jsonify(
+#             {
+#                 "code": 400,
+#                 "message": f"Failed to update StaffRole with staff_id {staff_id} and staff_role {staff_role}. Error: {str(e)}"
+#             }
+#         ), 400
     
 @staff.route("/staffRole/getByStaff/<int:staff_id>")
 def get_all_staff_roles_by_staff(staff_id):
@@ -484,37 +484,37 @@ class StaffSkills(db.Model):
             "ss_status": self.ss_status.name
         }
 
-@staff.route("/staffSkills/create", methods=["POST"])
-def create_staff_skill():
-    try:
-        data = request.get_json()
-        staff_id = data.get("staff_id")
-        skill_id = data.get("skill_id")
-        ss_status = data.get("ss_status")
+# @staff.route("/staffSkills/create", methods=["POST"])
+# def create_staff_skill():
+#     try:
+#         data = request.get_json()
+#         staff_id = data.get("staff_id")
+#         skill_id = data.get("skill_id")
+#         ss_status = data.get("ss_status")
 
-        staff_skill = StaffSkills(
-            staff_id=staff_id,
-            skill_id=skill_id,
-            ss_status=ss_status
-        )
+#         staff_skill = StaffSkills(
+#             staff_id=staff_id,
+#             skill_id=skill_id,
+#             ss_status=ss_status
+#         )
 
-        db.session.add(staff_skill)
-        db.session.commit()
+#         db.session.add(staff_skill)
+#         db.session.commit()
 
-        response_data = {
-            "code": 201,
-            "message": "StaffSkills created successfully.",
-            "data": staff_skill.json()
-        }
+#         response_data = {
+#             "code": 201,
+#             "message": "StaffSkills created successfully.",
+#             "data": staff_skill.json()
+#         }
 
-        return jsonify(response_data), 201
-    except Exception as e:
-        return jsonify(
-            {
-                "code": 400,
-                "message": f"Failed to create StaffSkills. Error: {str(e)}"
-            }
-        ), 400
+#         return jsonify(response_data), 201
+#     except Exception as e:
+#         return jsonify(
+#             {
+#                 "code": 400,
+#                 "message": f"Failed to create StaffSkills. Error: {str(e)}"
+#             }
+#         ), 400
     
 # Get all StaffSkills
 @staff.route("/staffSkills/getAll")
@@ -556,39 +556,39 @@ def get_staff_skills(staff_id):
         }
     ), 404
 
-# Update a specific StaffSkills
-@staff.route("/staffSkills/updateByStaffSkill/<int:staff_id>/<int:skill_id>", methods=["PUT"])
-def update_staff_skill(staff_id, skill_id):
-    try:
-        data = request.get_json()
-        ss_status = data.get("ss_status")
+# # Update a specific StaffSkills
+# @staff.route("/staffSkills/updateByStaffSkill/<int:staff_id>/<int:skill_id>", methods=["PUT"])
+# def update_staff_skill(staff_id, skill_id):
+#     try:
+#         data = request.get_json()
+#         ss_status = data.get("ss_status")
 
-        staff_skill = StaffSkills.query.filter_by(staff_id=staff_id, skill_id=skill_id).first()
-        if staff_skill:
-            staff_skill.ss_status = ss_status
-            db.session.commit()
+#         staff_skill = StaffSkills.query.filter_by(staff_id=staff_id, skill_id=skill_id).first()
+#         if staff_skill:
+#             staff_skill.ss_status = ss_status
+#             db.session.commit()
 
-            response_data = {
-                "code": 200,
-                "message": f"StaffSkills for staff_id {staff_id} and skill_id {skill_id} updated successfully.",
-                "data": staff_skill.json()
-            }
+#             response_data = {
+#                 "code": 200,
+#                 "message": f"StaffSkills for staff_id {staff_id} and skill_id {skill_id} updated successfully.",
+#                 "data": staff_skill.json()
+#             }
 
-            return jsonify(response_data), 200
-        else:
-            return jsonify(
-                {
-                    "code": 404,
-                    "message": f"StaffSkills for staff_id {staff_id} and skill_id {skill_id} not found. Nothing updated."
-                }
-            ), 404
-    except Exception as e:
-        return jsonify(
-            {
-                "code": 400,
-                "message": f"Failed to update StaffSkills. Error: {str(e)}"
-            }
-        ), 400
+#             return jsonify(response_data), 200
+#         else:
+#             return jsonify(
+#                 {
+#                     "code": 404,
+#                     "message": f"StaffSkills for staff_id {staff_id} and skill_id {skill_id} not found. Nothing updated."
+#                 }
+#             ), 404
+#     except Exception as e:
+#         return jsonify(
+#             {
+#                 "code": 400,
+#                 "message": f"Failed to update StaffSkills. Error: {str(e)}"
+#             }
+#         ), 400
     
 @staff.route("/staffSkills/getBySkill/<int:skill_id>")
 def get_staff_skills_by_skill(skill_id):
