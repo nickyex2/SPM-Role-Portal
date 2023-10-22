@@ -3,6 +3,9 @@ name: Run Unit Test Python Flask Backend
 on: 
   pull_request:
     branches: [ master, main ]
+    paths: 
+      - 'sbrp-frontend/api/**'
+      - '.github/workflows/**'
 
 jobs:
   build:
