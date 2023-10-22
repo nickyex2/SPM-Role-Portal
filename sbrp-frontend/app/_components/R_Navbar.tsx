@@ -30,7 +30,7 @@ export default function R_Navbar() {
   }
   return (
     <Navbar fluid rounded className="sticky top-0 z-50 bg-blue-300 rounded-none">
-      <Navbar.Brand href="http://localhost:3000/listroles">
+      <Navbar.Brand href="/listroles">
         {/* <img
           alt="Flowbite React Logo"
           className="mr-3 h-6 sm:h-9"

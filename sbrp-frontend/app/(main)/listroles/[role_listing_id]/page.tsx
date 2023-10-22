@@ -24,14 +24,14 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
   const [loading, setLoading] = useState(true);
   async function getRoleDetails(): Promise<TRoleDetails> {
     const response: AxiosResponse<TResponseData> = await axios.get(
-      `http://localhost:5003/getRole/${role?.role_id}`
+      `/api/role/getOne/${role?.role_id}`
     );
     return response.data.data;
   }
 
   async function getRoleSkills(): Promise<Array<TRoleSkills>> {
     const response: AxiosResponse<TResponseData> = await axios.get(
-      `http://localhost:5008/getRoleSkills/${role?.role_id}`
+      `/api/role/roleSkills/getByRole/${role?.role_id}`
     );
     return response.data.data?.role_skills;
   }
@@ -40,7 +40,7 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
       skill_ids: roleSkills
     }
     const response: AxiosResponse<TResponseData> = await axios.post(
-      `http://localhost:5001/getSkills`,
+      `/api/skills/getMulti`,
       sendData
     );
     return response.data.data;
@@ -48,7 +48,7 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
   async function getRoleListingChanges(): Promise<Array<TRoleListingChanges>> {
     try {
     const response: AxiosResponse<TResponseData> = await axios.get(
-      `http://localhost:5002/getRoleListingChanges/${params.role_listing_id}`
+      `/api/role/roleListing/getChanges/${params.role_listing_id}`
     );
     return response.data.data?.role_listing_changes;
     }
@@ -62,7 +62,7 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
   async function getAppliedRole(): Promise<TRoleApplication | undefined> {
     try {
       const response: AxiosResponse<TResponseData> = await axios.get(
-        `http://localhost:5005/getRoleApplication/${params.role_listing_id}/${sessionStorage.getItem("staff_id")}`
+        `/api/role/roleApplication/getByRoleLStaff/${params.role_listing_id}/${sessionStorage.getItem("staff_id")}`
       );
       return response.data.data;
     }
@@ -80,7 +80,7 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
       role_app_status: "applied"
     }
     const response: AxiosResponse<TResponseData> = await axios.post(
-      `http://localhost:5005/createRoleApplication`,
+      `/api/role/roleApplication/create`,
       sendApplication
     );
     if (response.status === 201) {
@@ -89,7 +89,7 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
   }
   async function withdrawRole(roleApplication: TRoleApplication) {
     const response: AxiosResponse<TResponseData> = await axios.put(
-      `http://localhost:5005/updateRoleApplication/${roleApplication.role_app_id}`,
+      `/api/role/roleApplication/update/${roleApplication.role_app_id}`,
       {
         ...roleApplication,
         role_app_status: "withdrawn"
@@ -102,7 +102,7 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
   useEffect(() => {
     async function getRoleListing(): Promise<TRoleListing> {
       const response: AxiosResponse<TResponseData> = await axios.get(
-        `http://localhost:5002/getRoleListing/${params.role_listing_id}`
+        `/api/role/roleListing/getOne/${params.role_listing_id}`
       );
       return response.data.data;
     }
