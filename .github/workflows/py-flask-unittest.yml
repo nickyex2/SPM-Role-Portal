@@ -5,6 +5,7 @@ on:
     branches: [ master, main ]
     paths: 
       - 'sbrp-frontend/api/**'
+      - 'BE/unit-tests/**'
       - '.github/workflows/**'
 
 jobs:
