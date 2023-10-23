@@ -205,8 +205,6 @@ export default function Test() {
       });
     }
 
-    let timestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
-
     // If opening date is after today, set status to inactive, else set to active
     let status = "active";
     if (selectedOpeningDate > Today) {
@@ -222,7 +220,7 @@ export default function Test() {
       role_listing_close: selectedClosingDate,
       role_listing_creator: sessionStorage.getItem("staff_id"),
       role_listing_status: status,
-      role_listing_updater: timestamp,
+      role_listing_updater: sessionStorage.getItem("staff_id")
     };
     console.log(sendData)
     const response: AxiosResponse<TResponseData> = await axios.post(
@@ -552,7 +550,7 @@ export default function Test() {
                   ) : null} */}
 
                   {/* Create Button */}
-                  <div>
+                  <div className="flex justify-end">
                     <Button onClick={() => createListing(selectedRoleTypeID, selectedDescription, selectedStaffID, selectedOpeningDate, selectedClosingDate)}>
                       Create Listing
                     </Button>
@@ -585,7 +583,11 @@ export default function Test() {
         <div className="grid grid-cols-2 gap-0">
 
           <div className="flex-1 bg-#fff border-black border-solid rounded max-w">
-            <RoleListings roles={roles} roleDetails={roleDetails} sysRole={sysRole} roleSkills={roleSkills} currUserSkills={currUserSkills} onRoleClick={handleRoleClick} />
+            {selectedRole ? (
+            <RoleListings roles={roles} roleDetails={roleDetails} selectedRole={selectedRole} sysRole={sysRole} roleSkills={roleSkills} currUserSkills={currUserSkills} onRoleClick={handleRoleClick} />
+            ) : (
+              <p>No roles selected</p>
+            )}
           </div>
 
           <div>

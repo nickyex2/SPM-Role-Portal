@@ -98,7 +98,7 @@ export default function RoleDetails( {selectedRole, sysRole, roleSkills, currUse
   async function getRoleListingSource(): Promise<TStaff | undefined> {
     try {
       const response: AxiosResponse<TResponseData> = await axios.get(
-        `http://localhost:5000//getStaff/${selectedRole.role_listing_source}`
+        `http://localhost:5000/getStaff/${selectedRole.role_listing_source}`
       );
       console.log("response.data.data: ", response.data.data);
       return response.data.data;
@@ -198,7 +198,7 @@ export default function RoleDetails( {selectedRole, sysRole, roleSkills, currUse
       <h1>Loading...</h1>
     </div>
   ) : (
-    <div className="w-4/5 mx-auto h-[60vh] overflow-y-scroll">
+    <div className="w-4/5 h-[60vh] overflow-y-scroll">
       <div className="max-w p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mx-auto mb-2 grid grid-cols-4 gap-2">
         {/* Title */}
         <div className="col-span-3">
@@ -221,7 +221,7 @@ export default function RoleDetails( {selectedRole, sysRole, roleSkills, currUse
               <Modal.Body>
                 <div className="space-y-6">
                   <h3 className="text-xl font-medium text-gray-900 dark:text-white">Confirm Application?</h3>
-                  <h6>Your application will be submitted to the hiring team.</h6>
+                  <h6>Your details will be submitted to the hiring team.</h6>
 
                   <div className="flex gap-5 justify-end">
                     <Button className="bg-gray-300" onClick={() => props.setOpenModal(undefined)}>Cancel</Button>
@@ -251,7 +251,7 @@ export default function RoleDetails( {selectedRole, sysRole, roleSkills, currUse
         {/* Department, How many days posted ago */}
         <div className="col-span-1">
           <div className="flex items-center">
-            <p className="font-normal text-gray-700 dark:text-black">
+            <p className="font-normal text-sm text-gray-700 dark:text-black">
               {/* Convert this from all capital to first letter capital with the remaining lower */}
               {roleListingSource?.dept?.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}
             </p>
@@ -259,7 +259,7 @@ export default function RoleDetails( {selectedRole, sysRole, roleSkills, currUse
         </div>
         <div className="col-span-2">
           <div className="flex items-center">
-            <p className="font-normal text-gray-700 dark:text-black">
+            <p className="font-normal text-sm text-gray-700 dark:text-black">
               Posted {daysSinceOpen} days ago
             </p>
           </div>
@@ -268,7 +268,7 @@ export default function RoleDetails( {selectedRole, sysRole, roleSkills, currUse
         {/* Closing Date */}
         <div className="col-span-4">
           <div className="flex items-center">
-            <p className="font-normal text-gray-700 dark:text-black">
+            <p className="font-normal text-sm text-gray-700 dark:text-black">
               Application Deadline: {selectedRole?.role_listing_close}
             </p>
           </div>
@@ -277,7 +277,7 @@ export default function RoleDetails( {selectedRole, sysRole, roleSkills, currUse
         {/* Hiring Manager (email) */}
         <div className="col-span-4">
           <div className="flex items-center">
-            <p className="font-normal text-gray-700 dark:text-black">
+            <p className="font-normal text-sm text-gray-700 dark:text-black">
               Hiring Manager: {roleListingSource?.fname?.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())} 
               <span className="text-blue-500">({roleListingSource?.email})</span>
             </p>
@@ -286,7 +286,7 @@ export default function RoleDetails( {selectedRole, sysRole, roleSkills, currUse
 
         {/* Skill Match */}
         <div className="col-span-1">
-          <p className="font-normal text-gray-700 dark:text-black">
+          <p className="font-normal text-sm text-gray-700 dark:text-black">
             Skill Match:
             <br />
             {
@@ -298,19 +298,19 @@ export default function RoleDetails( {selectedRole, sysRole, roleSkills, currUse
         </div>
         
         <div className="col-span-3">
-          <p className="font-normal text-gray-700 dark:text-black">
+          <p className="font-normal text-sm text-gray-700 dark:text-black">
             {roleSkillsDetails.map((skill) => {
               console.log("SkillDeets", skill)
               if (currUserSkills.includes(skill.skill_id)) {
                 return (
-                  <span key={skill.skill_name} className="inline-block bg-green-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                  <span key={skill.skill_name} className="inline-block bg-green-200 rounded-full px-3 py-1 text-xs font-semibold text-gray-700 mr-2 mb-2">
                     {skill.skill_name}
                   </span>
                 )
               }
               else {
                 return (
-                  <span key={skill.skill_name} className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                  <span key={skill.skill_name} className="inline-block bg-gray-200 rounded-full px-3 py-1 text-xs font-semibold text-gray-700 mr-2 mb-2">
                     {skill.skill_name}
                   </span>
                 )
@@ -323,12 +323,12 @@ export default function RoleDetails( {selectedRole, sysRole, roleSkills, currUse
 
         {/* Role Description */}
         <div className="col-span-4">
-          <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+          <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
             Role Description
           </h5>
         </div>
         <div className="col-span-4">
-          <p className="font-normal text-gray-700 dark:text-black">
+          <p className="font-normal text-sm text-gray-700 dark:text-black">
             {selectedRole.role_listing_desc}
           </p>
         </div>
