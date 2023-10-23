@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import axios, { AxiosResponse } from "axios";
 import { Modal, Button } from "flowbite-react";
-import { HiUser } from "react-icons/hi";
 
 export default function Modal_Staff({
   props,
@@ -50,66 +49,9 @@ export default function Modal_Staff({
   }, [props.modalStaff]);
   return (
     <Modal show={props.openModal === 'pop-up-profile'} size="md" popup onClose={() => props.setOpenModal(undefined)}>
-          <Modal.Header>
-          <div className="flex flex-row items-right gap-4">
-          <HiUser className='mb-3 rounded-full shadow-lg' size={96}/>
-                  <div className='my-auto'>
-                    <div className='flex flex-col'>
-                      <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
-                        {props.modalStaff?.fname} {props.modalStaff?.lname}
-                      </h5>
-                      <span className="text-sm text-gray-500 dark:text-gray-400">
-                      {props.modalStaff?.dept}
-                      </span>
-                      <span className="text-sm text-gray-500 dark:text-gray-400">
-                        {staffRoles.map((role, idx) => {
-                          return (
-                            
-                              <span key={idx}>{role.role_name} </span>
-                            
-                          )
-                        }
-                        )}
-                      </span>
-                      
-                    </div>
-                    
-                  </div>
-                  
-            </div>
-          </Modal.Header>
-
+          <Modal.Header />
           <Modal.Body>
-            <div className="space-y-6 mb-8">
-              <div className='flex flex-col items-right my-2'>
-                <h1 className="text-xl font-semibold mb-1">Employee Details</h1>
-
-                <p>
-                  <strong>Email:</strong> {props.modalStaff?.email}
-                </p>
-                <p>
-                  <strong>Phone:</strong> {props.modalStaff?.phone}
-                </p>
-                <p>
-                  <strong>Reporting Officer:</strong> {reportingOfficer?.fname} {reportingOfficer?.lname}
-                </p>
-              </div>
-
-              <div className='flex flex-col items-right my-4'>
-                <h1 className="text-xl font-semibold mb-1">Skills</h1>
-                {props.modalSkills.map((skill, idx) => {
-                  return (
-                    <div key={idx}>
-                      <p>{skill.skill_name}</p>
-                    </div>
-                  )
-                }
-                )}
-              </div>
-
-            </div>
-
-            {/* <div className="text-center">
+            <div className="text-center">
               <h1 className="text-3xl font-bold">Profile</h1>
               <p>{props.modalStaff?.lname} {props.modalStaff?.fname}</p>
               <p>{props.modalStaff?.email}</p>
@@ -123,23 +65,21 @@ export default function Modal_Staff({
                 )
               }
               )}
-              
+              {staffRoles.map((role, idx) => {
+                return (
+                  <div key={idx}>
+                    <p>{role.role_name}</p>
+                  </div>
+                )
+              }
+              )}
               <p>{reportingOfficer?.fname} {reportingOfficer?.lname}</p>
               <div className="flex justify-center gap-4">
                 <Button onClick={() => props.setOpenModal(undefined)}>
                   {`Back To All Applicants`}
                 </Button>
               </div>
-            </div> */}
-
-              <div className="flex flex-row justify-center gap-4">
-                <Button color='success' pill>
-                  {`Accept Applicant`}
-                </Button>
-                <Button color='light' pill>
-                  {`Reject Applicant`}
-                </Button>
-              </div>
+            </div>
           </Modal.Body>
         </Modal>
   )

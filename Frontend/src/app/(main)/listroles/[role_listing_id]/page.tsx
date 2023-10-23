@@ -3,11 +3,10 @@ import React from "react";
 import axios, { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Badge, Button, Modal, Toast, Tabs, Card } from "flowbite-react";
+import { Badge, Button, Modal, Toast } from "flowbite-react";
 import { useRouter } from "next/navigation";
-import { HiOutlineCheckCircle, HiCheck, HiBriefcase, HiClipboardList, HiTag } from 'react-icons/hi'
+import { HiOutlineCheckCircle, HiCheck } from 'react-icons/hi'
 import EditListing from "@/app/_components/EditListing";
-import Loading from "@/app/_components/Loading";
 
 export default function Role_Listing_Profile( { params } : { params: { role_listing_id: string } }) {
   const router = useRouter();
@@ -149,261 +148,30 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
     });
     setLoading(false);
   }
-  function matchColour() {
-    if (Math.round((skillMatchCounter / roleSkillsDetails.length) * 100) < 40) {
-      return(
-        <p className='text-6xl text-center md:text-9xl font-bold text-red-600'>
-                  {
-                    Math.round((skillMatchCounter / roleSkillsDetails.length) * 100) + "%"
-                  }
-                  <p className='text-4xl font-bold text-center md:text-5xl font-bold text-left text-gray-900 dark:text-white'>Match</p>
-                </p>
-      )
-    } else if (Math.round((skillMatchCounter / roleSkillsDetails.length) * 100) > 40 && Math.round((skillMatchCounter / roleSkillsDetails.length) * 100) < 70) {
-      return (
-        <p className='text-6xl text-center md:text-9xl font-bold text-orange-400'>
-                  {
-                    Math.round((skillMatchCounter / roleSkillsDetails.length) * 100) + "%"
-                  }
-                  <p className='text-4xl font-bold text-center md:text-5xl font-bold text-left text-gray-900 dark:text-white'>Match</p>
-                </p>
-      )
-    } else {
-      return (
-        <p className='text-6xl text-center md:text-9xl font-bold text-green-600'>
-                  {
-                    Math.round((skillMatchCounter / roleSkillsDetails.length) * 100) + "%"
-                  }
-                  <p className='text-4xl font-bold text-center md:text-5xl font-bold text-left text-gray-900 dark:text-white'>Match</p>
-                </p>
-      )
-    }
-  }
-   
   return (
-    loading ? ( <Loading />) : (
+    loading ? ( <h1>Loading...</h1> ) : (
     <div>
-      <Tabs.Group
-      aria-label="Tabs with icons"
-      style="underline"
-      className="mx-auto mt-2">
-        <Tabs.Item
-        active
-        icon={HiBriefcase}
-        title="Role Details"
-        className='border-0'>
-          <div className='w-5/6 md:w-2/3 mx-auto mb-4'>
-            <Card>
-              <div className='flex flex-col items-start gap-2'>
-                <h1 className='text-3xl font-semibold text-gray-900 dark:text-white'>Skills Match</h1>
-                <div className='object-contain'>
-                    <div className='md:flex flex-row items-center gap-8'>
-                      <span className="m-8">
-                        {matchColour()}               
-                        <br></br>
-                        {/* <p className='hidden md:text-5xl font-bold text-left'>Match</p> */}
-                      </span>
-                      <span>
-
-                        <div className='flex flex-row items-start gap-8'>
-                          <div className='flex flex-col items-start'>
-                            <p className='font-medium text-xl mb-2'>Matched Skills</p>
-                              {roleSkillsDetails.map((roleSkill, idx) => {
-                                if (currUserSkills.includes(roleSkill.skill_id)) {
-                                  return (
-                                    <Badge color="success" key={idx} className="mr-4 my-1">
-                                      {roleSkill.skill_name}
-                                    </Badge>
-                                  )
-                                }
-                              })}
-                          </div>
-                          <div className='flex flex-col items-start'>
-                            <p className='font-medium text-xl mb-2'>Missing Skills</p>
-                                {roleSkillsDetails.map((roleSkill, idx) => {
-                                  if (!currUserSkills.includes(roleSkill.skill_id)) {
-                                    return (
-                                      <Badge color="failure" key={idx} className="mr-4 my-1">
-                                        {roleSkill.skill_name}
-                                      </Badge>
-                                    )
-                                  }
-                                })}
-                            </div>
-                        </div>
-                      </span>
-                    </div>
-                </div>
-              </div>
-            </Card>
-            
-          </div>
-
-          <div className='w-5/6 md:w-2/3 mx-auto mb-4'>
-            <Card>
-                <div className='flex flex-col gap-4'>
-                  <div className='flex flex-row'>
-                    <h1 className='text-3xl font-semibold text-gray-900 dark:text-white'>Role Details</h1>
-        
-                        <div 
-                          onClick={() => {
-                            props.setOpenModal('pop-up-edit');
-                          }}
-                          className='ml-auto cursor-pointer'>
-                            <svg className="w-8 h-8 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-                            <path d="M12.687 14.408a3.01 3.01 0 0 1-1.533.821l-3.566.713a3 3 0 0 1-3.53-3.53l.713-3.566a3.01 3.01 0 0 1 .821-1.533L10.905 2H2.167A2.169 2.169 0 0 0 0 4.167v11.666A2.169 2.169 0 0 0 2.167 18h11.666A2.169 2.169 0 0 0 16 15.833V11.1l-3.313 3.308Zm5.53-9.065.546-.546a2.518 2.518 0 0 0 0-3.56 2.576 2.576 0 0 0-3.559 0l-.547.547 3.56 3.56Z"/>
-                            <path d="M13.243 3.2 7.359 9.081a.5.5 0 0 0-.136.256L6.51 12.9a.5.5 0 0 0 .59.59l3.566-.713a.5.5 0 0 0 .255-.136L16.8 6.757 13.243 3.2Z"/>
-                          </svg>
-                        </div>
-                        
-                  </div>
-                  
-                  
-                  <div className='flex flex-row gap-8'>
-                    <div className='grow'>
-                      <p className='font-semibold'>Role Name</p>
-                      <p>{ roleDetails?.role_name || '' }</p>
-                    </div>
-                    <div className='grow'>
-                      <p className='font-semibold'>Role ID</p>
-                      <p>{ role?.role_id || '' }</p>
-                    </div>
-
-                  </div>
-
-                  <div>
-                    <div className='flex flex-row gap-8'>
-                      <div className='grow'>
-                        <p className='font-semibold'>Role Description</p>
-                        <p>{ role?.role_listing_desc || '' }</p>
-                      </div>
-
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className='flex flex-row gap-8'>
-                      <div className='grow'>
-                        <p className='font-semibold'>Date Listed</p>
-                        <p>{ role?.role_listing_open || '' }</p>
-                      </div>
-
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className='flex flex-col gap-2'>
-                        <p className='font-semibold'>Skills Required</p>
-                        <div className='flex flex-col items-start md:flex md:flex-row'>
-                            {roleSkillsDetails.map((roleSkill, idx) => {
-                            
-                              return (
-                                
-                                  <Badge color="success" key={idx} className='mb-2 mr-1'>
-                                  {roleSkill.skill_name}
-                                  </Badge>
-                                
-                                
-                              )
-                            
-                          })}
-                        </div>
-                    </div>
-                  </div>
-
-                  <div className='flex flex-row items-center mt-2'>
-                    <div className='w-2/3 mx-auto'>
-                      {appliedRole && appliedRole.role_app_status !== "withdrawn" ? (
-                        
-                        <Button 
-                        className='mx-auto w-5/6'
-                        onClick={() => {
-                          withdrawRole(appliedRole);
-                        }}>Withdraw</Button>
-                        
-                        
-                      ) : 
-                        
-                        <Button 
-                        className='mx-auto w-5/6'
-                        onClick={() => {
-                          applyRole(role?.role_listing_id as number, parseInt(sessionStorage.getItem("staff_id") as string));
-                        }}>Apply</Button>
-                      
-
-                      }
-                      </div>
-                    
-                  </div>
-
-                </div>
-              </Card>
-              <div className='flex flex-col items-center my-10'>
-              {sessionStorage.getItem("sys_role") === "hr" || parseInt(sessionStorage.getItem("staff_id") as string) === role?.role_listing_source ? (
-                        <div className='flex flex-row gap-2'>
-                          <Button onClick={() => {
-                            router.push(`/listroles/${params.role_listing_id}/applicants`)
-                          }}>
-                            View Applicants
-                          </Button>
-                        </div>
-                        
-                      ): null}
-              </div>
-            
-          </div>
-      </Tabs.Item>
-      <Tabs.Item
-      icon={HiClipboardList}
-      title="Change Log"
-      >
-        <div className='w-5/6 md:w-2/3 mx-auto mb-4'>
-          <Card>
-            <div className='flex flex-col items-start gap-2'>
-              <h1 className='text-3xl font-semibold mb-4 text-gray-900 dark:text-white'>Change Log</h1>
-              {
-                roleListingChanges.map((change, idx) => {
-                  return (
-                    <div key={idx}>
-                      <span className='font-semibold'>Change #{change.change_no}&ensp;•&ensp;</span> 
-                      <span className='font-semibold'>{change.role_listing_updater}</span>
-                      <span className='font-light'> changed </span>
-                      <span className='font-semibold'>{change.changed_field}</span>
-                      <span className='font-light'> on Role </span>
-                      <span className='font-semibold'>#{change.role_listing_id}</span>
-                      <span className='font-light'> from </span>
-                      <span className='font-semibold'>{change.old_value}</span>
-                      <span className='font-light'> to </span>
-                      <span className='font-semibold'>{change.new_value} &ensp;•</span>
-                      <span className='font-light'>&ensp;{change.log_time}</span> 
-                    </div>
-                  )
-                })
-              }
-              <div >
-                      <span className='font-semibold'>Change #1&ensp;•&ensp;</span> 
-                      <span className='font-semibold'>chiok</span>
-                      <span className='font-light'> changed </span>
-                      <span className='font-semibold'>something</span>
-                      <span className='font-light'> on Role </span>
-                      <span className='font-semibold'>#2</span>
-                      <span className='font-light'> from </span>
-                      <span className='font-semibold'>9</span>
-                      <span className='font-light'> to </span>
-                      <span className='font-semibold'>10 &ensp;•</span>
-                      <span className='font-light'>&ensp;1 week ago</span> 
-                    </div>
-
-              
-            </div>
-          </Card>
-        </div>
-
-      </Tabs.Item>
-    </Tabs.Group>
-      
-      
-      {/* here
+      <div className="mt-5 flex mb-3">
+        {roleSkillsDetails.map((roleSkill, idx) => {
+          if (currUserSkills.includes(roleSkill.skill_id)) {
+            return (
+              <Badge color="success" key={idx} className="mx-3">
+                {roleSkill.skill_name}
+              </Badge>
+            )
+          }
+          return (
+            <Badge color="failure" key={idx} className="mx-3">
+              {roleSkill.skill_name}
+            </Badge>
+          )
+        })}
+      </div>
+      <span className="m-3">
+        {
+          Math.round((skillMatchCounter / roleSkillsDetails.length) * 100) + "% Match"
+        }
+      </span>
       <form className="mt-5">
         <div className="grid md:grid-cols-2 md:gap-6">
           <div className="mb-6">
@@ -497,9 +265,15 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
           </div>          
         </div>
       </form>
-      end */}
-      
-      {/* {sessionStorage.getItem("sys_role") === "hr" || parseInt(sessionStorage.getItem("staff_id") as string) === role?.role_listing_source ? (
+      {appliedRole && appliedRole.role_app_status !== "withdrawn" ? (
+        <Button onClick={() => {
+          withdrawRole(appliedRole);
+        }}>Withdraw</Button>
+      ) : <Button onClick={() => {
+        applyRole(role?.role_listing_id as number, parseInt(sessionStorage.getItem("staff_id") as string));
+      }}>Apply</Button>
+      }
+      {sessionStorage.getItem("sys_role") === "hr" || parseInt(sessionStorage.getItem("staff_id") as string) === role?.role_listing_source ? (
         <div>
           <Button onClick={() => {
             router.push(`/listroles/${params.role_listing_id}/applicants`)
@@ -514,7 +288,7 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
           </Button>
         </div>
       ): null}
-      <Button type="button" onClick={()=>{router.push('/listroles')}}>Return to All Listings</Button> */}
+      <Button type="button" onClick={()=>{router.push('/listroles')}}>Return to All Listings</Button>
       <Modal show={props.openModal === 'pop-up-applied'} size="md" popup onClose={() => props.setOpenModal(undefined)}>
         <Modal.Header />
         <Modal.Body>

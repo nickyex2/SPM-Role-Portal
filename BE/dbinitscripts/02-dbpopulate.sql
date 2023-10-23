@@ -48,10 +48,7 @@ INSERT INTO STAFF_DETAILS (`fname`, `lname`, `dept`, `email`, `phone`, `biz_addr
 ('AH GAO', 'TAN', 'FINANCE', 'tan_ah_gao@all-in-one.com.sg', '65 1234 5678', '1, Marina Boulevard, Singapore 018989', 'staff'),
 ('VINCENT REX', 'COLINS', 'HUMAN RESOURCE AND ADMIN', 'colins_vincent_rex@all-in-one.com.sg', '65 1334 5678', '1, Marina Boulevard, Singapore 018989', 'hr'),
 ('FAUD', 'NIZAM', 'SALES', 'faud_nizam@all-in-one.com.sg', '65 1434 5678', '1, Marina Boulevard, Singapore 018989', 'manager'),
-('JOHN', 'DOE', 'IT', 'john_doe@all-in-one.com.sg', '65 1534 5678', '1, Marina Boulevard, Singapore 018989', 'inactive'),
-('SAMUEL', 'TAN', 'IT', 'samuel_tan@all-in-one.com.sg', '65 1634 5678', '1, Marina Boulevard, Singapore 018989', 'staff'),
-('JANE', 'GOH', 'IT', 'jane_goh@all-in-one.com.sg', '65 1734 5678', '1, Marina Boulevard, Singapore 018989', 'manager');
-
+('JOHN', 'DOE', 'IT', 'john_doe@all-in-one.com.sg', '65 1534 5678', '1, Marina Boulevard, Singapore 018989', 'inactive');
 
 INSERT INTO ROLE_DETAILS (`role_name`, `role_description`, `role_status`) VALUES
 ('Data Scientist', 'Data Scientist', 'active'),
@@ -158,22 +155,15 @@ INSERT INTO ROLE_DETAILS (`role_name`, `role_description`, `role_status`) VALUES
 INSERT INTO STAFF_REPORTING_OFFICER (`staff_id`, `RO_id`) VALUES
 (1, 3),
 (2, 3),
-(3, 3),
-(4, 6),
-(5, 6),
-(6, 6);
+(3, 3);
 
 INSERT INTO STAFF_ROLES (`staff_id`, `staff_role`, `role_type`, `sr_status`) VALUES
-(1, 38, 'primary', 'active'),
-(1, 67, 'secondary', 'active'),
-(2, 20, 'primary', 'active'),
-(2, 19, 'secondary', 'active'),
-(3, 95, 'primary', 'active'),
-(3, 27, 'secondary', 'active'),
-(5, 2, 'primary', 'active'),
-(5, 5, 'secondary', 'active'),
-(6, 23, 'primary', 'active'),
-(6, 24, 'secondary', 'active');
+(1, 1, 'primary', 'active'),
+(1, 2, 'secondary', 'active'),
+(2, 1, 'primary', 'active'),
+(2, 2, 'secondary', 'active'),
+(3, 1, 'primary', 'active'),
+(3, 2, 'secondary', 'active');
 
 INSERT INTO STAFF_SKILLS (`staff_id`, `skill_id`, `ss_status`) VALUES
 (1, 1, 'active'),
@@ -184,19 +174,7 @@ INSERT INTO STAFF_SKILLS (`staff_id`, `skill_id`, `ss_status`) VALUES
 (1, 6, 'active'),
 (3, 7, 'active'),
 (4, 8, 'active'),
-(3, 9, 'active'),
-(5, 1, 'active'),
-(5, 2, 'active'),
-(5, 6, 'active'),
-(5, 7, 'active'),
-(5, 11, 'active'),
-(5, 13, 'active'),
-(6, 1, 'active'),
-(6, 2, 'active'),
-(6, 6, 'active'),
-(6, 15, 'active'),
-(6, 44, 'active'),
-(2, 32, 'active');
+(3, 9, 'active');
 
 INSERT INTO ROLE_SKILLS (`role_id`, `skill_id`) VALUES
 (1, 1),
