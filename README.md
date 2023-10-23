@@ -26,7 +26,7 @@ https://spm-role-portal-eight.vercel.app
 2. Navigate to the `sbrp-frontend` folder
 3. add .env file with the following content in the root directory
 ```
-dbURL='mysql+mysqldb://<USERNAME>:<PASSWORD>@<HOSTNAME>:<PORT>/<DATABASE_NAME>'
+dbURL='mysql+pymysql://<USERNAME>:<PASSWORD>@<HOSTNAME>:<PORT>/<DATABASE_NAME>'
 ```
 4. Run `pnpm install` or `npm install` to install all dependencies
 5. Run `npm run dev` to start the development server
