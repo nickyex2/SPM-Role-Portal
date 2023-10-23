@@ -36,7 +36,7 @@ export default function R_Navbar() {
           className="mr-3 h-6 sm:h-9"
           src="/favicon.svg"
         /> */}
-        <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
+        <span className="self-center whitespace-nowrap text-lg font-semibold dark:text-white">
           All-In-One
         </span>
       </Navbar.Brand>
