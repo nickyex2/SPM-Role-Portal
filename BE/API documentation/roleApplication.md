@@ -13,12 +13,14 @@ The `RoleApplication` model represents a role application with the following att
   - "Applied"
   - "Rejected"
   - "Accepted"
+- `role_app_ts_create` (Timestamp): Timestamp for when the role application
+was created. This field is automatically set when the role application is created.
 
 ## 2. Endpoints
 
 ### 2.1. Create a New Role Application
 
-- **Endpoint:** `POST /createRoleApplication`
+- **Endpoint:** `POST /api/role/roleapp/create`
 - **Description:** Create a new role application by providing role application information in the request body.
 - **Request Body:**
   ```json
@@ -54,7 +56,7 @@ The `RoleApplication` model represents a role application with the following att
 
 ### 2.2. Get All Role Applications
 
-- **Endpoint:** `GET /getAllRoleApplications`
+- **Endpoint:** `GET /api/role/roleapp/getAll`
 - **Description:** Retrieve a list of all role applications in the database.
 - **Response:**
 
@@ -86,7 +88,7 @@ The `RoleApplication` model represents a role application with the following att
 
 ### 2.3. Get Role Applications by Role Listing ID
 
-- **Endpoint:** `GET /getRoleApplicationsListing/<int:role_listing_id>`
+- **Endpoint:** `GET /api/role/roleapp/getOne/<int:role_listing_id>`
 - **Description:** Retrieve role applications associated with a specific role listing by providing its unique `role_listing_id`.
 - **Response:**
 
@@ -118,7 +120,7 @@ The `RoleApplication` model represents a role application with the following att
 
 ### 2.4. Get Role Applications by Staff ID
 
-- **Endpoint:** `GET /getRoleApplicationsStaff/<int:staff_id>`
+- **Endpoint:** `GET /api/role/roleapp/getByStaff/<int:staff_id>`
 - **Description:** Retrieve role applications associated with a specific staff member by providing their unique `staff_id`.
 - **Response:**
 
@@ -150,7 +152,7 @@ The `RoleApplication` model represents a role application with the following att
 
 ### 2.5. Get Role Application by Role Listing ID and Staff ID
 
-- **Endpoint:** `GET /getRoleApplication/<int:role_listing_id>/<int:staff_id>`
+- **Endpoint:** `GET /api/role/roleapp/getByRoleLStaff/<int:role_listing_id>/<int:staff_id>`
 - **Description:** Retrieve a role application by providing the unique `role_listing_id` and `staff_id` associated with the application.
 - **Response:**
 
@@ -177,7 +179,7 @@ The `RoleApplication` model represents a role application with the following att
 
 ### 2.6. Update a Specific Role Application by role_app_id
 
-- **Endpoint:** `PUT /updateRoleApplication/<int:role_app_id>`
+- **Endpoint:** `PUT /api/role/roleapp/update/<int:role_app_id>`
 - **Description:** Update the status of a specific role application by providing its unique `role_app_id`.
 - **Request Body:**
   ```json
@@ -220,7 +222,7 @@ The `RoleApplication` model represents a role application with the following att
 ### 2.7. Delete a Specific Role Application by role_app_id
 
 - **Endpoint:** `DELETE /deleteRoleApplication/<int:role_app_id>`
-- **Description:** Delete a specific role application by providing its unique `role_app_id`.
+- **Description:** Delete a specific role application by providing its unique `role_app_id`. This endpoint is only used for testing purposes.
 - **Response:**
 
   - Success (Status Code: 200 OK)

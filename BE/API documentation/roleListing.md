@@ -4,6 +4,7 @@ This documentation describes the API endpoints for managing role listings using 
 
 ## 1. Role Listing Model
 
+### 1.1 Role Listing
 The `RoleListing` model represents a role listing with the following attributes:
 
 - `role_listing_id` (Integer, Primary Key): Unique identifier for the role listing.
@@ -15,12 +16,26 @@ The `RoleListing` model represents a role listing with the following attributes:
 - `role_listing_creator` (String, 255 characters): Creator of the role listing.
 - `role_listing_status` (String, 255 characters): Status of the role listing (e.g., active, inactive).
 - `role_listing_updater` (Integer): Updater of the role listing.
+- `role_listing_ts_create` (Timestamp): Timestamp for when the role listing was created. This field is automatically set when the role listing is created.
+- `role_listing_ts_update` (Timestamp): Timestamp for when the role listing was last updated. This field is automatically set when the role listing is created/updated.
+
+### 1.2 Role Listing Changes
+The `RoleListingChange` model represents a change to a role listing with the following attributes:
+
+- `change_id` (Integer, Primary Key): Unique identifier for the change. This key is automatically generated.
+- `role_listing_id` (Integer, Primary Key): Identifier for the role listing associated with the change.
+- `change_no` (Integer, Primary Key): Change number for the change. This number is automatically generated.
+- `log_time` (Timestamp): Timestamp for when the change was made. This field is automatically set when the change is created.
+- `role_listing_updater` (Integer): Updater of the role listing.
+- `changed_field` (String, 255 characters): Name of the field that was changed.
+- `old_value` (String, 255 characters): Old value of the field that was changed.
+- `new_value` (String, 255 characters): New value of the field that was changed.
 
 ## 2. Endpoints
 
 ### 2.1. Create a New Role Listing
 
-- **Endpoint:** `POST /createRoleListing`
+- **Endpoint:** `POST /api/role/roleListing/create`
 - **Description:** Create a new role listing by providing role listing information in the request body.
 - **Request Body:**
   ```json
@@ -67,7 +82,7 @@ The `RoleListing` model represents a role listing with the following attributes:
 
 ### 2.2. Get All Role Listings
 
-- **Endpoint:** `GET /getAllRoleListings`
+- **Endpoint:** `GET /api/role/roleListing/getAll`
 - **Description:** Retrieve a list of all role listings in the database.
 - **Response:**
 
@@ -104,7 +119,7 @@ The `RoleListing` model represents a role listing with the following attributes:
 
 ### 2.3. Get a Specific Role Listing by `role_listing_id`
 
-- **Endpoint:** `GET /getRoleListing/<int:role_listing_id>`
+- **Endpoint:** `GET /api/role/roleListing/getOne/<int:role_listing_id>`
 - **Description:** Retrieve information about a specific role listing by providing its unique `role_listing_id`.
 - **Response:**
 
@@ -136,7 +151,7 @@ The `RoleListing` model represents a role listing with the following attributes:
 
 ### 2.4. Update a Specific Role Listing by `role_listing_id`
 
-- **Endpoint:** `PUT /updateRoleListing/<int:role_listing_id>`
+- **Endpoint:** `PUT /api/role/roleListing/update/<int:role_listing_id>`
 - **Description:** Update information for a specific role listing by providing its unique `role_listing_id` and the fields to be updated in the request body.
 - **Request Body:**
   ```json
@@ -185,7 +200,7 @@ The `RoleListing` model represents a role listing with the following attributes:
 
 ### 2.5. Get Role Listing Changes
 
-- **Endpoint:** `GET /getRoleListingChanges/<int:role_listing_id>`
+- **Endpoint:** `GET /api/role/roleListing/getChanges/<int:role_listing_id>`
 - **Description:** Retrieve changes associated with a specific role listing by providing its unique `role_listing_id`.
 - **Request Parameters:**
   - `role_listing_id` (integer): The unique identifier of the role listing for which you want to retrieve changes.
@@ -221,3 +236,24 @@ The `RoleListing` model represents a role listing with the following attributes:
     }
     ```
 
+### 2.6. Delete a Specific Role Listing by `role_listing_id`
+
+- **Endpoint:** `DELETE /api/role/roleListing/delete/<int:role_listing_id>`
+- **Description:** Delete a specific role listing by providing its unique `role_listing_id`. This endpoint is only used for testing purposes.
+- **Request Parameters:**
+  - `role_listing_id` (integer): The unique identifier of the role listing you want to delete.
+  - **Response**
+    - Success (Status Code: 200 OK)
+      ```json
+      {
+          "code": 200,
+          "message": "RoleListing with ID {role_listing_id} deleted successfully."
+      }
+      ```
+    - Role listing not found (Status Code: 404 Not Found)
+      ```json
+      {
+          "code": 404,
+          "message": "RoleListing with ID {role_listing_id} not found. Nothing deleted."
+      }
+      ```

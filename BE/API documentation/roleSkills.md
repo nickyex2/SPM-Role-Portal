@@ -1,43 +1,19 @@
-## Role Skills API Documentation
+# Role Skills API Documentation
 
-This documentation describes the API endpoints for managing role skills associations using a Flask-based web application. The API allows you to create, retrieve, and delete role skills associations in a database.
+This documentation describes the API endpoints for managing role skills associations using a Flask-based web application. The API allows you to retrieve role skills associations in a database.
 
-### 1. Create a New Role Skills Association
+## 1. Role Skills Association Model
 
-- **Endpoint:** `POST /createRoleSkills`
-- **Description:** Create a new role skills association by providing the `role_id` and `skill_id` in the request body.
-- **Request Body:**
-  ```json
-  {
-      "role_id": 1,
-      "skill_id": 2
-  }
-  ```
-- **Response:**
+The `RoleSkills` model represents a role skills association with the following attributes:
 
-  - Success (Status Code: 201 Created)
-    ```json
-    {
-        "code": 201,
-        "message": "RoleSkills association created successfully.",
-        "data": {
-            "role_id": 1,
-            "skill_id": 2
-        }
-    }
-    ```
+- `role_id` (Integer, Primary Key): Identifier for the role associated with the skill.
+- `skill_id` (Integer, Primary Key): Identifier for the skill associated with the role.
 
-  - Creation failed (Status Code: 400 Bad Request)
-    ```json
-    {
-        "code": 400,
-        "message": "Failed to create RoleSkills association. Error: {error_message}"
-    }
-    ```
+## 2. Endpoints
 
-### 2. Get All Role Skills Associations
+### 2.1. Get All Role Skills Associations
 
-- **Endpoint:** `GET /getAllRoleSkills`
+- **Endpoint:** `GET /api/role/roleSkills/getAll`
 - **Description:** Retrieve a list of all role skills associations in the database.
 - **Response:**
 
@@ -65,9 +41,9 @@ This documentation describes the API endpoints for managing role skills associat
     }
     ```
 
-### 3. Get Role Skills Associations for a Specific Role ID
+### 2.2. Get Role Skills Associations for a Specific Role ID
 
-- **Endpoint:** `GET /getRoleSkills/<int:role_id>`
+- **Endpoint:** `GET /api/role/roleSkills/getByRole/<int:role_id>`
 - **Description:** Retrieve role skills associations for a specific `role_id`.
 - **Response:**
 
@@ -95,32 +71,31 @@ This documentation describes the API endpoints for managing role skills associat
     }
     ```
 
-### 4. Delete a Role Skills Association
+### 2.3. Get Multiple Role Skills Associations by `role_ids`
 
-- **Endpoint:** `DELETE /deleteRoleSkills/<int:role_id>/<int:skill_id>`
-- **Description:** Delete a role skills association by providing the `role_id` and `skill_id`.
+- **Endpoint:** `POST /api/role/roleSkills/getMultiRole`
+- **Description:** Retrieve multiple role skills associations by providing a list of `role_ids`.
+- **Request Body**
+  - `role_ids` (List of Integers): List of role IDs to retrieve role skills associations for.
+    ```json
+    {
+        "role_ids": [1,2,3,4...]
+    }
+    ```
 - **Response:**
-
   - Success (Status Code: 200 OK)
     ```json
     {
         "code": 200,
-        "message": "RoleSkills association with role_id {role_id} and skill_id {skill_id} deleted successfully."
+        "data": {
+            ["role_id"]: [1,2,3,4...]
+        }
     }
     ```
-
-  - Role skills association not found (Status Code: 404 Not Found)
+  - No role skills associations found (Status Code: 404 Not Found)
     ```json
     {
         "code": 404,
-        "message": "No RoleSkills association found with role_id {role_id} and skill_id {skill_id}. Nothing deleted."
-    }
-    ```
-
-  - Deletion failed (Status Code: 400 Bad Request)
-    ```json
-    {
-        "code": 400,
-        "message": "Failed to delete RoleSkills association with role_id {role_id} and skill_id {skill_id}. Error: {error_message}"
+        "message": "No RoleSkills association found for role_ids."
     }
     ```
