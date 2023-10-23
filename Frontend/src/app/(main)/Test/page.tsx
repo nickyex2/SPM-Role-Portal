@@ -4,7 +4,7 @@ import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Button, Toast, Dropdown, Spinner } from "flowbite-react";
+import { Button, Modal, Label, TextInput, Checkbox, Toast, Dropdown, Spinner } from "flowbite-react";
 import { HiCheck } from "react-icons/hi";
 import AddListing from "@/app/_components/AddListing";
 import "flowbite";
@@ -32,6 +32,20 @@ export default function Test() {
   
   const [sysRole, setSysRole] = useState<string>("");
 
+  const [roleTypes, setRoleTypes] = useState<Array<TRoleDetails>>([]);
+  const [selectedRoleType, setSelectedRoleType] = useState<string>("Role Type");
+  const [selectedRoleTypeID, setSelectedRoleTypeID] = useState<number>();
+
+  const [allStaff, setAllStaff] = useState<Array<TStaff>>([]);
+  const [selectedStaff, setSelectedStaff] = useState<string>("Select Hiring Manager");
+  const [selectedStaffID, setSelectedStaffID] = useState<number>();
+
+  const [selectedDescription, setSelectedDescription] = useState<string>("");
+
+  const [selectedOpeningDate, setSelectedOpeningDate] = useState<Date>();
+  const [selectedClosingDate, setSelectedClosingDate] = useState<Date>();
+  const Today = new Date();
+
   
   const props = {
     openModal,
@@ -46,6 +60,8 @@ export default function Test() {
   const getRoleDetailsURL = "http://localhost:5003/getRoles";
   const getAllSkillsURL = "http://localhost:5001/getAllSkills";
   const getRoleSkillsURL = "http://localhost:5008/getSpecificRoleSkills";
+  const getAllRoleTypesURL = "http://localhost:5003/getAllRoles";
+  const getAllStaffURL = "http://localhost:5000/getAllStaff";
 
   const [selectedRole, setSelectedRole] = useState<TRoleListing | undefined>(undefined);
 
@@ -90,6 +106,20 @@ export default function Test() {
       }
     );
     return response.data.data;
+  }
+
+  async function getAllRoleTypes(): Promise<Array<TRoleDetails>> {
+    const response: AxiosResponse<TResponseData> = await axios.get(
+      getAllRoleTypesURL
+    );
+    return response.data.data?.roles;
+  }
+
+  async function getAllStaff(): Promise<Array<TStaff>> {
+    const response: AxiosResponse<TResponseData> = await axios.get(
+      getAllStaffURL
+    );
+    return response.data.data?.staffs;
   }
 
   function handleSearch(searchInput: string) {
@@ -145,6 +175,96 @@ export default function Test() {
     }
   }
 
+  async function selectRoleType (roleType: TRoleDetails) {
+    setSelectedRoleType(roleType.role_name);
+    setSelectedRoleTypeID(roleType.role_id);
+  }
+
+  async function selectStaff (staff: TStaff) {
+    setSelectedStaff(staff.fname + " " + staff.lname);
+    setSelectedStaffID(staff.staff_id);
+
+    console.log("STAFF ID", staff.staff_id);
+  }
+
+  async function createListing (selectedRoleTypeID, selectedDescription, selectedStaffID, selectedOpeningDate, selectedClosingDate) {
+    // generate an 8 digit id, if not in roles, then use it, else generate another one
+    let id = Math.floor(10000000 + Math.random() * 90000000);
+    let idExists = false;
+    roles.forEach((role) => {
+      if (role.role_listing_id === id) {
+        idExists = true;
+      }
+    });
+    while (idExists) {
+      id = Math.floor(10000000 + Math.random() * 90000000);
+      roles.forEach((role) => {
+        if (role.role_listing_id === id) {
+          idExists = true;
+        }
+      });
+    }
+
+    let timestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+    // If opening date is after today, set status to inactive, else set to active
+    let status = "active";
+    if (selectedOpeningDate > Today) {
+      status = "inactive";
+    }
+
+    let sendData = {
+      role_listing_id: id,
+      role_id: selectedRoleTypeID,
+      role_listing_desc: selectedDescription,
+      role_listing_source: selectedStaffID,
+      role_listing_open: selectedOpeningDate,
+      role_listing_close: selectedClosingDate,
+      role_listing_creator: sessionStorage.getItem("staff_id"),
+      role_listing_status: status,
+      role_listing_updater: timestamp,
+    };
+    console.log(sendData)
+    const response: AxiosResponse<TResponseData> = await axios.post(
+      "http://localhost:5002/createRoleListing",
+      sendData
+    );
+    console.log(response);
+    if (response.data.code === 200) {
+      setShowToast(true);
+      setTimeout(() => {
+        setShowToast(false);
+      }, 3000);
+      // Update roles and roleDetails
+      getAllRoles()
+        .then((data) => {
+          // Fetch details for all roles concurrently using Promise.all
+          setRoles(data);
+          // console.log("setRoles<TRoleListings>: ", data);
+          setInitialRoles(data);
+          setSelectedRole(data[0]);
+          let role_ids: Array<Number> = [];
+          data.forEach((role) => {
+            role_ids.push(role.role_id);
+          });
+          // console.log(role_ids);
+          getRoleDetails(role_ids).then((data) => {
+            setRoleDetails(data);
+            // console.log(data);
+          });
+          getRoleSkills(role_ids).then((data) => {
+            setRoleSkills(data);
+            setInitialRoleSkills(data);
+            // console.log(data);
+          });
+        })
+        .catch((error) => {
+          console.error("Error fetching roles:", error);
+          setLoading(false);
+        });
+    }
+  }
+
   useEffect(() => {
     setLoading(true);
     if (
@@ -158,22 +278,22 @@ export default function Test() {
       .then((data) => {
         // Fetch details for all roles concurrently using Promise.all
         setRoles(data);
-        console.log("setRoles<TRoleListings>: ", data);
+        // console.log("setRoles<TRoleListings>: ", data);
         setInitialRoles(data);
         setSelectedRole(data[0]);
         let role_ids: Array<Number> = [];
         data.forEach((role) => {
           role_ids.push(role.role_id);
         });
-        console.log(role_ids);
+        // console.log(role_ids);
         getRoleDetails(role_ids).then((data) => {
           setRoleDetails(data);
-          console.log(data);
+          // console.log(data);
         });
         getRoleSkills(role_ids).then((data) => {
           setRoleSkills(data);
           setInitialRoleSkills(data);
-          console.log(data);
+          // console.log(data);
         });
       })
       .catch((error) => {
@@ -185,8 +305,30 @@ export default function Test() {
       .then((data) => {
         // Fetch details for all roles concurrently using Promise.all
         setSkills(data);
-        console.log(data);
+        // console.log(data);
         setInitialSkills(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching Skills:", error);
+        setLoading(false);
+      });
+
+    getAllRoleTypes()
+      .then((data) => {
+        // Fetch details for all roles concurrently using Promise.all
+        setRoleTypes(data);
+        // console.log("RoleTypes: ", data);
+      })
+      .catch((error) => {
+        // console.error("Error fetching Skills:", error);
+        setLoading(false);
+      });
+
+    getAllStaff()
+      .then((data) => {
+        // Fetch details for all roles concurrently using Promise.all
+        setAllStaff(data);
+        // console.log("All Staff: ", data);
       })
       .catch((error) => {
         console.error("Error fetching Skills:", error);
@@ -300,15 +442,145 @@ export default function Test() {
       {/* RoleListings */}
       <div className="flex items-stretch h-full flex-col">
         {sysRole === "hr" || sysRole === "manager" ? (
-          <Button
-            type="button"
-            onClick={() => {
-              props.setOpenModal("pop-up-add");
-            }}
-            className="my-5 mx-auto"
-          >
-            New Listing
-          </Button>
+          <div>
+            <Button
+              type="button"
+              onClick={() => {
+                props.setOpenModal("pop-up-add");
+              }}
+              className="my-5 mx-auto"
+            >
+              New Listing
+            </Button>
+            <Modal show={props.openModal === 'pop-up-add'} size="md" popup onClose={() => props.setOpenModal(undefined)}>
+              <Modal.Header />
+              <Modal.Body>
+                <div className="space-y-4">
+                  <h3 className="text-xl font-medium text-gray-900 dark:text-white">Create new Role Listing</h3>
+
+                  {/* Role Listing ID Input */}
+                  <div>
+                    <div className="mb-2 block">
+                      <Label htmlFor="role_id" value="Role ID" />
+                    </div>
+                    {/* For every role in roleType, create a dropdown input with a search function, limit to 5 dropdowns before adding scrollable */}
+                    <Dropdown label={selectedRoleType} dismissOnClick={true}>
+                      <div className="max-h-40 overflow-y-scroll">
+                      {roleTypes.map((roleType) => {
+                        return <Dropdown.Item onClick={() => selectRoleType(roleType)}>{roleType.role_name}</Dropdown.Item>;
+                      })}
+                      </div>
+                    </Dropdown>
+                  </div>
+
+
+                  {/* Role Lister Creator Name prefilled based on the session user name */}
+                  {/* <div>
+                    <div className="mb-2 block">
+                      <Label htmlFor="name" value="Lister Name" />
+                    </div>
+                    <TextInput id="name" placeholder="John Doe" value={sessionStorage.getItem("fname") + " " + sessionStorage.getItem("lname")} required />
+                  </div> */}
+
+                  {/* Role ID Input */}
+
+
+                  {/* Role Listing Description Large Textarea Input */}
+                  <div>
+                    <div className="mb-2 block">
+                      <Label htmlFor="description" value="Description" />
+                    </div>
+                    <textarea id="description" className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none" rows={4} placeholder="Description of role"
+                    onBlur={(e) => setSelectedDescription(e.target.value)}
+                    required />
+                  </div>
+
+                  {/* Role Listing Source Input, the Hiring Manager */}
+                  <div>
+                    <div className="mb-2 block">
+                      <Label htmlFor="role_id" value="Hiring Manager" />
+                    </div>
+                    {/* For every role in roleType, create a dropdown input with a search function, limit to 5 dropdowns before adding scrollable */}
+                    <Dropdown label={selectedStaff} dismissOnClick={true}>
+                      <div className="max-h-40 overflow-y-scroll">
+                      {allStaff.map((staff) => {
+                        return <Dropdown.Item onClick={() => selectStaff(staff)}>{staff.fname + " " + staff.lname}</Dropdown.Item>;
+                      })}
+                      </div>
+                    </Dropdown>
+                  </div>
+
+                  {/* Role Listing Open Date Date style input */}
+                  <div>
+                    <div className="mb-2 block">
+                      <Label htmlFor="open_date" value="Opening Date" />
+                    </div>
+                    <input
+                      onChange={(e) => {
+                        const selectedDate = new Date(e.target.value);
+                        setSelectedOpeningDate(selectedDate);
+                      }}
+                      type="date" id="open_date" className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none" required />
+                  </div>
+
+                  {/* Role Listing Closing Date Date style Input */}
+                  <div>
+                    <div className="mb-2 block">
+                      <Label htmlFor="close_date" value="Closing Date" />
+                    </div>
+                    <input
+                      onChange={(e) => {
+                        const selectedDate = new Date(e.target.value);
+                        setSelectedClosingDate(selectedDate);
+                      }}
+                      type="date" id="close_date" className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none" required />
+                  </div>
+
+                  {/* If opening date is after Today, display a div as "inactive", otherwise display a div as "active" */}
+                  {/* {selectedOpeningDate && Today ? (
+                    selectedOpeningDate > Today ? (
+                      <div className="bg-red-500 text-white text-center rounded-lg">
+                        <p className="text-lg font-medium">Inactive</p>
+                        <p className="text-sm">Opening Date is after Today</p>
+                      </div>
+                    ) : (
+                      <div className="bg-green-500 text-white text-center rounded-lg">
+                        <p className="text-lg font-medium">Active</p>
+                        <p className="text-sm">Opening Date is before Today</p>
+                      </div>
+                    )
+                  ) : null} */}
+
+                  {/* Create Button */}
+                  <div>
+                    <Button onClick={() => createListing(selectedRoleTypeID, selectedDescription, selectedStaffID, selectedOpeningDate, selectedClosingDate)}>
+                      Create Listing
+                    </Button>
+                  </div>
+
+                  {/* Role Listing Updater Input */}
+                  {/* <div className="flex justify-between">
+                    <div className="flex items-center gap-2">
+                      <Checkbox id="remember" />
+                      <Label htmlFor="remember">Remember me</Label>
+                    </div>
+                    <a href="/modal" className="text-sm text-cyan-700 hover:underline dark:text-cyan-500">
+                      Lost Password?
+                    </a>
+                  </div>
+                  <div className="w-full">
+                    <Button>Log in to your account</Button>
+                  </div>
+                  <div className="flex justify-between text-sm font-medium text-gray-500 dark:text-gray-300">
+                    Not registered?&nbsp;
+                    <a href="/modal" className="text-cyan-700 hover:underline dark:text-cyan-500">
+                      Create account
+                    </a>
+                  </div> */}
+                </div>
+              </Modal.Body>
+            </Modal>
+          </div>
         ) : null}
         <div className="grid grid-cols-2 gap-0">
 

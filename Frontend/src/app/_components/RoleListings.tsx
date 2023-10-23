@@ -35,7 +35,7 @@ export default function RoleListings( {roles, roleDetails, sysRole, roleSkills, 
       <h1>Loading...</h1>
     </div>
   ) : (
-    <div className="w-4/6 mx-auto h-[60vh] overflow-y-scroll">
+    <div className="w-4/5 mx-auto h-[60vh] overflow-y-scroll">
       {roles?.map((role) => {
             const today = new Date();
             const roleListingOpenDate = new Date(role.role_listing_open);
@@ -65,7 +65,7 @@ export default function RoleListings( {roles, roleDetails, sysRole, roleSkills, 
                 </div>
 
                 {/* role_listing_open, role_listing_status */}
-                <div className="col-span-1 flex justify-end">
+                {/* <div className="col-span-1 flex justify-end">
                   <div className="rounded-full bg-gray-300 p-2">
                     <p className="font-normal text-gray-700 dark:text-black">
                       {daysSinceOpen} days ago
@@ -85,14 +85,14 @@ export default function RoleListings( {roles, roleDetails, sysRole, roleSkills, 
                     </div>
                       ) : null
                   }
-                </div>
+                </div> */}
 
                 {/* roleList.role_listing_source */}
-                <div className="col-span-2">
+                {/* <div className="col-span-2">
                   <p className="font-normal text-gray-700 dark:text-gray-400">
                     Hiring Manager: {role.role_listing_source}
                   </p>
-                </div>
+                </div> */}
 
                 {/* roleList.role_listing_close */}
                 <div className="col-span-2">
@@ -102,7 +102,7 @@ export default function RoleListings( {roles, roleDetails, sysRole, roleSkills, 
                 </div>
 
                 {/* role.role_listing_desc */}
-                <div className="col-span-3">
+                {/* <div className="col-span-3">
                   <p className="font-normal text-gray-700 dark:text-gray-400">
                     Job Description:
                     <br />
@@ -110,9 +110,9 @@ export default function RoleListings( {roles, roleDetails, sysRole, roleSkills, 
                       ? role.role_listing_desc.slice(0, 200) + "..."
                       : role.role_listing_desc}
                   </p>
-                </div>
+                </div> */}
                 {/* role skill match % */}
-                <div className="col-span-3">
+                {/* <div className="col-span-3">
                   <p className="font-normal text-gray-700 dark:text-gray-400">
                     Skill Match %:
                     <br />
@@ -121,6 +121,43 @@ export default function RoleListings( {roles, roleDetails, sysRole, roleSkills, 
                         currUserSkills.includes(skill)
                       ).length / roleSkills[role.role_id]?.length * 100 || 0) 
                     } %
+                  </p>
+                </div> */}
+                <div className="col-span-1 mx-auto">
+                  <div>
+                    <p className="font-normal text-gray-700 dark:text-black">
+                      {
+                        (roleSkills[role.role_id]?.filter((skill) =>
+                          currUserSkills.includes(skill)
+                        ).length / roleSkills[role.role_id]?.length * 100 || 0)
+                      } %
+                      <br />
+                      Skill Match
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="col-span-3">
+                  <p className="font-normal text-gray-700 dark:text-black">
+                    {roleSkills[role.role_id]? (
+                    roleSkills[role.role_id].map((skill) => {
+                      if (currUserSkills.includes(skill)) {
+                        console.log("Skill", skill)
+                        return (
+                          <span key={skill} className="inline-block bg-green-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                            {skill}
+                          </span>
+                        );
+                      }
+                      else {
+                        return (
+                          <span key={skill} className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                            {skill}
+                          </span>
+                        );
+                      }
+                    })
+                    ): null}
                   </p>
                 </div>
               </div>
