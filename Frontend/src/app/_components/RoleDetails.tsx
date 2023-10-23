@@ -4,7 +4,7 @@ import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Button, Toast, Dropdown, Spinner } from "flowbite-react";
+import { Button, Modal, Label, TextInput, Checkbox,  Toast, Dropdown, Spinner } from "flowbite-react";
 import { HiCheck } from "react-icons/hi";
 import AddListing from "@/app/_components/AddListing";
 import "flowbite";
@@ -30,12 +30,8 @@ export default function RoleDetails( {selectedRole, sysRole, roleSkills, currUse
   const [roleListingSource, setRoleListingSource] = useState<TStaff | undefined>(undefined); 
   
   const props = { openModal, setOpenModal, showToast, setShowToast }; //setRole, setRoleListingChanges
-  
-  console.log("selectedRole: ", selectedRole);
-  console.log("roleDetails: ", roleDetails);
-  console.log("sysRole: ", sysRole);
-  console.log("roleSkills: ", roleSkills);
-  console.log("currUserSkills: ", currUserSkills);
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [showErrorToast, setShowErrorToast] = useState(false);
 
   const today = new Date();
   const roleListingOpenDate = new Date(selectedRole.role_listing_open);
@@ -76,7 +72,7 @@ export default function RoleDetails( {selectedRole, sysRole, roleSkills, currUse
     return response.data.data?.role_listing_changes;
     }
     catch (error: any) {
-      if (error.response.status === 404){
+      if (error.response.code === 404){
         console.log("No role listing changes found");
       }
       return [];
@@ -92,7 +88,7 @@ export default function RoleDetails( {selectedRole, sysRole, roleSkills, currUse
       return response.data.data;
     }
     catch (error: any) {
-      if (error.response.status === 404){
+      if (error.response.code === 404){
         console.log("No role application found");
       }
       return undefined;
@@ -105,7 +101,6 @@ export default function RoleDetails( {selectedRole, sysRole, roleSkills, currUse
         `http://localhost:5000//getStaff/${selectedRole.role_listing_source}`
       );
       console.log("response.data.data: ", response.data.data);
-      console.log("INNNNNNNNNNNNNNNNNNNNNNNNNN");
       return response.data.data;
     }
     catch (error: any) {
@@ -127,8 +122,13 @@ export default function RoleDetails( {selectedRole, sysRole, roleSkills, currUse
       sendApplication
     );
     if (response.status === 201) {
-      props.setOpenModal('pop-up-applied');
+      props.setOpenModal(undefined);
+      setShowSuccessToast(true);
+    } else {
+      props.setOpenModal(undefined);
+      setShowErrorToast(true);
     }
+    props.setOpenModal(undefined);
   }
 
   async function withdrawRole(roleApplication: TRoleApplication) {
@@ -152,7 +152,7 @@ export default function RoleDetails( {selectedRole, sysRole, roleSkills, currUse
   if (selectedRole && loading) {
     getRoleDetails().then((data) => {
       setRoleDetails(data);
-      console.log("roleDetails: ", data);
+      // console.log("roleDetails: ", data);
     });
     getRoleSkills().then((data) => {
       let skills: Array<Number> = [];
@@ -168,23 +168,23 @@ export default function RoleDetails( {selectedRole, sysRole, roleSkills, currUse
           }
         })
         setSkillMatchCounter(counter);
-        console.log("skillMatchCounter: ",data);
+        // console.log("skillMatchCounter: ",data);
       });
     });
     getRoleListingChanges().then((data) => {
       setRoleListingChanges(data);
-      console.log("roleListingChanges", data);
+      // console.log("roleListingChanges", data);
     });
     getAppliedRole().then((data) => {
       if (data) {
         setAppliedRole(data);
-        console.log("appliedRole: ", data);
+        // console.log("appliedRole: ", data);
       }
     });
     getRoleListingSource().then((data) => {
       if (data) {
         setRoleListingSource(data);
-        console.log("roleListingSource: ", data);
+        // console.log("roleListingSource: ", data);
       }
     });
     setLoading(false);
@@ -198,7 +198,7 @@ export default function RoleDetails( {selectedRole, sysRole, roleSkills, currUse
       <h1>Loading...</h1>
     </div>
   ) : (
-    <div className="w-4/6 mx-auto h-[60vh] overflow-y-scroll">
+    <div className="w-4/5 mx-auto h-[60vh] overflow-y-scroll">
       <div className="max-w p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mx-auto mb-2 grid grid-cols-4 gap-2">
         {/* Title */}
         <div className="col-span-3">
@@ -212,9 +212,39 @@ export default function RoleDetails( {selectedRole, sysRole, roleSkills, currUse
             <Button onClick={() => {
               withdrawRole(appliedRole);
             }}>Withdraw</Button>
-          ) : <Button onClick={() => {
-            applyRole(selectedRole?.role_listing_id as number, parseInt(sessionStorage.getItem("staff_id") as string));
-          }}>Apply</Button>
+          ) : <div>
+            <Button onClick={() => {
+              props.setOpenModal("pop-up-apply");
+            }}>Apply</Button>
+            <Modal show={props.openModal === "pop-up-apply"} size="md" popup onClose={() => props.setOpenModal(undefined)}>
+              <Modal.Header />
+              <Modal.Body>
+                <div className="space-y-6">
+                  <h3 className="text-xl font-medium text-gray-900 dark:text-white">Confirm Application?</h3>
+                  <h6>Your application will be submitted to the hiring team.</h6>
+
+                  <div className="flex gap-5 justify-end">
+                    <Button className="bg-gray-300" onClick={() => props.setOpenModal(undefined)}>Cancel</Button>
+                    <Button onClick={() => applyRole(selectedRole?.role_listing_id as number, parseInt(sessionStorage.getItem("staff_id") as string))}>Confirm</Button>
+                  </div>
+                </div>
+              </Modal.Body>
+            </Modal>
+
+            {showSuccessToast && (
+              <Toast>
+                <div className="ml-3 text-sm font-normal">Successful Application!</div>
+                <Toast.Toggle onDismiss={() => props.setShowToast(false)} />
+              </Toast>
+            )}
+            {showErrorToast && (
+              <Toast>
+                Error in Application
+              </Toast>
+            )}
+          </div>
+
+          
           }
         </div>
 
@@ -239,7 +269,7 @@ export default function RoleDetails( {selectedRole, sysRole, roleSkills, currUse
         <div className="col-span-4">
           <div className="flex items-center">
             <p className="font-normal text-gray-700 dark:text-black">
-              Closing Date: {selectedRole?.role_listing_close}
+              Application Deadline: {selectedRole?.role_listing_close}
             </p>
           </div>
         </div>
@@ -248,7 +278,8 @@ export default function RoleDetails( {selectedRole, sysRole, roleSkills, currUse
         <div className="col-span-4">
           <div className="flex items-center">
             <p className="font-normal text-gray-700 dark:text-black">
-              Hiring Manager: {roleListingSource?.fname?.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())} ({roleListingSource?.email})
+              Hiring Manager: {roleListingSource?.fname?.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())} 
+              <span className="text-blue-500">({roleListingSource?.email})</span>
             </p>
           </div>
         </div>
@@ -269,6 +300,7 @@ export default function RoleDetails( {selectedRole, sysRole, roleSkills, currUse
         <div className="col-span-3">
           <p className="font-normal text-gray-700 dark:text-black">
             {roleSkillsDetails.map((skill) => {
+              console.log("SkillDeets", skill)
               if (currUserSkills.includes(skill.skill_id)) {
                 return (
                   <span key={skill.skill_name} className="inline-block bg-green-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
