@@ -27,14 +27,14 @@ export default function R_Navbar() {
     router.push("/Login");
   }
   return (
-    <Navbar fluid rounded className="sticky top-0 z-50 bg-blue-300">
+    <Navbar fluid rounded className="sticky p-1 top-0 z-50 bg-blue-300">
       <Navbar.Brand href="http://localhost:3000/listroles">
         {/* <img
           alt="Flowbite React Logo"
           className="mr-3 h-6 sm:h-9"
           src="/favicon.svg"
         /> */}
-        <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
+        <span className="self-center whitespace-nowrap text-lg font-semibold dark:text-white">
           All-In-One
         </span>
       </Navbar.Brand>
