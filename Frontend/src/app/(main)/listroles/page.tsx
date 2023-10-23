@@ -7,7 +7,9 @@ import Link from "next/link";
 import { Button, Toast, Dropdown, Spinner } from "flowbite-react";
 import { HiCheck } from "react-icons/hi";
 import AddListing from "@/app/_components/AddListing";
-import "flowbite";
+import Loading from "@/app/_components/Loading";
+
+import 'flowbite'
 
 export default function List_Roles() {
   const router = useRouter();
@@ -183,12 +185,12 @@ export default function List_Roles() {
     setSysRole(sessionStorage.getItem("sys_role") as string);
   }, []);
 
-  return loading ? (
-    <div className="text-center">
-      <Spinner aria-label="Extra large spinner example" size="xl" />
-      <h1>Loading...</h1>
-    </div>
-  ) : (
+  
+
+  return (
+    loading ? ( 
+      <Loading />
+     ) : (
     <div>
       {/* SearchBar */}
       <section
@@ -413,5 +415,6 @@ export default function List_Roles() {
         ) : null}
       </div>
     </div>
+  )
   );
 }
