@@ -19,7 +19,7 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
   const [roleDetails, setRoleDetails] = useState<TRoleDetails | undefined>(undefined);
   const [roleSkillsDetails, setRoleSkillsDetails] = useState<Array<TSkillDetails>>([]);
   const [roleListingChanges, setRoleListingChanges] = useState<Array<TRoleListingChanges>>([]);
-  const [appliedRole, setAppliedRole] = useState<TRoleApplication | undefined>(undefined);
+  const [appliedRole, setAppliedRole] = useState<TRoleApplicant | undefined>(undefined);
   const props = { openModal, setOpenModal, showToast, setShowToast, setRole, setRoleListingChanges };
   const [loading, setLoading] = useState(true);
   async function getRoleDetails(): Promise<TRoleDetails> {
@@ -59,7 +59,7 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
       return [];
     }
   }
-  async function getAppliedRole(): Promise<TRoleApplication | undefined> {
+  async function getAppliedRole(): Promise<TRoleApplicant | undefined> {
     try {
       const response: AxiosResponse<TResponseData> = await axios.get(
         `/api/role/roleApplication/getByRoleLStaff/${params.role_listing_id}/${sessionStorage.getItem("staff_id")}`
@@ -87,7 +87,7 @@ export default function Role_Listing_Profile( { params } : { params: { role_list
       props.setOpenModal('pop-up-applied');
     }
   }
-  async function withdrawRole(roleApplication: TRoleApplication) {
+  async function withdrawRole(roleApplication: TRoleApplicant) {
     const response: AxiosResponse<TResponseData> = await axios.put(
       `/api/role/roleApplication/update/${roleApplication.role_app_id}`,
       {

@@ -178,6 +178,10 @@ class AppliedEnum(enum.Enum):
     applied = 'applied'
     withdrawn = 'withdrawn'
 
+class CheckedEnum(enum.Enum):
+    pending = 'pending'
+    supported = 'supported'
+    not_supported = 'not_supported'
 class RoleApplication(db.Model):
     __tablename__ = 'ROLE_APPLICATIONS'
     role_app_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -185,6 +189,8 @@ class RoleApplication(db.Model):
     staff_id = db.Column(db.Integer, nullable=False)
     role_app_status = db.Column(db.Enum(AppliedEnum), nullable=False)
     role_app_ts_create = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=False)
+    hr_checked = db.Column(db.Enum(CheckedEnum), nullable=False, server_default='pending')
+    hr_checked_ts = db.Column(db.TIMESTAMP, nullable=True)
 
     def __init__(self, role_listing_id, staff_id, role_app_status):
         self.role_listing_id = role_listing_id
@@ -197,7 +203,9 @@ class RoleApplication(db.Model):
             "role_listing_id": self.role_listing_id,
             "staff_id": self.staff_id,
             "role_app_status": self.role_app_status.name,
-            "role_app_ts_create": self.role_app_ts_create
+            "role_app_ts_create": self.role_app_ts_create,
+            "hr_checked": self.hr_checked.name,
+            "hr_checked_ts": self.hr_checked_ts
         }
 
 # Create a new RoleApplication
@@ -314,10 +322,12 @@ def update_role_application(role_app_id):
     try:
         data = request.get_json()
         role_app_status = data.get("role_app_status")
+        hr_checked = data.get("hr_checked")
 
         role_application = RoleApplication.query.get(role_app_id)
         if role_application:
             role_application.role_app_status = role_app_status
+            role_application.hr_checked = hr_checked
             db.session.commit()
 
             response_data = {
