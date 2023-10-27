@@ -1,205 +1,145 @@
-## Staff Skill API Documentation
+# Staff Skill API Documentation
 
-**1. Create a New Staff Skill**
+This documentation describes the API endpoints for managing staff skills using a Flask-based web application. The API allows you to retrieve staff skills in a database.
 
-- **Endpoint:** `POST /createStaffSkill`
-- **Description:** Create a new staff skill.
+## 1. Staff Skill Model
 
-**Request:**
-```http
-POST /createStaffSkill
-Content-Type: application/json
+The `StaffSkill` model represents a staff skill with the following attributes:
 
-{
-    "staff_id": 123,
-    "skill_id": 456,
-    "ss_status": "active"
-}
-```
+- `staff_id` (Integer, Primary Key): Identifier for the staff member associated with the skill.
+- `skill_id` (Integer, Primary Key): Identifier for the skill associated with the staff member.
+- `ss_status` (Enum): The status of the staff skill, which can be one of the following:
+  - "active"
+  - "inactive"
 
-**Response:**
-- `201 Created` - If the staff skill is created successfully, it returns the created staff skill.
-```json
-{
-    "code": 201,
-    "message": "StaffSkill created successfully.",
-    "data": {
-        "staff_id": 123,
-        "skill_id": 456,
-        "ss_status": "active"
-    }
-}
-```
+## 2. Endpoints
 
-- `400 Bad Request` - If there is an error during the creation process, it returns an error message.
-```json
-{
-    "code": 400,
-    "message": "Failed to create StaffSkill. Error: <error_message>"
-}
-```
+### 2.1. Get All Staff Skills
 
-**2. Get All Staff Skills**
-
-- **Endpoint:** `GET /getAllStaffSkills`
+- **Endpoint:** `GET /api/staff/staffSkills/getAll`
 - **Description:** Retrieve all staff skills from the database.
+- **Response:**
+  - `200 OK` - If there are staff skills in the database, it returns a list of staff skills.
+  ```json
+  {
+      "code": 200,
+      "data": {
+          "staff_skills": [
+              {
+                  "staff_id": 123,
+                  "skill_id": 456,
+                  "ss_status": "active"
+              },
+              {
+                  "staff_id": 789,
+                  "skill_id": 101,
+                  "ss_status": "inactive"
+              }
+          ]
+      }
+  }
+  ```
 
-**Request:**
-```http
-GET /getAllStaffSkills
-```
+  - `404 Not Found` - If there are no staff skills in the database, it returns an error message.
+  ```json
+  {
+      "code": 404,
+      "message": "No staff skills in the database."
+  }
+  ```
 
-**Response:**
-- `200 OK` - If there are staff skills in the database, it returns a list of staff skills.
-```json
-{
-    "code": 200,
-    "data": {
-        "staff_skills": [
-            {
-                "staff_id": 123,
-                "skill_id": 456,
-                "ss_status": "active"
-            },
-            {
-                "staff_id": 789,
-                "skill_id": 101,
-                "ss_status": "inactive"
-            }
-        ]
-    }
-}
-```
+### 2.2. Get Staff Skills for a Specific Staff Member
 
-- `404 Not Found` - If there are no staff skills in the database, it returns an error message.
-```json
-{
-    "code": 404,
-    "message": "No staff skills in the database."
-}
-```
-
-**3. Get Staff Skills for a Specific Staff Member**
-
-- **Endpoint:** `GET /getStaffSkills/<int:staff_id>`
+- **Endpoint:** `GET /api/staff/staffSkills/getByStaff/<int:staff_id>`
 - **Description:** Retrieve all staff skills for a specific staff member by providing their `staff_id`.
+- **Response:**
+  - `200 OK` - If there are staff skills associated with the provided staff member, it returns the list of staff skills.
+  ```json
+  {
+      "code": 200,
+      "data": {
+          "staff_skills": [
+              {
+                  "staff_id": 123,
+                  "skill_id": 456,
+                  "ss_status": "active"
+              },
+              {
+                  "staff_id": 123,
+                  "skill_id": 789,
+                  "ss_status": "inactive"
+              }
+          ]
+      }
+  }
+  ```
 
-**Request:**
-```http
-GET /getStaffSkills/123
-```
+  - `404 Not Found` - If there are no staff skills associated with the provided staff member, it returns an error message.
+  ```json
+  {
+      "code": 404,
+      "message": "No staff skills found for staff_id 123."
+  }
+  ```
 
-**Response:**
-- `200 OK` - If there are staff skills associated with the provided staff member, it returns the list of staff skills.
-```json
-{
-    "code": 200,
-    "data": {
-        "staff_skills": [
-            {
-                "staff_id": 123,
-                "skill_id": 456,
-                "ss_status": "active"
-            },
-            {
-                "staff_id": 123,
-                "skill_id": 789,
-                "ss_status": "inactive"
-            }
-        ]
-    }
-}
-```
+### 2.3. Get Staff Skills by Skill ID
 
-- `404 Not Found` - If there are no staff skills associated with the provided staff member, it returns an error message.
-```json
-{
-    "code": 404,
-    "message": "No staff skills found for staff_id 123."
-}
-```
+- **Endpoint:** `GET /api/staff/staffSkills/getBySkill/<int:skill_id>`
+- **Description:** Retrieve all staff associated with a specific skill by providing the `skill_id`.
+- **Response:**
+  - `200 OK` - If there are staff skills associated with the provided skill, it returns the list of staff skills.
+  ```json
+  {
+      "code": 200,
+      "data": {
+          "staff_skills": [
+              {
+                  "staff_id": 123,
+                  "skill_id": 456,
+                  "ss_status": "active"
+              },
+              {
+                  "staff_id": 789,
+                  "skill_id": 456,
+                  "ss_status": "inactive"
+              }
+          ]
+      }
+  }
+  ```
 
-**4. Update a Specific Staff Skill**
+  - `404 Not Found` - If there are no staff skills associated with the provided skill, it returns an error message.
+  ```json
+  {
+      "code": 404,
+      "message": "No staff skills found for skill_id 456."
+  }
+  ```
 
-- **Endpoint:** `PUT /updateStaffSkill/<int:staff_id>/<int:skill_id>`
-- **Description:** Update a specific staff skill by providing `staff_id` and `skill_id`.
+### 2.4. Get Multiple Staff Skills by `staff_ids`
 
-**Request:**
-```http
-PUT /updateStaffSkill/123/456
-Content-Type: application/json
-
-{
-    "ss_status": "inactive"
-}
-```
-
-**Response:**
-- `200 OK` - If the staff skill is found and updated successfully, it returns the updated staff skill.
-```json
-{
-    "code": 200,
-    "message": "StaffSkill for staff_id 123 and skill_id 456 updated successfully.",
-    "data": {
-        "staff_id": 123,
-        "skill_id": 456,
-        "ss_status": "inactive"
-    }
-}
-```
-
-- `404 Not Found` - If the staff skill is not found, it returns an error message.
-```json
-{
-    "code": 404,
-    "message": "StaffSkill for staff_id 123 and skill_id 456 not found. Nothing updated."
-}
-```
-
-- `400 Bad Request` - If there is an error during the update process, it returns an error message.
-```json
-{
-    "code": 400,
-    "message": "Failed to update StaffSkill. Error: <error_message>"
-}
-```
-
-**5. Get Staff Skills by Skill ID**
-
-- **Endpoint:** `GET /getStaffSkillsBySkill/<int:skill_id>`
-- **Description:** Retrieve all staff skills associated with a specific skill by providing the `skill_id`.
-
-**Request:**
-```http
-GET /getStaffSkillsBySkill/456
-```
-
-**Response:**
-- `200 OK` - If there are staff skills associated with the provided skill, it returns the list of staff skills.
-```json
-{
-    "code": 200,
-    "data": {
-        "staff_skills": [
-            {
-                "staff_id": 123,
-                "skill_id": 456,
-                "ss_status": "active"
-            },
-            {
-                "staff_id": 789,
-                "skill_id": 456,
-                "ss_status": "inactive"
-            }
-        ]
-    }
-}
-```
-
-- `404 Not Found` - If there are no staff skills associated with the provided skill, it returns an error message.
-```json
-{
-    "code": 404,
-    "message": "No staff skills found for skill_id 456."
-}
-```
+- **Endpoint:** `POST /api/staff/staffSkills/getMulti`
+- **Description:** Retrieve multiple staff skills by providing a list of `staff_ids` in the request body.
+- **Request Body:**
+  ```json
+  {
+      "staff_ids": [123, 456, 789]
+  }
+  ```
+- **Response:**
+  - `200 OK` - If there are staff skills associated with the provided staff members, it returns the list of staff skills.
+  ```json
+  {
+      "code": 200,
+      "data": {
+        ["staff_id"] : [1,2,3,4...]
+      }
+  }
+  ```
+  - `404 Not Found` - If there are no staff skills associated with the provided staff members, it returns an error message.
+  ```json
+  {
+      "code": 404,
+      "message": "No StaffSkills association found with staff_ids"
+  }
+  ```
