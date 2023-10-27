@@ -561,7 +561,7 @@ export default function Test() {
 
                   {/* Create Button */}
                   <div className="flex justify-end">
-                    <Button onClick={() => createListing(selectedRoleTypeID, selectedDescription, selectedStaffID, selectedOpeningDate, selectedClosingDate)}>
+                    <Button onClick={() => createListing(selectedRoleTypeID as number, selectedDescription, selectedStaffID as number, selectedOpeningDate as Date, selectedClosingDate as Date)}>
                       Create Listing
                     </Button>
                   </div>
