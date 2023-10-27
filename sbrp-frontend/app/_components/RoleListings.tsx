@@ -8,6 +8,7 @@ import { Button, Toast, Dropdown, Spinner } from "flowbite-react";
 import { HiCheck } from "react-icons/hi";
 import AddListing from "@/app/_components/AddListing";
 import "flowbite";
+import { get } from "http";
 
 type RoleListingProps = {
   roles: TRoleListing[];
@@ -16,11 +17,45 @@ type RoleListingProps = {
   sysRole: string;
   roleSkills: TSpecificRoleSkills;
   currUserSkills: number[];
+  allStaff: TStaff[];
   onRoleClick: (role: TRoleListing) => void;
 };
 
-export default function RoleListings( {roles, roleDetails, selectedRole, sysRole, roleSkills, currUserSkills, onRoleClick}:RoleListingProps ) {
+export default function RoleListings( {roles, roleDetails, selectedRole, sysRole, roleSkills, currUserSkills, allStaff, onRoleClick}:RoleListingProps ) {
   const [loading, setLoading] = useState(true);
+
+  const [allSkills, setAllSkills] = useState<TSkillDetails[]>([]);
+  const [allRoles, setAllRoles] = useState<TRoleDetails[]>([]);
+
+  async function getAllSkills(): Promise<TSkillDetails[]> {
+    try {
+      const response: AxiosResponse<TResponseData> = await axios.get(
+        `/api/skills/getAll`
+      );
+      return response.data.data.skills;
+    }
+    catch (error: any) {
+      if (error?.response?.status === 404){
+        console.log("No skills found");
+      }
+      return [];
+    }
+  }
+
+  async function getAllRoles(): Promise<TRoleDetails[]> {
+    try {
+      const response: AxiosResponse<TResponseData> = await axios.get(
+        `/api/role/getAll`
+      );
+      return response.data.data.roles;
+    }
+    catch (error: any) {
+      if (error?.response?.status === 404){
+        console.log("No roles found");
+      }
+      return [];
+    }
+  }
   
   // async function getRoleListingSource(selectedRole): Promise<TStaff | undefined> {
   //   try {
@@ -39,6 +74,15 @@ export default function RoleListings( {roles, roleDetails, selectedRole, sysRole
   // }
 
   useEffect(() => {
+    getAllSkills().then((data) => {
+      setAllSkills(data);
+      // console.log("ALL SKILLS: ", data)
+    });
+
+    getAllRoles().then((data) => {
+      setAllRoles(data);
+      console.log("ALL ROLES: ", data)
+    });
     setLoading(false);
   }
   , []);
@@ -70,7 +114,7 @@ export default function RoleListings( {roles, roleDetails, selectedRole, sysRole
                 skill_ids: roleSkills
               }
               const response: AxiosResponse<TResponseData> = await axios.post(
-                `http://localhost:5001/getSkills`,
+                `/api/skills/getMulti`,
                 sendData
               );
               return response.data.data;
@@ -87,10 +131,9 @@ export default function RoleListings( {roles, roleDetails, selectedRole, sysRole
                 key={role.role_listing_id}
                 onClick={() => onRoleClick(role)}
               >
-                {/* Image */}
 
                 {/* roleList.TITLE */}
-                <div className="col-span-2">
+                <div className="col-span-3">
                   <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
                     {
                       roleDetails.find(
@@ -100,6 +143,17 @@ export default function RoleListings( {roles, roleDetails, selectedRole, sysRole
                   </h5>
                 </div>
 
+                {/* Department, How many days posted ago */}
+                <div className="col-span-3">
+                  <div className="flex items-center">
+                    <p className="font-normal text-sm text-gray-700 dark:text-black">
+                      {/* Convert this from all capital to first letter capital with the remaining lower */}
+                      {/* {roleListingSource?.dept?.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())} */}
+                      {allStaff.find((staff) => staff.staff_id === role.role_listing_source)?.dept?.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}
+                    </p>
+                  </div>
+                </div>
+
                 {/* roleList.role_listing_close */}
                 <div className="col-span-2">
                   <p className="font-normal text-sm text-gray-700 dark:text-gray-400">
@@ -107,15 +161,6 @@ export default function RoleListings( {roles, roleDetails, selectedRole, sysRole
                   </p>
                 </div>
 
-                {/* Department, How many days posted ago */}
-                <div className="col-span-1">
-                  <div className="flex items-center">
-                    <p className="font-normal text-sm text-gray-700 dark:text-black">
-                      {/* Convert this from all capital to first letter capital with the remaining lower */}
-                      {/* {roleListingSource?.dept?.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())} */}
-                    </p>
-                  </div>
-                </div>
 
                 <div className="col-span-3 flex justify-end">
                   <div>
@@ -135,19 +180,21 @@ export default function RoleListings( {roles, roleDetails, selectedRole, sysRole
                   <p className="font-normal text-gray-700 dark:text-black">
                     {roleSkills[role.role_id]? (
                     roleSkills[role.role_id].map((skill) => {
+                      
+                      let skillDetail = allSkills.find((skillDetail) => skillDetail.skill_id === skill);
 
                       if (currUserSkills.includes(skill)) {
                         console.log("Skill", skill)
                         return (
                           <span key={skill} className="inline-block bg-green-200 rounded-full px-3 py-1 text-xs font-semibold text-gray-700 mr-2 mb-2">
-                            {skill}
+                            {skillDetail ? skillDetail.skill_name : `Skill ${skill}`}
                           </span>
                         );
                       }
                       else {
                         return (
                           <span key={skill} className="inline-block bg-gray-200 rounded-full px-3 py-1 text-xs font-semibold text-gray-700 mr-2 mb-2">
-                            {skill}
+                            {skillDetail ? skillDetail.skill_name : `Skill ${skill}`}
                           </span>
                         );
                       }
