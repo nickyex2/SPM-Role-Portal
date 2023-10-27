@@ -193,7 +193,7 @@ export default function Test() {
     console.log("STAFF ID", staff.staff_id);
   }
 
-  async function createListing (selectedRoleTypeID, selectedDescription, selectedStaffID, selectedOpeningDate, selectedClosingDate) {
+  async function createListing (selectedRoleTypeID:number, selectedDescription:string, selectedStaffID:number, selectedOpeningDate:Date, selectedClosingDate:Date) {
     // generate an 8 digit id, if not in roles, then use it, else generate another one
     let id = Math.floor(10000000 + Math.random() * 90000000);
     let idExists = false;
@@ -213,17 +213,21 @@ export default function Test() {
 
     // If opening date is after today, set status to inactive, else set to active
     let status = "active";
-    if (selectedOpeningDate > Today) {
-      status = "inactive";
-    }
+
+    // convert selectedOpeningDate which is a Date to a String of format YYYY-MM-DD
+    let selectedOpeningDateStr = selectedOpeningDate.toISOString().split("T")[0];
+
+    // convert selectedClosingDate which is a Date to a String of format YYYY-MM-DD
+    let selectedClosingDateStr = selectedClosingDate.toISOString().split("T")[0];
+
 
     let sendData = {
       role_listing_id: id,
       role_id: selectedRoleTypeID,
       role_listing_desc: selectedDescription,
       role_listing_source: selectedStaffID,
-      role_listing_open: selectedOpeningDate,
-      role_listing_close: selectedClosingDate,
+      role_listing_open: selectedOpeningDateStr,
+      role_listing_close: selectedClosingDateStr,
       role_listing_creator: sessionStorage.getItem("staff_id"),
       role_listing_status: status,
       role_listing_updater: sessionStorage.getItem("staff_id")
