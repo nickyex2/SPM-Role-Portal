@@ -3,19 +3,24 @@ import React from "react";
 import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { Button, Modal, Label, TextInput, Checkbox, Toast, Dropdown, Spinner } from "flowbite-react";
-import { HiCheck } from "react-icons/hi";
-import AddListing from "@/app/_components/AddListing";
+import {
+  Button,
+  Modal,
+  Label,
+  Toast,
+  Dropdown,
+  Spinner,
+} from "flowbite-react";
 import "flowbite";
-import RoleListings from "../../_components/RoleListings";
-import RoleDetails from "../../_components/RoleDetails";
+import RoleListings from "@/app/_components/RoleListings";
+import RoleDetails from "@/app/_components/RoleDetails";
 
 export default function Test() {
   const router = useRouter();
-  
+
   const [openModal, setOpenModal] = useState<string | undefined>();
-  const [showToast, setShowToast] = useState(false);
+  const [showAddSuccessfulToast, setShowAddSuccessfulToast] = useState(false);
+  const [showAddErrorToast, setShowAddErrorToast] = useState(false);
 
   const [loading, setLoading] = useState(true);
 
@@ -25,11 +30,12 @@ export default function Test() {
   const [roleDetails, setRoleDetails] = useState<Array<TRoleDetails>>([]);
 
   const [roleSkills, setRoleSkills] = useState<TSpecificRoleSkills>({});
-  const [initailRoleSkills, setInitialRoleSkills] = useState<TSpecificRoleSkills>({});
+  const [initailRoleSkills, setInitialRoleSkills] =
+    useState<TSpecificRoleSkills>({});
   const [skills, setSkills] = useState<Array<TSkillDetails>>([]);
   const [initialSkills, setInitialSkills] = useState<Array<TSkillDetails>>([]);
   const [currUserSkills, setCurrUserSkills] = useState<Array<number>>([]);
-  
+
   const [sysRole, setSysRole] = useState<string>("");
 
   const [roleTypes, setRoleTypes] = useState<Array<TRoleDetails>>([]);
@@ -37,7 +43,9 @@ export default function Test() {
   const [selectedRoleTypeID, setSelectedRoleTypeID] = useState<number>();
 
   const [allStaff, setAllStaff] = useState<Array<TStaff>>([]);
-  const [selectedStaff, setSelectedStaff] = useState<string>("Select Hiring Manager");
+  const [selectedStaff, setSelectedStaff] = useState<string>(
+    "Select Hiring Manager"
+  );
   const [selectedStaffID, setSelectedStaffID] = useState<number>();
 
   const [selectedDescription, setSelectedDescription] = useState<string>("");
@@ -46,14 +54,9 @@ export default function Test() {
   const [selectedClosingDate, setSelectedClosingDate] = useState<Date>();
   const Today = new Date();
 
-  
   const props = {
     openModal,
-    setOpenModal,
-    showToast,
-    setShowToast,
-    setRoles,
-    setRoleDetails,
+    setOpenModal
   };
 
   const getAllRolesURL = "/api/role/roleListing/getAll";
@@ -63,7 +66,9 @@ export default function Test() {
   const getAllRoleTypesURL = "/api/role/getAll";
   const getAllStaffURL = "/api/staff/getAll";
 
-  const [selectedRole, setSelectedRole] = useState<TRoleListing | undefined>(undefined);
+  const [selectedRole, setSelectedRole] = useState<TRoleListing | undefined>(
+    undefined
+  );
 
   const handleRoleClick = (role: TRoleListing) => {
     setSelectedRole(role);
@@ -181,19 +186,25 @@ export default function Test() {
     }
   }
 
-  async function selectRoleType (roleType: TRoleDetails) {
+  async function selectRoleType(roleType: TRoleDetails) {
     setSelectedRoleType(roleType.role_name);
     setSelectedRoleTypeID(roleType.role_id);
   }
 
-  async function selectStaff (staff: TStaff) {
+  async function selectStaff(staff: TStaff) {
     setSelectedStaff(staff.fname + " " + staff.lname);
     setSelectedStaffID(staff.staff_id);
 
     console.log("STAFF ID", staff.staff_id);
   }
 
-  async function createListing (selectedRoleTypeID:number, selectedDescription:string, selectedStaffID:number, selectedOpeningDate:Date, selectedClosingDate:Date) {
+  async function createListing(
+    selectedRoleTypeID: number,
+    selectedDescription: string,
+    selectedStaffID: number,
+    selectedOpeningDate: Date,
+    selectedClosingDate: Date
+  ) {
     // generate an 8 digit id, if not in roles, then use it, else generate another one
     let id = Math.floor(10000000 + Math.random() * 90000000);
     let idExists = false;
@@ -215,11 +226,14 @@ export default function Test() {
     let status = "active";
 
     // convert selectedOpeningDate which is a Date to a String of format YYYY-MM-DD
-    let selectedOpeningDateStr = selectedOpeningDate.toISOString().split("T")[0];
+    let selectedOpeningDateStr = selectedOpeningDate
+      .toISOString()
+      .split("T")[0];
 
     // convert selectedClosingDate which is a Date to a String of format YYYY-MM-DD
-    let selectedClosingDateStr = selectedClosingDate.toISOString().split("T")[0];
-
+    let selectedClosingDateStr = selectedClosingDate
+      .toISOString()
+      .split("T")[0];
 
     let sendData = {
       role_listing_id: id,
@@ -230,46 +244,44 @@ export default function Test() {
       role_listing_close: selectedClosingDateStr,
       role_listing_creator: sessionStorage.getItem("staff_id"),
       role_listing_status: status,
-      role_listing_updater: sessionStorage.getItem("staff_id")
+      role_listing_updater: sessionStorage.getItem("staff_id"),
     };
-    console.log(sendData)
+    console.log(sendData);
     const response: AxiosResponse<TResponseData> = await axios.post(
-      "http://localhost:5002/createRoleListing",
+      "/api/role/roleListing/create",
       sendData
     );
     console.log(response);
-    if (response.data.code === 200) {
-      setShowToast(true);
-      setTimeout(() => {
-        setShowToast(false);
-      }, 3000);
-      // Update roles and roleDetails
-      getAllRoles()
-        .then((data) => {
-          // Fetch details for all roles concurrently using Promise.all
-          setRoles(data);
-          // console.log("setRoles<TRoleListings>: ", data);
-          setInitialRoles(data);
-          setSelectedRole(data[0]);
-          let role_ids: Array<Number> = [];
-          data.forEach((role) => {
-            role_ids.push(role.role_id);
-          });
-          // console.log(role_ids);
-          getRoleDetails(role_ids).then((data) => {
-            setRoleDetails(data);
-            console.log("ROLEDETAILSSS: ", data);
-          });
-          getRoleSkills(role_ids).then((data) => {
-            setRoleSkills(data);
-            setInitialRoleSkills(data);
-            // console.log(data);
-          });
-        })
-        .catch((error) => {
-          console.error("Error fetching roles:", error);
-          setLoading(false);
+    if (response.data.code === 201) {
+      // set into the relevant states
+      setRoles([response.data.data, ...roles])
+      setInitialRoles([response.data.data, ...roles]);
+      setSelectedRole(response.data.data);
+      let role_ids: Array<Number> = [response.data.data.role_id as number];
+      getRoleDetails(role_ids).then((data) => {
+        setRoleDetails([data[0], ...roleDetails]);
+        console.log("ROLEDETAILS: ", data);
+      });
+      getRoleSkills(role_ids).then((data) => {
+        setRoleSkills({
+          ...data,
+          ...roleSkills
         });
+        setInitialRoleSkills({
+          ...data,
+          ...roleSkills
+        });
+      });
+      props.setOpenModal(undefined);
+      setShowAddSuccessfulToast(true);
+      setTimeout(() => {
+        setShowAddSuccessfulToast(false);
+      }, 10000);
+    } else {
+      setShowAddErrorToast(true);
+      setTimeout(() => {
+        setShowAddErrorToast(false);
+      }, 10000);
     }
   }
 
@@ -349,7 +361,6 @@ export default function Test() {
   useEffect(() => {
     setSysRole(sessionStorage.getItem("sys_role") as string);
   }, []);
-
 
   return loading ? (
     <div className="text-center">
@@ -460,11 +471,18 @@ export default function Test() {
             >
               New Listing
             </Button>
-            <Modal show={props.openModal === 'pop-up-add'} size="md" popup onClose={() => props.setOpenModal(undefined)}>
+            <Modal
+              show={props.openModal === "pop-up-add"}
+              size="md"
+              popup
+              onClose={() => props.setOpenModal(undefined)}
+            >
               <Modal.Header />
               <Modal.Body>
                 <div className="space-y-4">
-                  <h3 className="text-xl font-medium text-gray-900 dark:text-white">Create new Role Listing</h3>
+                  <h3 className="text-xl font-medium text-gray-900 dark:text-white">
+                    Create New Role Listing
+                  </h3>
 
                   {/* Role Listing ID Input */}
                   <div>
@@ -474,33 +492,34 @@ export default function Test() {
                     {/* For every role in roleType, create a dropdown input with a search function, limit to 5 dropdowns before adding scrollable */}
                     <Dropdown label={selectedRoleType} dismissOnClick={true}>
                       <div className="max-h-40 overflow-y-scroll">
-                      {roleTypes.map((roleType) => {
-                        return <Dropdown.Item onClick={() => selectRoleType(roleType)}>{roleType.role_name}</Dropdown.Item>;
-                      })}
+                        {roleTypes.map((roleType) => {
+                          return (
+                            <Dropdown.Item
+                              onClick={() => selectRoleType(roleType)}
+                            >
+                              {roleType.role_name}
+                            </Dropdown.Item>
+                          );
+                        })}
                       </div>
                     </Dropdown>
                   </div>
 
-
-                  {/* Role Lister Creator Name prefilled based on the session user name */}
-                  {/* <div>
-                    <div className="mb-2 block">
-                      <Label htmlFor="name" value="Lister Name" />
-                    </div>
-                    <TextInput id="name" placeholder="John Doe" value={sessionStorage.getItem("fname") + " " + sessionStorage.getItem("lname")} required />
-                  </div> */}
-
                   {/* Role ID Input */}
-
 
                   {/* Role Listing Description Large Textarea Input */}
                   <div>
                     <div className="mb-2 block">
                       <Label htmlFor="description" value="Description" />
                     </div>
-                    <textarea id="description" className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none" rows={4} placeholder="Description of role"
-                    onBlur={(e) => setSelectedDescription(e.target.value)}
-                    required />
+                    <textarea
+                      id="description"
+                      className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none"
+                      rows={4}
+                      placeholder="Description of role"
+                      onBlur={(e) => setSelectedDescription(e.target.value)}
+                      required
+                    />
                   </div>
 
                   {/* Role Listing Source Input, the Hiring Manager */}
@@ -511,9 +530,13 @@ export default function Test() {
                     {/* For every role in roleType, create a dropdown input with a search function, limit to 5 dropdowns before adding scrollable */}
                     <Dropdown label={selectedStaff} dismissOnClick={true}>
                       <div className="max-h-40 overflow-y-scroll">
-                      {allStaff.map((staff) => {
-                        return <Dropdown.Item onClick={() => selectStaff(staff)}>{staff.fname + " " + staff.lname}</Dropdown.Item>;
-                      })}
+                        {allStaff.map((staff) => {
+                          return (
+                            <Dropdown.Item onClick={() => selectStaff(staff)}>
+                              {staff.fname + " " + staff.lname}
+                            </Dropdown.Item>
+                          );
+                        })}
                       </div>
                     </Dropdown>
                   </div>
@@ -528,7 +551,11 @@ export default function Test() {
                         const selectedDate = new Date(e.target.value);
                         setSelectedOpeningDate(selectedDate);
                       }}
-                      type="date" id="open_date" className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none" required />
+                      type="date"
+                      id="open_date"
+                      className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none"
+                      required
+                    />
                   </div>
 
                   {/* Role Listing Closing Date Date style Input */}
@@ -541,74 +568,102 @@ export default function Test() {
                         const selectedDate = new Date(e.target.value);
                         setSelectedClosingDate(selectedDate);
                       }}
-                      type="date" id="close_date" className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none" required />
+                      type="date"
+                      id="close_date"
+                      className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none"
+                      required
+                    />
                   </div>
-
-                  {/* If opening date is after Today, display a div as "inactive", otherwise display a div as "active" */}
-                  {/* {selectedOpeningDate && Today ? (
-                    selectedOpeningDate > Today ? (
-                      <div className="bg-red-500 text-white text-center rounded-lg">
-                        <p className="text-lg font-medium">Inactive</p>
-                        <p className="text-sm">Opening Date is after Today</p>
-                      </div>
-                    ) : (
-                      <div className="bg-green-500 text-white text-center rounded-lg">
-                        <p className="text-lg font-medium">Active</p>
-                        <p className="text-sm">Opening Date is before Today</p>
-                      </div>
-                    )
-                  ) : null} */}
 
                   {/* Create Button */}
                   <div className="flex justify-end">
-                    <Button onClick={() => createListing(selectedRoleTypeID as number, selectedDescription, selectedStaffID as number, selectedOpeningDate as Date, selectedClosingDate as Date)}>
+                    <Button
+                      onClick={() =>
+                        createListing(
+                          selectedRoleTypeID as number,
+                          selectedDescription,
+                          selectedStaffID as number,
+                          selectedOpeningDate as Date,
+                          selectedClosingDate as Date
+                        )
+                      }
+                    >
                       Create Listing
                     </Button>
                   </div>
-
-                  {/* Role Listing Updater Input */}
-                  {/* <div className="flex justify-between">
-                    <div className="flex items-center gap-2">
-                      <Checkbox id="remember" />
-                      <Label htmlFor="remember">Remember me</Label>
-                    </div>
-                    <a href="/modal" className="text-sm text-cyan-700 hover:underline dark:text-cyan-500">
-                      Lost Password?
-                    </a>
-                  </div>
-                  <div className="w-full">
-                    <Button>Log in to your account</Button>
-                  </div>
-                  <div className="flex justify-between text-sm font-medium text-gray-500 dark:text-gray-300">
-                    Not registered?&nbsp;
-                    <a href="/modal" className="text-cyan-700 hover:underline dark:text-cyan-500">
-                      Create account
-                    </a>
-                  </div> */}
                 </div>
               </Modal.Body>
             </Modal>
           </div>
-        ) : (<div className="my-6 mx-auto"></div>)}
+        ) : (
+          <div className="my-6 mx-auto"></div>
+        )}
         <div className="grid grid-cols-2 gap-0 mt-5">
-
           <div className="flex-1 bg-#fff border-black border-solid rounded max-w">
             {selectedRole ? (
-            <RoleListings roles={roles} roleDetails={roleDetails} selectedRole={selectedRole} sysRole={sysRole} roleSkills={roleSkills} currUserSkills={currUserSkills} allStaff={allStaff} onRoleClick={handleRoleClick} />
+              <RoleListings
+                roles={roles}
+                roleDetails={roleDetails}
+                selectedRole={selectedRole}
+                sysRole={sysRole}
+                roleSkills={roleSkills}
+                currUserSkills={currUserSkills}
+                allStaff={allStaff}
+                onRoleClick={handleRoleClick}
+                allSkills={initialSkills}
+              />
             ) : (
               <p>No roles selected</p>
             )}
           </div>
 
-          <div>
-            {selectedRole ? (
-              <RoleDetails selectedRole={selectedRole} roleDetails={roleDetails} sysRole={sysRole} roleSkills={roleSkills} currUserSkills={currUserSkills} />
+          <div className="flex-1 bg-#fff border-black border-solid rounded max-w">
+            {selectedRole && roleSkills ? (
+              <RoleDetails
+                selectedRole={selectedRole}
+                roleDetails={roleDetails.find((roleDetail) => roleDetail.role_id === selectedRole.role_id) as TRoleDetails}
+                sysRole={sysRole}
+                roleSkills={roleSkills[selectedRole?.role_id]}
+                currUserSkills={currUserSkills}
+              />
             ) : (
               <p>No role selected</p>
             )}
           </div>
+          {showAddSuccessfulToast && (
+          <Toast
+            style={{
+              position: "fixed",
+              bottom: "20px",
+              right: "20px",
+              zIndex: 9999,
+            }}
+            className="bg-gray-700 text-white p-4 rounded shadow"
+          >
+            <div className="ml-3 text-sm font-normal">
+              Role Listing Created Successfully!
+            </div>
+            <Toast.Toggle />
+          </Toast>
+          )}
+          {showAddErrorToast && (
+          <Toast
+            style={{
+              position: "fixed",
+              bottom: "20px",
+              right: "20px",
+              zIndex: 9999,
+            }}
+            className="bg-gray-700 text-white p-4 rounded shadow"
+          >
+            <div className="ml-3 text-sm font-normal">
+              Please Try Again Later!
+            </div>
+            <Toast.Toggle />
+          </Toast>
+          )}
         </div>
       </div>
     </div>
-  )
+  );
 }
