@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import "flowbite";
+import dateFormat from "dateformat";
 
 type RoleListingProps = {
   roles: TRoleListing[];
@@ -30,6 +31,36 @@ export default function RoleListings( {roles, roleDetails, selectedRole, sysRole
   //     return undefined;
   //   }
   // }
+  function matchColour(percentMatch: number) {
+    if (percentMatch < 40) {
+      return(
+        <p className='text-2xl text-center md:text-2xl font-bold text-red-600'>
+                  {
+                    percentMatch + "%"
+                  }
+                  <p className='text-4xl font-bold text-center md:text-xl font-bold text-left text-gray-900 dark:text-white'>Skill Match</p>
+                </p>
+      )
+    } else if (percentMatch > 40 && percentMatch < 70) {
+      return (
+        <p className='text-2xl text-center md:text-2xl font-bold text-orange-400'>
+                  {
+                    percentMatch + "%"
+                  }
+                  <p className='text-4xl font-bold text-center md:text-xl font-bold text-left text-gray-900 dark:text-white'>Skill Match</p>
+                </p>
+      )
+    } else {
+      return (
+        <p className='text-2xl text-center md:text-2xl font-bold text-green-600'>
+                  {
+                    percentMatch + "%"
+                  }
+                  <p className='text-4xl font-bold text-center md:text-xl font-bold text-left text-gray-900 dark:text-white'>Skill Match</p>
+                </p>
+      )
+    }
+  }
   return (
     <div className="w-4/5 h-[60vh] overflow-y-scroll ml-auto">
       {roles?.map((role) => {
@@ -61,7 +92,7 @@ export default function RoleListings( {roles, roleDetails, selectedRole, sysRole
                     <p className="font-normal text-sm text-gray-700 dark:text-white">
                       {/* Convert this from all capital to first letter capital with the remaining lower */}
                       {/* {roleListingSource?.dept?.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())} */}
-                      {allStaff.find((staff) => staff.staff_id === role.role_listing_source)?.dept?.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}
+                      {allStaff.find((staff) => staff.staff_id === role.role_listing_source)?.dept}
                     </p>
                   </div>
                 </div>
@@ -69,7 +100,7 @@ export default function RoleListings( {roles, roleDetails, selectedRole, sysRole
                 {/* roleList.role_listing_close */}
                 <div className="col-span-2">
                   <p className="font-normal text-sm text-gray-700 dark:text-gray-400">
-                    Application Deadline: {role.role_listing_close}
+                    Application Deadline: {dateFormat(role.role_listing_close, "dd mmmm yyyy")}
                   </p>
                 </div>
 
@@ -78,17 +109,15 @@ export default function RoleListings( {roles, roleDetails, selectedRole, sysRole
                   <div>
                     <p className="font-normal text-sm text-gray-700 dark:text-white">
                       {
-                        (roleSkills[role.role_id]?.filter((skill) =>
-                          currUserSkills.includes(skill)
-                        ).length / roleSkills[role.role_id]?.length * 100 || 0)
-                      } %
-                      <br />
-                      Skill Match
+                        matchColour(roleSkills[role.role_id]?.filter((skill) =>
+                        currUserSkills.includes(skill)
+                      ).length / roleSkills[role.role_id]?.length * 100 || 0)
+                      }
                     </p>
                   </div>
                 </div>
                 
-                <div className="col-span-3">
+                <div className="col-span-2">
                   <p className="font-normal text-gray-700 dark:text-white">
                     {roleSkills[role.role_id]? (
                     roleSkills[role.role_id].map((skill) => {
@@ -98,14 +127,14 @@ export default function RoleListings( {roles, roleDetails, selectedRole, sysRole
                       if (currUserSkills.includes(skill)) {
                         console.log("Skill", skill)
                         return (
-                          <span key={skill} className="inline-block bg-green-200 rounded-full px-3 py-1 text-xs font-semibold text-gray-700 mr-2 mb-2">
+                          <span key={skill} className="inline-block bg-green-200 rounded-full px-3 py-1 text-[10px] font-semibold text-gray-700 mr-2 mb-2">
                             {skillDetail ? skillDetail.skill_name : `Skill ${skill}`}
                           </span>
                         );
                       }
                       else {
                         return (
-                          <span key={skill} className="inline-block bg-gray-200 rounded-full px-3 py-1 text-xs font-semibold text-gray-700 mr-2 mb-2">
+                          <span key={skill} className="inline-block bg-gray-200 rounded-full px-3 py-1 text-[10px] font-semibold text-gray-700 mr-2 mb-2">
                             {skillDetail ? skillDetail.skill_name : `Skill ${skill}`}
                           </span>
                         );

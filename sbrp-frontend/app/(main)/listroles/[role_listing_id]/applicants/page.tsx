@@ -83,7 +83,12 @@ export default function Role_Applicants( { params } : { params: { role_listing_i
         setApplicantSkills(staffSkills);
       });
       setLoading(false);
+    })
+    .catch((error: any) => {
+      console.log(error);
+      setLoading(false);
     });
+
   }, [role_listing_id])
   return (
     <div>
@@ -129,6 +134,13 @@ export default function Role_Applicants( { params } : { params: { role_listing_i
                 </Table.Cell>
               </Table.Row>
             ) : (
+              roleApplicants.length === 0 ? (
+                <Table.Row>
+                  <Table.Cell colSpan={6}>
+                    <span className="font-bold">No applicants</span>
+                  </Table.Cell>
+                </Table.Row>
+              ) :
               roleApplicants.map((roleApplicant: TRoleApplicant) => {
                 const applicantDetail: TStaff | undefined = applicantDetails.find((staff: TStaff) => {
                   return staff.staff_id === roleApplicant.staff_id;

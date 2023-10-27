@@ -2,6 +2,7 @@
 import React from "react";
 import axios, { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Button,
   Modal,
@@ -12,6 +13,7 @@ import {
   Spinner,
 } from "flowbite-react";
 import "flowbite";
+import dateFormat from "dateformat";
 
 type RoleDetailsProps = {
   selectedRole: TRoleListing;
@@ -29,6 +31,7 @@ export default function RoleDetails({
   currUserSkills,
 }: RoleDetailsProps) {
   //, roleDetails
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [openModal, setOpenModal] = useState<string | undefined>(undefined);
   const [showToast, setShowToast] = useState(false);
@@ -229,6 +232,13 @@ export default function RoleDetails({
         {/* Withdraw/Apply Button */}
         <div className="col-span-2">
           <div className="flex justify-end gap-2">
+            {sysRole === "hr" ? (
+              <Button onClick={() => {
+                router.push(`/listroles/${selectedRole.role_listing_id}/applicants`);
+              }}>
+                View Applicants
+              </Button>
+            ): null}
             {appliedRole ? (
               appliedRole.role_app_status !== "withdrawn" ? (
                 <div>
@@ -522,7 +532,8 @@ export default function RoleDetails({
         <div className="col-span-4">
           <div className="flex items-center">
             <p className="font-normal text-sm text-gray-400 dark:text-white">
-              Posted {daysSincePosted} days ago
+              {daysSincePosted === 0 ? "Posted Today" : `Posted ${daysSincePosted} days ago`}
+              
             </p>
           </div>
         </div>
@@ -533,9 +544,7 @@ export default function RoleDetails({
               {/* Convert this from all capital to first letter capital with the remaining lower */}
               Department:{" "}
               <b>
-                {roleListingSource?.dept
-                  ?.toLowerCase()
-                  .replace(/\b\w/g, (c) => c.toUpperCase())}
+                {roleListingSource?.dept}
               </b>
             </p>
           </div>
@@ -546,7 +555,7 @@ export default function RoleDetails({
         <div className="col-span-4">
           <div className="flex items-center">
             <p className="font-normal text-sm text-gray-700 dark:text-white">
-              Application Deadline: {selectedRole?.role_listing_close}
+              Application Deadline: {dateFormat(selectedRole.role_listing_close, "dd mmmm yyyy")}
             </p>
           </div>
         </div>
