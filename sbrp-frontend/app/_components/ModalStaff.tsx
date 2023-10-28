@@ -132,14 +132,22 @@ export default function Modal_Staff({
               </div>
             </div> */}
 
-              <div className="flex flex-row justify-center gap-4">
-                <Button color='success' pill>
-                  {`Accept Applicant`}
-                </Button>
-                <Button color='light' pill>
-                  {`Reject Applicant`}
-                </Button>
-              </div>
+
+            {/* for later */}
+            {/* {
+              page === 'applicants' ? 
+                
+                  <div className="flex flex-row justify-center gap-4">
+                    <Button color='success' pill>
+                      {`Accept Applicant`}
+                    </Button>
+                    <Button color='light' pill>
+                      {`Reject Applicant`}
+                    </Button>
+                  </div>
+                
+            : null} */}
+              
           </Modal.Body>
         </Modal>
   )
