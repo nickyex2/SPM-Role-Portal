@@ -66,13 +66,6 @@ type TRoleListingChanges = {
   new_value: string
 }
 
-type TRoleApplication = {
-  role_app_id: number,
-  role_listing_id: number,
-  staff_id: number,
-  role_app_status: string,
-}
-
 type TReportingOfficer = {
   staff_id: number,
   RO_id: number
@@ -96,7 +89,9 @@ type TRoleApplicant = {
   role_listing_id: number,
   staff_id: number,
   role_app_status: string,
-  role_app_ts_create: EpochTimeStamp
+  role_app_ts_create: EpochTimeStamp,
+  hr_checked: string,
+  hr_checked_ts: EpochTimeStamp | null,
 }
 
 type TSpecificRoleSkills = {

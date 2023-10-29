@@ -96,11 +96,14 @@ CREATE TABLE IF NOT EXISTS ROLE_APPLICATIONS (
   staff_id int NOT NULL,
   role_app_status ENUM ('applied', 'withdrawn') NOT NULL,
   role_app_ts_create TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  hr_checked ENUM('pending', 'supported', 'unsupported') NOT NULL,
+  hr_checked_ts TIMESTAMP NULL,
   PRIMARY KEY (role_app_id),
   FOREIGN KEY (role_listing_id) REFERENCES ROLE_LISTINGS(role_listing_id),
   FOREIGN KEY (staff_id) REFERENCES STAFF_DETAILS(staff_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+ALTER TABLE ROLE_APPLICATIONS ADD COLUMN hr_checked_ts TIMESTAMP NULL;
 -- ROLE_LISTING_CHANGES TABLE
 CREATE TABLE IF NOT EXISTS ROLE_LISTING_CHANGES (
   change_id int NOT NULL,
@@ -149,3 +152,12 @@ END//
 DELIMITER ;
 
 COMMIT;
+
+DELIMITER //
+CREATE TRIGGER role_application_change_hr_checked_trigger BEFORE UPDATE ON ROLE_APPLICATIONS FOR EACH ROW
+BEGIN
+  IF OLD.hr_checked = 'pending' && (NEW.hr_checked = 'supported' || NEW.hr_checked = 'not_supported') THEN
+    SET NEW.hr_checked_ts = CURRENT_TIMESTAMP;
+  END IF;
+END//
+DELIMITER ;
