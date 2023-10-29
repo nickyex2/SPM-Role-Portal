@@ -300,7 +300,6 @@ export default function Test() {
         setRoles(data);
         // console.log("setRoles<TRoleListings>: ", data);
         setInitialRoles(data);
-        setSelectedRole(data[0]);
         let role_ids: Array<Number> = [];
         data.forEach((role) => {
           role_ids.push(role.role_id);
@@ -600,7 +599,6 @@ export default function Test() {
         )}
         <div className="grid grid-cols-2 gap-0 mt-5">
           <div className="flex-1 bg-#fff border-black border-solid rounded max-w">
-            {selectedRole ? (
               <RoleListings
                 roles={roles}
                 roleDetails={roleDetails}
@@ -612,9 +610,6 @@ export default function Test() {
                 onRoleClick={handleRoleClick}
                 allSkills={initialSkills}
               />
-            ) : (
-              <p>No roles selected</p>
-            )}
           </div>
 
           <div className="flex-1 bg-#fff border-black border-solid rounded max-w">
