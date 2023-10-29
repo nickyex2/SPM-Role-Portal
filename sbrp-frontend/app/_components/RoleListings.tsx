@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, {useEffect} from "react";
 import "flowbite";
 import dateFormat from "dateformat";
 
@@ -16,21 +16,7 @@ type RoleListingProps = {
 };
 
 export default function RoleListings( {roles, roleDetails, selectedRole, sysRole, roleSkills, currUserSkills, allStaff, onRoleClick, allSkills}:RoleListingProps ) {
-  // async function getRoleListingSource(selectedRole): Promise<TStaff | undefined> {
-  //   try {
-  //     const response: AxiosResponse<TResponseData> = await axios.get(
-  //       `http://localhost:5000/getStaff/${selectedRole.role_listing_source}`
-  //     );
-  //     console.log("response.data.data: ", response.data.data);
-  //     return response.data.data;
-  //   }
-  //   catch (error: any) {
-  //     if (error?.response?.status === 404){
-  //       console.log("No role application found");
-  //     }
-  //     return undefined;
-  //   }
-  // }
+  // need to do the initial filtering (1. if role is active and role is still open or 2. if hr or source manager)
   function matchColour(percentMatch: number) {
     if (percentMatch < 40) {
       return(
