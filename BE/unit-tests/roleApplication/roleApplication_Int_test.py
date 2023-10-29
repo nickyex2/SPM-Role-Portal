@@ -72,9 +72,9 @@ class TestRoleApplicationAPI(unittest.TestCase):
         res = requests.get(f'{self.base_url}/getByRoleLStaff/{role_listing_id}/{staff_id}')
         role_app_id = res.json()['data']['role_app_id']
         data = {
-            "role_app_status": "withdrawn"
+            "role_app_status": "withdrawn",
+            "hr_checked": "supported"
         }
-
         response = requests.put(f'{self.base_url}/update/{role_app_id}', json=data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['data']['role_app_status'], data['role_app_status'])
