@@ -244,7 +244,8 @@ export default function RoleDetails({
                     View Applicants
                   </Button>
                 ) : null}
-                {appliedRole ? (
+                { parseInt(sessionStorage.getItem("staff_id") as string) !== selectedRole.role_listing_source ?
+                (appliedRole ? (
                   appliedRole.role_app_status !== "withdrawn" ? (
                     <div>
                       <Button
@@ -374,7 +375,7 @@ export default function RoleDetails({
                     )}
                     {showApplyErrorToast && <Toast>Error in Application</Toast>}
                   </div>
-                )}
+                )) : null}
                 {/* Edit Button and Modal */}
                 {sysRole === "hr" ||
                 (sysRole === "manager" &&
