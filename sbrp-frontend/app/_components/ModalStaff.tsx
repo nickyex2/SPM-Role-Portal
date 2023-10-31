@@ -27,7 +27,7 @@ export default function Modal_Staff({
   }
   async function getStaffRoles(staff_id: number): Promise<Array<TRoleDetails>> {
     const response: AxiosResponse<TResponseData> = await axios.get(
-      `/api/staff/getByStaff/${staff_id}`
+      `/api/staff/staffRole/getByStaff/${staff_id}`
     );
     const staffRoles: Array<Number> = [];
     response.data.data?.staff_roles.forEach((staffRole: TStaffRole) => {

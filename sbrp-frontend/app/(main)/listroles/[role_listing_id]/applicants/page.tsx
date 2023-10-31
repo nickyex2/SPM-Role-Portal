@@ -41,7 +41,7 @@ export default function Role_Applicants( { params } : { params: { role_listing_i
   }
   async function getRoleApplicants(role_listing_id: number): Promise<Array<TRoleApplicant>> {
     const response: AxiosResponse<TResponseData> = await axios.get(
-      `/api/role/roleApplication/getOne/${role_listing_id}`
+      `/api/role/roleapp/getOne/${role_listing_id}`
     );
     return response.data.data;
   }
