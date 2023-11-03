@@ -16,10 +16,10 @@ export default function Modal_Staff({
     modalStaff: TStaff | undefined;
     modalSkills: Array<TSkillDetails>;
     page: string | undefined;
-    roleApplicant: TRoleApplicant;
-    userStaff: TStaff | undefined;
+    roleApplicant?: TRoleApplicant 
+    userStaff?: TStaff | undefined;
   };
-  updateRoleApplicantMain: (roleApplicant: TRoleApplicant) => void;
+  updateRoleApplicantMain?: (roleApplicant: TRoleApplicant) => void;
 }) {
   const [reportingOfficer, setReportingOfficer] = useState<TStaff | undefined>(undefined);
   const [staffRoles, setStaffRoles] = useState<Array<TRoleDetails>>([]);
@@ -188,33 +188,43 @@ export default function Modal_Staff({
 
 
             {/* for later */}
-            {
-              props.page === 'applicants' && props.userStaff?.sys_role !== 'manager' ? 
+            {props.roleApplicant ?
+
+              props.page === 'applicants'  ? 
         
                 props.roleApplicant.role_app_status !== "withdrawn" ?
 
-                  props.roleApplicant.hr_checked === "pending" ?
+                  props.roleApplicant.hr_checked === "pending" && props.userStaff?.sys_role !== 'manager' ?
                 
                     <div className="flex flex-row justify-center gap-4">
                       <Button color='success' pill
                       onClick={() => {
                         // update db
-                        props.roleApplicant.hr_checked = "supported"
+                        // props.roleApplicant.hr_checked = "supported"
                         // props.roleApplicant.hr_checked_ts = Date.now()
-                        updateRoleApplicant("Supported", props.roleApplicant.role_app_id)
-                        updateRoleApplicantMain(props.roleApplicant)
-                        console.log(props.roleApplicant)
+                        if (props.roleApplicant) {
+                          if (updateRoleApplicantMain) {
+                          updateRoleApplicant("Supported", props.roleApplicant.role_app_id)
+                          updateRoleApplicantMain(props.roleApplicant)
+                          console.log(props.roleApplicant)
+                          }
+                        }
                       }}>
                         {`Support Application`}
                       </Button>
                       <Button color='light' pill
                       onClick={() => {
                         // update db
-                        props.roleApplicant.hr_checked = "unsupported"
+                        // props.roleApplicant.hr_checked = "unsupported"
                         // props.roleApplicant.hr_checked_ts = Date.now()
-                        updateRoleApplicant("Unsupported", props.roleApplicant.role_app_id)
-                        updateRoleApplicantMain(props.roleApplicant)
-                        console.log(props.roleApplicant)
+                        if (props.roleApplicant) {
+                          if (updateRoleApplicantMain) {
+                          updateRoleApplicant("Unsupported", props.roleApplicant.role_app_id)
+                          updateRoleApplicantMain(props.roleApplicant)
+                          console.log(props.roleApplicant)
+                          }
+                        }
+                        
                       }}>
                         {`Unsupport Application`}
                       </Button>
@@ -239,10 +249,12 @@ export default function Modal_Staff({
                   : null
 
                 : props.roleApplicant.role_app_status === "withdrawn" ?
-                    <div>Application has been withdrawn</div>
+                    <div className='text-center'>Application has been withdrawn</div>
                 : null
                 
-            : null}
+            : null
+          
+          : null}
               
           </Modal.Body>
         </Modal>
