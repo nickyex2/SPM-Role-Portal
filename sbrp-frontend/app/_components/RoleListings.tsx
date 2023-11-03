@@ -148,6 +148,26 @@ export default function RoleListings({
               </p>
             </div>
 
+            {sessionStorage.getItem("sys_role") === "hr" || sessionStorage.getItem("sys_role") === "manager" ? (
+              <div className="col-span-2">
+              <p className="font-normal text-sm text-gray-700 dark:text-gray-400">
+                Application Status:{" "}
+                {role.role_listing_status === "active" ? (
+                  <span
+                  className="inline-block bg-green-200 rounded-full px-3 py-1 text-[10px] font-semibold text-gray-700 mr-2 mb-2"
+                >
+                  active
+                </span>
+                ): (
+                  <span
+                  className="inline-block bg-red-200 rounded-full px-3 py-1 text-[10px] font-semibold text-gray-700 mr-2 mb-2"
+                >
+                  inactive
+                </span>
+                )}
+              </p>
+            </div>): null}
+
             <div className="col-span-3 flex justify-end">
               <div>
                 <p className="font-normal text-sm text-gray-700 dark:text-white">

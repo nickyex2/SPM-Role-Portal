@@ -3,17 +3,11 @@ import React from "react";
 import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import {
-  Button,
-  Modal,
-  Label,
-  Toast,
-  Dropdown,
-  Spinner,
-} from "flowbite-react";
+import { Button, Modal, Label, Toast, Dropdown, Spinner } from "flowbite-react";
 import "flowbite";
 import RoleListings from "@/app/_components/RoleListings";
 import RoleDetails from "@/app/_components/RoleDetails";
+import { HiCheck, HiX } from "react-icons/hi";
 
 export default function Test() {
   const router = useRouter();
@@ -21,6 +15,27 @@ export default function Test() {
   const [openModal, setOpenModal] = useState<string | undefined>();
   const [showAddSuccessfulToast, setShowAddSuccessfulToast] = useState(false);
   const [showAddErrorToast, setShowAddErrorToast] = useState(false);
+  const [showApplySuccessToast, setShowApplySuccessToast] = useState(false);
+  const [showApplyErrorToast, setShowApplyErrorToast] = useState(false);
+  const [showWithdrawSuccessToast, setShowWithdrawSuccessToast] =
+    useState(false);
+  const [showWithdrawErrorToast, setShowWithdrawErrorToast] = useState(false);
+  const [showEditSuccessToast, setShowEditSuccessToast] = useState(false);
+  const [showEditErrorToast, setShowEditErrorToast] = useState(false);
+  const roleDetailsToastProps = {
+    showApplySuccessToast,
+    setShowApplySuccessToast,
+    showApplyErrorToast,
+    setShowApplyErrorToast,
+    showWithdrawSuccessToast,
+    setShowWithdrawSuccessToast,
+    showWithdrawErrorToast,
+    setShowWithdrawErrorToast,
+    showEditSuccessToast,
+    setShowEditSuccessToast,
+    showEditErrorToast,
+    setShowEditErrorToast,
+  };
 
   const [loading, setLoading] = useState(true);
 
@@ -52,11 +67,10 @@ export default function Test() {
 
   const [selectedOpeningDate, setSelectedOpeningDate] = useState<Date>();
   const [selectedClosingDate, setSelectedClosingDate] = useState<Date>();
-  const Today = new Date();
 
   const props = {
     openModal,
-    setOpenModal
+    setOpenModal,
   };
 
   const getAllRolesURL = "/api/role/roleListing/getAll";
@@ -133,6 +147,19 @@ export default function Test() {
     return response.data.data?.staffs;
   }
 
+  function setUpdateRoleListing(roleListing: TRoleListing) {
+    let newRoles = roles.map((role) => {
+      if (role.role_listing_id === roleListing.role_listing_id) {
+        return roleListing;
+      } else {
+        return role;
+      }
+    });
+    setRoles(newRoles);
+    setInitialRoles(newRoles);
+    setSelectedRole(roleListing);
+  }
+
   function handleSearch(searchInput: string) {
     // let search = document.getElementById("search-dropdown") as HTMLInputElement;
     // console.log(search.value);
@@ -142,9 +169,10 @@ export default function Test() {
     if (searchBy === "Roles") {
       if (search === "") {
         setRoles(initialRoles);
+        setSelectedRole(initialRoles[0]);
         return;
       } else {
-        let filteredRoles = roles.filter((role) => {
+        let filteredRoles = initialRoles.filter((role) => {
           return roleDetails
             .find((roleDetail) => roleDetail.role_id === role.role_id)
             ?.role_name.toLowerCase()
@@ -152,12 +180,14 @@ export default function Test() {
         });
         console.log(filteredRoles);
         setRoles(filteredRoles);
+        setSelectedRole(filteredRoles[0]);
       }
     } else if (searchBy === "Skills") {
       if (search === "") {
         setRoles(initialRoles);
         setRoleSkills(initailRoleSkills);
         setSkills(initialSkills);
+        setSelectedRole(initialRoles[0]);
         return;
       } else {
         let filteredSkills = skills.filter((skill) => {
@@ -177,11 +207,12 @@ export default function Test() {
             }
           });
         });
-        let filteredRoles: TRoleListing[] = roles.filter((role) => {
+        let filteredRoles: TRoleListing[] = initialRoles.filter((role) => {
           return filteredRoleSkills.includes(role.role_id);
         });
         console.log(filteredRoles);
         setRoles(filteredRoles);
+        setSelectedRole(filteredRoles[0]);
       }
     }
   }
@@ -254,7 +285,7 @@ export default function Test() {
     console.log(response);
     if (response.data.code === 201) {
       // set into the relevant states
-      setRoles([response.data.data, ...roles])
+      setRoles([response.data.data, ...roles]);
       setInitialRoles([response.data.data, ...roles]);
       setSelectedRole(response.data.data);
       let role_ids: Array<Number> = [response.data.data.role_id as number];
@@ -265,11 +296,11 @@ export default function Test() {
       getRoleSkills(role_ids).then((data) => {
         setRoleSkills({
           ...data,
-          ...roleSkills
+          ...roleSkills,
         });
         setInitialRoleSkills({
           ...data,
-          ...roleSkills
+          ...roleSkills,
         });
       });
       props.setOpenModal(undefined);
@@ -599,63 +630,188 @@ export default function Test() {
         )}
         <div className="grid grid-cols-2 gap-0 mt-5">
           <div className="flex-1 bg-#fff border-black border-solid rounded max-w">
-              <RoleListings
-                roles={roles}
-                roleDetails={roleDetails}
-                selectedRole={selectedRole}
-                sysRole={sysRole}
-                roleSkills={roleSkills}
-                currUserSkills={currUserSkills}
-                allStaff={allStaff}
-                onRoleClick={handleRoleClick}
-                allSkills={initialSkills}
-              />
+            <RoleListings
+              roles={roles}
+              roleDetails={roleDetails}
+              selectedRole={selectedRole}
+              sysRole={sysRole}
+              roleSkills={roleSkills}
+              currUserSkills={currUserSkills}
+              allStaff={allStaff}
+              onRoleClick={handleRoleClick}
+              allSkills={initialSkills}
+            />
           </div>
 
           <div className="flex-1 bg-#fff border-black border-solid rounded max-w">
             {selectedRole && roleSkills ? (
               <RoleDetails
                 selectedRole={selectedRole}
-                roleDetails={roleDetails.find((roleDetail) => roleDetail.role_id === selectedRole.role_id) as TRoleDetails}
+                roleDetails={
+                  roleDetails.find(
+                    (roleDetail) => roleDetail.role_id === selectedRole.role_id
+                  ) as TRoleDetails
+                }
                 sysRole={sysRole}
                 roleSkills={roleSkills[selectedRole?.role_id]}
                 currUserSkills={currUserSkills}
+                roleDetailsToastProps={roleDetailsToastProps}
+                setUpdateRoleListing={setUpdateRoleListing}
               />
             ) : (
               <p>No role selected</p>
             )}
           </div>
           {showAddSuccessfulToast && (
-          <Toast
-            style={{
-              position: "fixed",
-              bottom: "20px",
-              right: "20px",
-              zIndex: 9999,
-            }}
-            className="bg-gray-700 text-white p-4 rounded shadow"
-          >
-            <div className="ml-3 text-sm font-normal">
-              Role Listing Created Successfully!
-            </div>
-            <Toast.Toggle />
-          </Toast>
+            <Toast
+              style={{
+                position: "fixed",
+                bottom: "20px",
+                right: "20px",
+                zIndex: 9999,
+              }}
+              className="bg-gray-700 text-white p-4 rounded shadow"
+            > 
+              <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
+                <HiCheck className="h-5 w-5" />
+              </div>
+              <div className="ml-3 text-sm font-normal">
+                Role Listing Created Successfully!
+              </div>
+              <Toast.Toggle />
+            </Toast>
           )}
           {showAddErrorToast && (
-          <Toast
-            style={{
-              position: "fixed",
-              bottom: "20px",
-              right: "20px",
-              zIndex: 9999,
-            }}
-            className="bg-gray-700 text-white p-4 rounded shadow"
-          >
-            <div className="ml-3 text-sm font-normal">
-              Please Try Again Later!
-            </div>
-            <Toast.Toggle />
-          </Toast>
+            <Toast
+              style={{
+                position: "fixed",
+                bottom: "20px",
+                right: "20px",
+                zIndex: 9999,
+              }}
+              className="bg-gray-700 text-white p-4 rounded shadow"
+            >
+              <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-200">
+                <HiX className="h-5 w-5" />
+              </div>
+              <div className="ml-3 text-sm font-normal">
+                Please Try Again Later!
+              </div>
+              <Toast.Toggle />
+            </Toast>
+          )}
+          {roleDetailsToastProps.showWithdrawSuccessToast && (
+            <Toast
+              style={{
+                position: "fixed",
+                bottom: "20px",
+                right: "20px",
+                zIndex: 9999,
+              }}
+              className="bg-gray-700 text-white p-4 rounded shadow"
+            >
+              <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
+                <HiCheck className="h-5 w-5" />
+              </div>
+              <div className="ml-3 text-sm font-normal">
+                Successful Withdrawal!
+              </div>
+              <Toast.Toggle />
+            </Toast>
+          )}
+          {roleDetailsToastProps.showWithdrawErrorToast && (
+            <Toast
+              style={{
+                position: "fixed",
+                bottom: "20px",
+                right: "20px",
+                zIndex: 9999,
+              }}
+              className="bg-gray-700 text-white p-4 rounded shadow"
+            >
+              <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-200">
+                <HiX className="h-5 w-5" />
+              </div>
+              <div className="ml-3 text-sm font-normal">
+                Error in Withdrawal
+              </div>
+              <Toast.Toggle />
+            </Toast>
+          )}
+          {roleDetailsToastProps.showApplySuccessToast && (
+            <Toast
+              style={{
+                position: "fixed",
+                bottom: "20px",
+                right: "20px",
+                zIndex: 9999,
+              }}
+              className="bg-gray-700 text-white p-4 rounded shadow"
+            >
+              <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
+                <HiCheck className="h-5 w-5" />
+              </div>
+              <div className="ml-3 text-sm font-normal">
+                Successful Application!
+              </div>
+              <Toast.Toggle />
+            </Toast>
+          )}
+          {roleDetailsToastProps.showApplyErrorToast && (
+            <Toast
+              style={{
+                position: "fixed",
+                bottom: "20px",
+                right: "20px",
+                zIndex: 9999,
+              }}
+              className="bg-gray-700 text-white p-4 rounded shadow"
+            >
+              <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-200">
+                <HiX className="h-5 w-5" />
+              </div>
+              <div className="ml-3 text-sm font-normal">
+                Error in Application
+              </div>
+              <Toast.Toggle />
+            </Toast>
+          )}
+          {roleDetailsToastProps.showEditSuccessToast && (
+            <Toast
+              style={{
+                position: "fixed",
+                bottom: "20px",
+                right: "20px",
+                zIndex: 9999,
+              }}
+              className="bg-gray-700 text-white p-4 rounded shadow"
+            >
+              <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
+                <HiCheck className="h-5 w-5" />
+              </div>
+              <div className="ml-3 text-sm font-normal">
+                Successful Application!
+              </div>
+              <Toast.Toggle />
+            </Toast>
+          )}
+          {roleDetailsToastProps.showEditErrorToast && (
+            <Toast
+              style={{
+                position: "fixed",
+                bottom: "20px",
+                right: "20px",
+                zIndex: 9999,
+              }}
+              className="bg-gray-700 text-white p-4 rounded shadow"
+            >
+              <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-200">
+                <HiX className="h-5 w-5" />
+              </div>
+              <div className="ml-3 text-sm font-normal">
+                Error in Application
+              </div>
+            </Toast>
           )}
         </div>
       </div>
