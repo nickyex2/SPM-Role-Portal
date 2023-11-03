@@ -24,6 +24,21 @@ type RoleDetailsProps = {
   sysRole: string;
   roleSkills: number[];
   currUserSkills: number[];
+  roleDetailsToastProps: {
+    showApplySuccessToast: boolean;
+    setShowApplySuccessToast: React.Dispatch<React.SetStateAction<boolean>>;
+    showApplyErrorToast: boolean;
+    setShowApplyErrorToast: React.Dispatch<React.SetStateAction<boolean>>;
+    showWithdrawSuccessToast: boolean;
+    setShowWithdrawSuccessToast: React.Dispatch<React.SetStateAction<boolean>>;
+    showWithdrawErrorToast: boolean;
+    setShowWithdrawErrorToast: React.Dispatch<React.SetStateAction<boolean>>;
+    showEditSuccessToast: boolean;
+    setShowEditSuccessToast: React.Dispatch<React.SetStateAction<boolean>>;
+    showEditErrorToast: boolean;
+    setShowEditErrorToast: React.Dispatch<React.SetStateAction<boolean>>;
+  };
+  setUpdateRoleListing: (roleListing: TRoleListing) => void;
 };
 
 export default function RoleDetails({
@@ -32,12 +47,13 @@ export default function RoleDetails({
   sysRole,
   roleSkills,
   currUserSkills,
+  roleDetailsToastProps,
+  setUpdateRoleListing,
 }: RoleDetailsProps) {
   //, roleDetails
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [openModal, setOpenModal] = useState<string | undefined>(undefined);
-  const [showToast, setShowToast] = useState(false);
   const [appliedRole, setAppliedRole] = useState<TRoleApplicant | undefined>(
     undefined
   );
@@ -51,14 +67,7 @@ export default function RoleDetails({
     TStaff | undefined
   >(undefined);
 
-  const props = { openModal, setOpenModal, showToast, setShowToast }; //setRole, setRoleListingChanges
-  const [showApplySuccessToast, setShowApplySuccessToast] = useState(false);
-  const [showApplyErrorToast, setShowApplyErrorToast] = useState(false);
-  const [showWithdrawSuccessToast, setShowWithdrawSuccessToast] =
-    useState(false);
-  const [showWithdrawErrorToast, setShowWithdrawErrorToast] = useState(false);
-  const [showEditSuccessToast, setShowEditSuccessToast] = useState(false);
-  const [showEditErrorToast, setShowEditErrorToast] = useState(false);
+  const props = { openModal, setOpenModal }; //setRole, setRoleListingChanges
 
   const today = new Date();
   const roleListingPostDate = new Date(selectedRole.role_listing_ts_create);
@@ -130,10 +139,12 @@ export default function RoleDetails({
     );
     props.setOpenModal(undefined);
     if (response.status === 201) {
-      setTimeout(() => setShowApplySuccessToast(true), 5000);
+      roleDetailsToastProps.setShowApplySuccessToast(true);
+      setTimeout(() => roleDetailsToastProps.setShowApplySuccessToast(false), 10000);
       setAppliedRole(response.data.data);
     } else {
-      setTimeout(() => setShowApplyErrorToast(true), 5000);
+      roleDetailsToastProps.setShowApplyErrorToast(true);
+      setTimeout(() => roleDetailsToastProps.setShowApplyErrorToast(false), 10000);
     }
   }
 
@@ -147,10 +158,12 @@ export default function RoleDetails({
     );
     props.setOpenModal(undefined);
     if (response.status === 200) {
-      setTimeout(() => setShowWithdrawSuccessToast(true), 5000);
+      roleDetailsToastProps.setShowWithdrawSuccessToast(true);
+      setTimeout(() => roleDetailsToastProps.setShowWithdrawSuccessToast(false), 10000);
       setAppliedRole(response.data.data);
     } else {
-      setTimeout(() => setShowWithdrawErrorToast(true), 5000);
+      roleDetailsToastProps.setShowWithdrawErrorToast(true);
+      setTimeout(() => roleDetailsToastProps.setShowWithdrawErrorToast(false), 10000);
     }
   }
 
@@ -161,10 +174,12 @@ export default function RoleDetails({
     );
     props.setOpenModal(undefined);
     if (response.status === 200) {
-      setTimeout(() => setShowEditSuccessToast(true), 5000);
-      window.location.reload();
+      setUpdateRoleListing(response.data.data);
+      roleDetailsToastProps.setShowEditSuccessToast(true);
+      setTimeout(() => roleDetailsToastProps.setShowEditSuccessToast(false), 10000);
     } else {
-      setTimeout(() => setShowEditErrorToast(true), 5000);
+      roleDetailsToastProps.setShowEditErrorToast(true);
+      setTimeout(() => roleDetailsToastProps.setShowEditErrorToast(false), 10000);
     }
   }
 
@@ -183,6 +198,12 @@ export default function RoleDetails({
     });
     getRoleListingChanges()
       .then((data) => {
+        // sort by log_time in descending order
+        data.sort((a, b) => {
+          return (
+            new Date(b.log_time).getTime() - new Date(a.log_time).getTime()
+          );
+        });
         setRoleListingChanges(data);
         // console.log("roleListingChanges", data);
       })
@@ -220,7 +241,7 @@ export default function RoleDetails({
     <div className="w-4/5 h-[60vh] overflow-y-scroll bg-white border border-gray-200 shadow dark:bg-gray-800 dark:border-gray-700">
       <Tabs.Group style="underline" className="mx-auto mt-2">
         <Tabs.Item active icon={HiBriefcase} title="Role Details">
-          <div className="max-w h-[60vh] p-6 bg-white shadow dark:bg-gray-800 mx-auto grid grid-cols-4 gap-2">
+          <div className="max-w h-[60vh] p-6 bg-white dark:bg-gray-800 mx-auto grid grid-cols-4 gap-2">
             {/* Title */}
             <div className="col-span-2">
               <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -240,6 +261,7 @@ export default function RoleDetails({
                         `/listroles/${selectedRole.role_listing_id}/applicants`
                       );
                     }}
+                    size="xs"
                   >
                     View Applicants
                   </Button>
@@ -282,26 +304,6 @@ export default function RoleDetails({
                           </div>
                         </Modal.Body>
                       </Modal>
-                      {showWithdrawSuccessToast && (
-                        <Toast>
-                          <div className="ml-3 text-sm font-normal">
-                            Successful Withdrawal!
-                          </div>
-                          <Toast.Toggle
-                            onDismiss={() => props.setShowToast(false)}
-                          />
-                        </Toast>
-                      )}
-                      {showWithdrawErrorToast && (
-                        <Toast>
-                          <div className="ml-3 text-sm font-normal">
-                            Error in Withdrawal
-                          </div>
-                          <Toast.Toggle
-                            onDismiss={() => props.setShowToast(false)}
-                          />
-                        </Toast>
-                      )}
                     </div>
                   ) : (
                     <div>
@@ -355,25 +357,6 @@ export default function RoleDetails({
                         </div>
                       </Modal.Body>
                     </Modal>
-                    {showApplySuccessToast && (
-                      <Toast
-                        style={{
-                          position: "fixed",
-                          bottom: "20px",
-                          right: "20px",
-                          zIndex: 9999,
-                        }}
-                        className="bg-gray-700 text-white p-4 rounded shadow"
-                      >
-                        <div className="ml-3 text-sm font-normal">
-                          Successful Application!
-                        </div>
-                        <Toast.Toggle
-                          onDismiss={() => props.setShowToast(false)}
-                        />
-                      </Toast>
-                    )}
-                    {showApplyErrorToast && <Toast>Error in Application</Toast>}
                   </div>
                 )) : null}
                 {/* Edit Button and Modal */}
@@ -529,17 +512,6 @@ export default function RoleDetails({
                         </div>
                       </Modal.Body>
                     </Modal>
-                    {showEditSuccessToast && (
-                      <Toast>
-                        <div className="ml-3 text-sm font-normal">
-                          Successful Application!
-                        </div>
-                        <Toast.Toggle
-                          onDismiss={() => props.setShowToast(false)}
-                        />
-                      </Toast>
-                    )}
-                    {showEditErrorToast && <Toast>Error in Application</Toast>}
                   </div>
                 ) : null}
               </div>
@@ -666,9 +638,10 @@ export default function RoleDetails({
                   return (
                     <div key={idx} className="mb-4">
                       <span className="font-semibold">
-                        {dateFormat(change.log_time, "dd-mm-yyyy hh:mm:ss")}
+                        {dateFormat((new Date(change.log_time).getTime() + 8 * 60 * 60 * 1000) , "dd-mm-yyyy hh:mm:ss TT")}
                         &ensp;•&ensp;
                       </span>
+                      Staff ID {" "}
                       <span className="font-semibold">
                         {change.role_listing_updater}
                       </span>
