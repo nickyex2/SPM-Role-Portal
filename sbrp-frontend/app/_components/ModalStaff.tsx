@@ -3,16 +3,23 @@ import React, { useEffect, useState } from "react";
 import axios, { AxiosResponse } from "axios";
 import { Modal, Button } from "flowbite-react";
 import { HiUser } from "react-icons/hi";
+import { time } from "console";
+import { format } from "path";
 
 export default function Modal_Staff({
   props,
+  updateRoleApplicantMain
 }: {
   props: {
     openModal: string | undefined;
     setOpenModal: React.Dispatch<React.SetStateAction<string | undefined>>;
     modalStaff: TStaff | undefined;
     modalSkills: Array<TSkillDetails>;
+    page: string | undefined;
+    roleApplicant: TRoleApplicant;
+    userStaff: TStaff | undefined;
   };
+  updateRoleApplicantMain: (roleApplicant: TRoleApplicant) => void;
 }) {
   const [reportingOfficer, setReportingOfficer] = useState<TStaff | undefined>(undefined);
   const [staffRoles, setStaffRoles] = useState<Array<TRoleDetails>>([]);
@@ -36,6 +43,53 @@ export default function Modal_Staff({
     const res = await axios.post(`/api/role/getMulti`, { role_ids: staffRoles })
     return res.data.data;
   }
+  async function updateRoleApplicant(hr_checked: string, role_app_id: number) {
+    const response: AxiosResponse<TResponseData> = await axios.put(
+      `/api/role/roleapp/update/${role_app_id}`,
+      { role_app_status:"applied", hr_checked: hr_checked }
+    );
+    
+    return response.data.data;
+
+  }
+  
+  // function formatTimestamp(timestamp: number | null) {
+  //   if (timestamp) {
+  //     const date = new Date(timestamp);
+  //     // return in the form DD MM YYYY HH:MM:SS
+  //     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+
+  //     // return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  //   }
+    
+  // }
+
+  function formatTimestamp(timestamp: number | null) {
+    if (timestamp) {
+      
+      const date = new Date(timestamp);
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const months = [
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      ];
+    
+      // Convert to GMT by subtracting the UTC offset
+      date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+    
+      const day = days[date.getUTCDay()];
+      const dayOfMonth = date.getUTCDate();
+      const month = months[date.getUTCMonth()];
+      const year = date.getUTCFullYear();
+      const hours = date.getUTCHours().toString().padStart(2, '0');
+      const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+      const seconds = date.getUTCSeconds().toString().padStart(2, '0');
+    
+      return `${day}, ${dayOfMonth} ${month} ${year} ${hours}:${minutes}:${seconds} GMT`;
+  }
+      
+  }
+
   useEffect(() => {
     setLoading(true);
     if (props.modalStaff) {
@@ -134,19 +188,61 @@ export default function Modal_Staff({
 
 
             {/* for later */}
-            {/* {
-              page === 'applicants' ? 
+            {
+              props.page === 'applicants' && props.userStaff?.sys_role !== 'manager' ? 
+        
+                props.roleApplicant.role_app_status !== "withdrawn" ?
+
+                  props.roleApplicant.hr_checked === "pending" ?
                 
-                  <div className="flex flex-row justify-center gap-4">
-                    <Button color='success' pill>
-                      {`Accept Applicant`}
-                    </Button>
-                    <Button color='light' pill>
-                      {`Reject Applicant`}
-                    </Button>
-                  </div>
+                    <div className="flex flex-row justify-center gap-4">
+                      <Button color='success' pill
+                      onClick={() => {
+                        // update db
+                        props.roleApplicant.hr_checked = "supported"
+                        // props.roleApplicant.hr_checked_ts = Date.now()
+                        updateRoleApplicant("Supported", props.roleApplicant.role_app_id)
+                        updateRoleApplicantMain(props.roleApplicant)
+                        console.log(props.roleApplicant)
+                      }}>
+                        {`Support Application`}
+                      </Button>
+                      <Button color='light' pill
+                      onClick={() => {
+                        // update db
+                        props.roleApplicant.hr_checked = "unsupported"
+                        // props.roleApplicant.hr_checked_ts = Date.now()
+                        updateRoleApplicant("Unsupported", props.roleApplicant.role_app_id)
+                        updateRoleApplicantMain(props.roleApplicant)
+                        console.log(props.roleApplicant)
+                      }}>
+                        {`Unsupport Application`}
+                      </Button>
+                    </div>
+                  : props.roleApplicant.hr_checked === "supported" ?
+                      <div className='text-center'>
+                        <p>Application has been supported on</p> 
+                        {/* {props.roleApplicant?.hr_checked_ts} */}
+                        {props.roleApplicant.hr_checked_ts ? 
+                          formatTimestamp(props.roleApplicant.hr_checked_ts)
+                          : formatTimestamp(Date.now())
+                          }
+                      </div>
+                  : props.roleApplicant.hr_checked === "unsupported" ?
+                      <div className='text-center'>
+                        <p>Application was unsupported on</p> 
+                        {props.roleApplicant.hr_checked_ts ? 
+                          formatTimestamp(props.roleApplicant.hr_checked_ts)
+                          : formatTimestamp(Date.now())
+                          }
+                      </div>
+                  : null
+
+                : props.roleApplicant.role_app_status === "withdrawn" ?
+                    <div>Application has been withdrawn</div>
+                : null
                 
-            : null} */}
+            : null}
               
           </Modal.Body>
         </Modal>

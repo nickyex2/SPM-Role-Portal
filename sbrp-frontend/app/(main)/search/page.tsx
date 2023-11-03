@@ -18,6 +18,7 @@ import { TableCell } from "flowbite-react/lib/esm/components/Table/TableCell";
 import { init } from "next/dist/compiled/webpack/webpack";
 import Loading from '@/app/_components/Loading';
 import Modal_Staff from '@/app/_components/ModalStaff';
+import { match } from "assert";
 
 export default function SearchStaff() {
   const router = useRouter();
@@ -48,7 +49,7 @@ export default function SearchStaff() {
   const [openModal, setOpenModal] = useState<string | undefined>();
   const [modalStaff, setModalStaff] = useState<TStaff>();
   const [modalSkills, setModalSkills] = useState<TSkillDetails[]>([]);
-  const props = { openModal, setOpenModal, modalStaff, modalSkills };
+  const props = { openModal, setOpenModal, modalStaff, modalSkills, page: "search" };
 
   async function getAllStaff(): Promise<TStaff[]> {
     const res: AxiosResponse<TResponseData> = await axios.get(
@@ -271,20 +272,22 @@ export default function SearchStaff() {
           skill_id_array.push(skill_id);
         }
       });
-      // console.log(skill_id_array);
+      console.log(skill_id_array);
 
-      if (skill_id_array.length >= 3 && skill_id_array.length/filteredRoleSkillDetails.length >= 0.7) {
+      // && skill_id_array.length/filteredRoleSkillDetails.length >= 0.7
+      if (skill_id_array.length >= 3 ) {
         filtered_staff_ids.push(Number(staff_id));
       }
     });
 
-    // console.log(filtered_staff_ids);
+    console.log(filtered_staff_ids);
 
     let filteredStaff = [...initialStaff].filter((staff) => {
       return filtered_staff_ids.includes(staff.staff_id);
     });
 
     setStaff(filteredStaff);
+
   }
 
 // sorts table of staff members by skill match percentage
@@ -301,20 +304,42 @@ export default function SearchStaff() {
     filtered_staff_skills = res
   })
 
+  // let sorted_staff_ids: Array<number> = 
+  //   Object.entries(filtered_staff_skills).sort((a, b) => {
+  //     return (b[1].length)/max_skill_count - (a[1].length)/max_skill_count
+  //   }).map((staff) => {
+  //     return Number(staff[0])
+  //   })
+  // console.log(sorted_staff_ids)
+
+  let matchSkills: Array<any> = []
+  Object.entries(filtered_staff_skills).forEach(([staff_id, staffSkills]) => {
+    let skill_id_array: Array<number> = [];
+    filteredRoleSkillDetails.forEach((skill) => {
+      if (staffSkills.includes(skill.skill_id)) {
+        skill_id_array.push(skill.skill_id);
+      }
+    });
+    matchSkills.push([staff_id, skill_id_array])
+  })
+
+  setSortedStaffSkills(matchSkills)
+  
   let sorted_staff_ids: Array<number> = 
-    Object.entries(filtered_staff_skills).sort((a, b) => {
-      return (b[1].length)/max_skill_count - (a[1].length)/max_skill_count
+    matchSkills.sort((a, b) => {
+      return b[1].length - a[1].length
     }).map((staff) => {
       return Number(staff[0])
     })
-  // console.log(sorted_staff_ids)
 
-  let sorted_staff_skills: Array<any> = 
-  Object.entries(filtered_staff_skills).sort((a, b) => {
-    return (b[1].length)/max_skill_count - (a[1].length)/max_skill_count
-  })
-  console.log(sorted_staff_skills)
-  setSortedStaffSkills(sorted_staff_skills)
+  // console.log(matchSkills)
+
+  // let sorted_staff_skills: Array<any> = 
+  // Object.entries(filtered_staff_skills).sort((a, b) => {
+  //   return (b[1].length)/max_skill_count - (a[1].length)/max_skill_count
+  // })
+  // console.log(sorted_staff_skills)
+  // setSortedStaffSkills(sorted_staff_skills)
 
   let sorted_staff: Array<TStaff> = []
   sorted_staff_ids.forEach((staff_id) => {
@@ -384,6 +409,11 @@ export default function SearchStaff() {
                     onChange={(e) => {
                       setQuery(e.target.value);
                       searchRoles(e.target.value);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Backspace") {
+                        setSelected(undefined);
+                      }
                     }}
                   />
                   <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
@@ -503,7 +533,7 @@ export default function SearchStaff() {
                   <Table.Row key={staff.staff_id}>
                     <Table.Cell>{staff.staff_id}</Table.Cell>
                     <Table.Cell >
-                      <a className='cursor-pointer' onClick={() => {
+                      <a className='cursor-pointer hover:underline' onClick={() => {
                         setModalStaff(staff as TStaff);
                         staff
                         setModalSkills(single_staff_skills);
