@@ -11,6 +11,11 @@ const nextConfig = {
       },
     ]
   },
+  experimental: {
+    outputFileTracingExcludes: {
+      "api/**/*.py" : ["public/**"]
+    }
+  }
 }
 
 module.exports = nextConfig
