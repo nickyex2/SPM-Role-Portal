@@ -256,7 +256,7 @@ INSERT INTO STAFF_REPORTING_OFFICER (`staff_id`, `RO_id`) VALUES
 (16, 6), -- William reports to Samuel Tan
 (17, 3), -- Jessica reports to Faud Nizam
 (18, 6), -- Thomas reports to Samuel Tan
-(19, 3), -- Sarah reports to Faud Nizam
+(19, 3); -- Sarah reports to Faud Nizam
 
 -- Set up STAFF_ROLES for the new staff members
 INSERT INTO STAFF_ROLES (`staff_id`, `staff_role`, `role_type`, `sr_status`) VALUES
@@ -272,7 +272,7 @@ INSERT INTO STAFF_ROLES (`staff_id`, `staff_role`, `role_type`, `sr_status`) VAL
 (16, 20, 'primary', 'active'), -- William has a primary role
 (17, 95, 'primary', 'active'), -- Jessica has a primary role
 (18, 38, 'primary', 'active'), -- Thomas has a primary role
-(19, 20, 'primary', 'active'); -- Sarah has a primary role
+(19, 20, 'primary', 'active'), -- Sarah has a primary role
 (14, 94, 'secondary', 'active'), -- Susan has a secondary role
 (15, 37, 'secondary', 'active'), -- Richard has a secondary role
 (16, 21, 'secondary', 'active'), -- William has a secondary role
@@ -324,7 +324,6 @@ INSERT INTO STAFF_SKILLS (`staff_id`, `skill_id`, `ss_status`) VALUES
 
 
 -- Insert skills for the new roles
--- Insert skills for the new roles in a single query
 INSERT INTO ROLE_SKILLS (`role_id`, `skill_id`) VALUES
 (32, 1), (32, 2), (32, 3), (32, 4), (32, 5),
 (33, 6), (33, 7), (33, 8), (33, 9), (33, 10),
@@ -334,7 +333,7 @@ INSERT INTO ROLE_SKILLS (`role_id`, `skill_id`) VALUES
 (37, 26), (37, 27), (37, 28), (37, 29), (37, 30),
 (38, 31), (38, 32), (38, 33), (38, 34), (38, 35),
 (39, 36), (39, 37), (39, 38), (39, 39), (39, 40),
-(40, 41), (40, 42), (40, 43), (40, 44), (40, 45),
+(40, 41), (40, 42), (40, 43), (40, 44), (40, 30),
 (41, 1), (41, 2), (41, 3), (41, 4), (41, 5),
 (42, 6), (42, 7), (42, 8), (42, 9), (42, 10),
 (43, 11), (43, 12), (43, 13), (43, 14), (43, 15),
