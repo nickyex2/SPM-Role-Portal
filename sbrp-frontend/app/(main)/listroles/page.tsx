@@ -324,6 +324,7 @@ export default function Test() {
       router.push("/login");
     }
     setCurrUserSkills(JSON.parse(sessionStorage.getItem("skills") as string));
+    setSysRole(sessionStorage.getItem("sys_role") as string);
     getAllRoles()
       .then((data) => {
         // Fetch details for all roles concurrently using Promise.all
@@ -386,10 +387,6 @@ export default function Test() {
 
     setLoading(false);
   }, [router]);
-
-  useEffect(() => {
-    setSysRole(sessionStorage.getItem("sys_role") as string);
-  }, []);
 
   return loading ? (
     <div className="text-center">
@@ -629,7 +626,8 @@ export default function Test() {
         )}
         <div className="grid grid-cols-2 gap-0 mt-5">
           <div className="flex-1 bg-#fff border-black border-solid rounded max-w">
-            <RoleListings
+            { sysRole && currUserSkills &&
+              <RoleListings
               roles={roles}
               roleDetails={roleDetails}
               selectedRole={selectedRole}
@@ -640,6 +638,7 @@ export default function Test() {
               onRoleClick={handleRoleClick}
               allSkills={initialSkills}
             />
+            }
           </div>
 
           <div className="flex-1 bg-#fff border-black border-solid rounded max-w">
