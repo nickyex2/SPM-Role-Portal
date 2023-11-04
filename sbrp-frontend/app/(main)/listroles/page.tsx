@@ -4,7 +4,6 @@ import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button, Modal, Label, Toast, Dropdown, Spinner } from "flowbite-react";
-import "flowbite";
 import RoleListings from "@/app/_components/RoleListings";
 import RoleDetails from "@/app/_components/RoleDetails";
 import { HiCheck, HiX } from "react-icons/hi";

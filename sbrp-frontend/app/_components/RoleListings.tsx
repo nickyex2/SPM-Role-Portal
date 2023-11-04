@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect } from "react";
-import "flowbite";
 import dateFormat from "dateformat";
 
 type RoleListingProps = {

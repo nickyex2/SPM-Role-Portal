@@ -3,8 +3,7 @@ import React, { useEffect, useState } from "react";
 import axios, { AxiosResponse } from "axios";
 import { Modal, Button } from "flowbite-react";
 import { HiUser } from "react-icons/hi";
-import { time } from "console";
-import { format } from "path";
+import dateFormat from "dateformat";
 
 export default function Modal_Staff({
   props,
@@ -52,43 +51,7 @@ export default function Modal_Staff({
     return response.data.data;
 
   }
-  
-  // function formatTimestamp(timestamp: number | null) {
-  //   if (timestamp) {
-  //     const date = new Date(timestamp);
-  //     // return in the form DD MM YYYY HH:MM:SS
-  //     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
 
-  //     // return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-  //   }
-    
-  // }
-
-  function formatTimestamp(timestamp: number | null) {
-    if (timestamp) {
-      
-      const date = new Date(timestamp);
-      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-      const months = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-      ];
-    
-      // Convert to GMT by subtracting the UTC offset
-      date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-    
-      const day = days[date.getUTCDay()];
-      const dayOfMonth = date.getUTCDate();
-      const month = months[date.getUTCMonth()];
-      const year = date.getUTCFullYear();
-      const hours = date.getUTCHours().toString().padStart(2, '0');
-      const minutes = date.getUTCMinutes().toString().padStart(2, '0');
-      const seconds = date.getUTCSeconds().toString().padStart(2, '0');
-    
-      return `${day}, ${dayOfMonth} ${month} ${year} ${hours}:${minutes}:${seconds} GMT`;
-  }
-      
-  }
 
   useEffect(() => {
     setLoading(true);
@@ -162,31 +125,6 @@ export default function Modal_Staff({
               </div>
 
             </div>
-
-            {/* <div className="text-center">
-              <h1 className="text-3xl font-bold">Profile</h1>
-              <p>{props.modalStaff?.lname} {props.modalStaff?.fname}</p>
-              <p>{props.modalStaff?.email}</p>
-              <p>{props.modalStaff?.dept}</p>
-              <p>{props.modalStaff?.phone}</p>
-              {props.modalSkills.map((skill, idx) => {
-                return (
-                  <div key={idx}>
-                    <p>{skill.skill_name}</p>
-                  </div>
-                )
-              }
-              )}
-              
-              <p>{reportingOfficer?.fname} {reportingOfficer?.lname}</p>
-              <div className="flex justify-center gap-4">
-                <Button onClick={() => props.setOpenModal(undefined)}>
-                  {`Back To All Applicants`}
-                </Button>
-              </div>
-            </div> */}
-
-
             {/* for later */}
             {props.roleApplicant ?
 
@@ -200,8 +138,6 @@ export default function Modal_Staff({
                       <Button color='success' pill
                       onClick={() => {
                         // update db
-                        // props.roleApplicant.hr_checked = "supported"
-                        // props.roleApplicant.hr_checked_ts = Date.now()
                         if (props.roleApplicant) {
                           if (updateRoleApplicantMain) {
                           updateRoleApplicant("Supported", props.roleApplicant.role_app_id)
@@ -215,8 +151,6 @@ export default function Modal_Staff({
                       <Button color='light' pill
                       onClick={() => {
                         // update db
-                        // props.roleApplicant.hr_checked = "unsupported"
-                        // props.roleApplicant.hr_checked_ts = Date.now()
                         if (props.roleApplicant) {
                           if (updateRoleApplicantMain) {
                           updateRoleApplicant("Unsupported", props.roleApplicant.role_app_id)
@@ -232,18 +166,17 @@ export default function Modal_Staff({
                   : props.roleApplicant.hr_checked === "supported" ?
                       <div className='text-center'>
                         <p>Application has been supported on</p> 
-                        {/* {props.roleApplicant?.hr_checked_ts} */}
                         {props.roleApplicant.hr_checked_ts ? 
-                          formatTimestamp(props.roleApplicant.hr_checked_ts)
-                          : formatTimestamp(Date.now())
+                          dateFormat((new Date(props.roleApplicant.hr_checked_ts).getTime() + 8 * 60 * 60 * 1000) , "dd-mm-yyyy hh:mm:ss TT")
+                          : dateFormat(Date.now())
                           }
                       </div>
                   : props.roleApplicant.hr_checked === "unsupported" ?
                       <div className='text-center'>
                         <p>Application was unsupported on</p> 
                         {props.roleApplicant.hr_checked_ts ? 
-                          formatTimestamp(props.roleApplicant.hr_checked_ts)
-                          : formatTimestamp(Date.now())
+                          dateFormat((new Date(props.roleApplicant.hr_checked_ts).getTime() + 8 * 60 * 60 * 1000) , "dd-mm-yyyy hh:mm:ss TT")
+                          : dateFormat(Date.now())
                           }
                       </div>
                   : null

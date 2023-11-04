@@ -14,7 +14,6 @@ import {
   Tabs,
   Card,
 } from "flowbite-react";
-import "flowbite";
 import dateFormat from "dateformat";
 import { HiBriefcase, HiClipboardList } from "react-icons/hi";
 

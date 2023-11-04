@@ -2,15 +2,12 @@
 import React from 'react';
 import axios, { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
-import { Button, Modal, Table } from 'flowbite-react';
-import { useRouter } from 'next/navigation';
-import { HiOutlineArrowLeft } from 'react-icons/hi';
+import { Table } from 'flowbite-react';
 import Modal_Staff from '@/app/_components/ModalStaff';
 import { FaSort } from "react-icons/fa";
 import { BsPersonCheckFill, BsPersonXFill } from "react-icons/bs";
 
 export default function Role_Applicants( { params } : { params: { role_listing_id: string } }) {
-  const router = useRouter();
   const role_listing_id = params.role_listing_id;
   const [openModal, setOpenModal] = useState<string | undefined>();
   const [modalStaff, setModalStaff] = useState<TStaff>();
@@ -20,7 +17,6 @@ export default function Role_Applicants( { params } : { params: { role_listing_i
   const [roleApplicants, setRoleApplicants] = useState<Array<TRoleApplicant>>([]);
   const [applicantDetails, setApplicantDetails] = useState<Array<TStaff>>([]);
   const [applicantSkills, setApplicantSkills] = useState<TSpecificStaffSkills>({}); // [ { staff_id: 1, skills: [ { skill_id: 1, skill_name: 'skill_name', skill_level: 1 } ] }
-  const [role, setRole] = useState<TRoleListing | undefined>(undefined);
   const [roleSkills, setRoleSkills] = useState<Array<TRoleSkills>>([]); 
   const [skills, setSkills] = useState<Array<TSkillDetails>>([]);
   const [loading, setLoading] = useState(true);
@@ -157,7 +153,6 @@ export default function Role_Applicants( { params } : { params: { role_listing_i
       setSkills(skills);
     });
     getRoleListing(Number(role_listing_id)).then((role: TRoleListing) => {
-      setRole(role);
       getRoleSkills(role.role_id).then((roleSkills: Array<TRoleSkills>) => {
         setRoleSkills(roleSkills);
       });
