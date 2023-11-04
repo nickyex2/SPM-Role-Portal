@@ -3,16 +3,22 @@ import React, { useEffect, useState } from "react";
 import axios, { AxiosResponse } from "axios";
 import { Modal, Button } from "flowbite-react";
 import { HiUser } from "react-icons/hi";
+import dateFormat from "dateformat";
 
 export default function Modal_Staff({
   props,
+  updateRoleApplicantMain
 }: {
   props: {
     openModal: string | undefined;
     setOpenModal: React.Dispatch<React.SetStateAction<string | undefined>>;
     modalStaff: TStaff | undefined;
     modalSkills: Array<TSkillDetails>;
+    page: string | undefined;
+    roleApplicant?: TRoleApplicant 
+    userStaff?: TStaff | undefined;
   };
+  updateRoleApplicantMain?: (roleApplicant: TRoleApplicant) => void;
 }) {
   const [reportingOfficer, setReportingOfficer] = useState<TStaff | undefined>(undefined);
   const [staffRoles, setStaffRoles] = useState<Array<TRoleDetails>>([]);
@@ -36,6 +42,17 @@ export default function Modal_Staff({
     const res = await axios.post(`/api/role/getMulti`, { role_ids: staffRoles })
     return res.data.data;
   }
+  async function updateRoleApplicant(hr_checked: string, role_app_id: number) {
+    const response: AxiosResponse<TResponseData> = await axios.put(
+      `/api/role/roleapp/update/${role_app_id}`,
+      { role_app_status:"applied", hr_checked: hr_checked }
+    );
+    
+    return response.data.data;
+
+  }
+
+
   useEffect(() => {
     setLoading(true);
     if (props.modalStaff) {
@@ -108,45 +125,69 @@ export default function Modal_Staff({
               </div>
 
             </div>
-
-            {/* <div className="text-center">
-              <h1 className="text-3xl font-bold">Profile</h1>
-              <p>{props.modalStaff?.lname} {props.modalStaff?.fname}</p>
-              <p>{props.modalStaff?.email}</p>
-              <p>{props.modalStaff?.dept}</p>
-              <p>{props.modalStaff?.phone}</p>
-              {props.modalSkills.map((skill, idx) => {
-                return (
-                  <div key={idx}>
-                    <p>{skill.skill_name}</p>
-                  </div>
-                )
-              }
-              )}
-              
-              <p>{reportingOfficer?.fname} {reportingOfficer?.lname}</p>
-              <div className="flex justify-center gap-4">
-                <Button onClick={() => props.setOpenModal(undefined)}>
-                  {`Back To All Applicants`}
-                </Button>
-              </div>
-            </div> */}
-
-
             {/* for later */}
-            {/* {
-              page === 'applicants' ? 
+            {props.roleApplicant ?
+
+              props.page === 'applicants'  ? 
+        
+                props.roleApplicant.role_app_status !== "withdrawn" ?
+
+                  props.roleApplicant.hr_checked === "pending" && props.userStaff?.sys_role !== 'manager' ?
                 
-                  <div className="flex flex-row justify-center gap-4">
-                    <Button color='success' pill>
-                      {`Accept Applicant`}
-                    </Button>
-                    <Button color='light' pill>
-                      {`Reject Applicant`}
-                    </Button>
-                  </div>
+                    <div className="flex flex-row justify-center gap-4">
+                      <Button color='success' pill
+                      onClick={() => {
+                        // update db
+                        if (props.roleApplicant) {
+                          if (updateRoleApplicantMain) {
+                          updateRoleApplicant("Supported", props.roleApplicant.role_app_id)
+                          updateRoleApplicantMain(props.roleApplicant)
+                          console.log(props.roleApplicant)
+                          }
+                        }
+                      }}>
+                        {`Support Application`}
+                      </Button>
+                      <Button color='light' pill
+                      onClick={() => {
+                        // update db
+                        if (props.roleApplicant) {
+                          if (updateRoleApplicantMain) {
+                          updateRoleApplicant("Unsupported", props.roleApplicant.role_app_id)
+                          updateRoleApplicantMain(props.roleApplicant)
+                          console.log(props.roleApplicant)
+                          }
+                        }
+                        
+                      }}>
+                        {`Unsupport Application`}
+                      </Button>
+                    </div>
+                  : props.roleApplicant.hr_checked === "supported" ?
+                      <div className='text-center'>
+                        <p>Application has been supported on</p> 
+                        {props.roleApplicant.hr_checked_ts ? 
+                          dateFormat((new Date(props.roleApplicant.hr_checked_ts).getTime() + 8 * 60 * 60 * 1000) , "dd-mm-yyyy hh:mm:ss TT")
+                          : dateFormat(Date.now())
+                          }
+                      </div>
+                  : props.roleApplicant.hr_checked === "unsupported" ?
+                      <div className='text-center'>
+                        <p>Application was unsupported on</p> 
+                        {props.roleApplicant.hr_checked_ts ? 
+                          dateFormat((new Date(props.roleApplicant.hr_checked_ts).getTime() + 8 * 60 * 60 * 1000) , "dd-mm-yyyy hh:mm:ss TT")
+                          : dateFormat(Date.now())
+                          }
+                      </div>
+                  : null
+
+                : props.roleApplicant.role_app_status === "withdrawn" ?
+                    <div className='text-center'>Application has been withdrawn</div>
+                : null
                 
-            : null} */}
+            : null
+          
+          : null}
               
           </Modal.Body>
         </Modal>

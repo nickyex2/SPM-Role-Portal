@@ -4,18 +4,12 @@ import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, Fragment } from "react";
 import {
-  Spinner,
-  TextInput,
   Table,
-  Dropdown,
-  Button,
   Badge,
 } from "flowbite-react";
 import { Combobox, Transition } from "@headlessui/react";
 import { HiOutlineChevronDoubleDown, HiOutlineCheck } from "react-icons/hi";
 import { FaSort } from "react-icons/fa";
-import { TableCell } from "flowbite-react/lib/esm/components/Table/TableCell";
-import { init } from "next/dist/compiled/webpack/webpack";
 import Loading from '@/app/_components/Loading';
 import Modal_Staff from '@/app/_components/ModalStaff';
 
@@ -25,30 +19,20 @@ export default function SearchStaff() {
   const [staff, setStaff] = useState<Array<TStaff>>([]);
   const [initialStaff, setInitialStaff] = useState<Array<TStaff>>([]);
   const [staffSkills, setStaffSkills] = useState<TSpecificStaffSkills>({});
-  const [searchBy, setSearchBy] = useState<string>("Skills"); // ["Skills", "Name"]
-  const [searchedSkills, setSearchedSkills] = useState<Array<TSkillDetails>>(
-    []
-  );
-  const [roles, setRoles] = useState<Array<TRoleListing>>([]);
   const [roleDetails, setRoleDetails] = useState<Array<TRoleDetails>>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const [selected, setSelected] = useState<TRoleDetails | undefined>(undefined);
   const [query, setQuery] = useState("");
   const [filteredRoles, setFilteredRoles] = useState<Array<TRoleDetails>>([]);
-  const [filteredRoleSkills, setFilteredRoleSkills] =
-    useState<TSpecificRoleSkills>({});
   const [filteredRoleSkillDetails, setFilteredRoleSkillDetails] = useState<
     Array<TSkillDetails>
   >([]);
-  const [tableSkillSort, setTableSkillSort] = useState<boolean>(true);
-  const [tableTimeSort, setTableTimeSort] = useState<boolean>(true); // [true, false] = [ascending, descending]
-  const [sortSkills, setSortSkills] = useState<TSpecificStaffSkills>({});
   const [sortedStaffSkills, setSortedStaffSkills] = useState<Array<any>>([]);
   const [openModal, setOpenModal] = useState<string | undefined>();
   const [modalStaff, setModalStaff] = useState<TStaff>();
   const [modalSkills, setModalSkills] = useState<TSkillDetails[]>([]);
-  const props = { openModal, setOpenModal, modalStaff, modalSkills };
+  const props = { openModal, setOpenModal, modalStaff, modalSkills, page: "search" };
 
   async function getAllStaff(): Promise<TStaff[]> {
     const res: AxiosResponse<TResponseData> = await axios.get(
@@ -104,112 +88,6 @@ export default function SearchStaff() {
     return response.data.data;
   }
 
-  // function handleSearch(search: string) {
-  //   // on search, filter skills first, then filter staffskills to get staff_ids then filter staff
-  //   // search === "", reset to initialStaff and initialSkills
-  //   if (search === "") {
-  //     setStaff(initialStaff);
-  //     return;
-  //   }
-  //   if (searchBy === "Skills") {
-  //     // filter skills
-  //     // let searchedSkills: Array<string> = []
-  //     let filteredSkills = skills.filter((skill) => {
-  //       // searchedSkills.push(skill.skill_name)
-  //       return skill.skill_name.toLowerCase().includes(search.toLowerCase());
-  //     });
-  //     setSearchedSkills(filteredSkills)
-  //     console.log(searchedSkills)
-  //     // filter staffskills to get staff_ids
-  //     let staff_ids: Array<number> = [];
-  //     filteredSkills.forEach((skill) => {
-  //       // if skill.skill_id is in staffSkills, add staff_id to staff_ids
-  //       Object.entries(staffSkills).forEach(([staff_id, staffSkills]) => {
-  //         if (
-  //           staffSkills.includes(skill.skill_id) &&
-  //           !staff_ids.includes(Number(staff_id))
-  //         ) {
-  //           staff_ids.push(Number(staff_id));
-  //         }
-  //       });
-  //     });
-  //     // filter staff
-  //     let filteredStaff = staff.filter((staff) => {
-  //       return staff_ids.includes(staff.staff_id);
-  //     });
-  //     setStaff(filteredStaff);
-  //   } else if (searchBy === "Name") {
-  //     let filteredStaff = staff.filter((staff) => {
-  //       return (
-  //         staff.fname.toLowerCase().includes(search.toLowerCase()) ||
-  //         staff.lname.toLowerCase().includes(search.toLowerCase())
-  //       );
-  //     });
-  //     setStaff(filteredStaff);
-  //   }
-  // }
-
-  // testing button onClick
-  // function handleSearch() {
-  // on search, filter skills first, then filter staffskills to get staff_ids then filter staff
-  // search === "", reset to initialStaff and initialSkills
-  //   const search = (document.getElementById("search-dropdown") as HTMLInputElement).value;
-
-  //   if (search === "") {
-  //     setStaff(initialStaff);
-  //     setSearchedSkills([])
-  //     return;
-  //   }
-  //   if (searchBy === "Skills" && search !== "") {
-  //     // filter skills
-  //     setStaff(initialStaff);
-  //     setSearchedSkills([])
-  //     let allSearchedSkills: Array<string> = []
-  //     search.split(",").forEach((search) => {
-  //       allSearchedSkills.push(search.trim())
-  //     })
-  //     // console.log(allSearchedSkills)
-  //     let filteredSkills: Array<TSkillDetails> = []
-  //     // iterate thorugh allSearchedSkills and match them with skills from skills by skill_name and push to filteredSkills
-  //     allSearchedSkills.forEach((search) => {
-  //       skills.forEach((skill) => {
-  //         if (skill.skill_name.toLowerCase().includes(search.toLowerCase())) {
-  //           filteredSkills.push(skill)
-  //         }
-  //       })
-  //     })
-  //     console.log(filteredSkills)
-  //     setSearchedSkills(filteredSkills)
-  //     // filter staffskills to get staff_ids
-  //     let staff_ids: Array<number> = [];
-  //     filteredSkills.forEach((skill) => {
-  //       // if skill.skill_id is in staffSkills, add staff_id to staff_ids
-  //       Object.entries(staffSkills).forEach(([staff_id, staffSkills]) => {
-  //         if (
-  //           staffSkills.includes(skill.skill_id) &&
-  //           !staff_ids.includes(Number(staff_id))
-  //         ) {
-  //           staff_ids.push(Number(staff_id));
-  //         }
-  //       });
-  //     });
-  //     // filter staff
-  //     let filteredStaff = [...initialStaff].filter((staff) => {
-  //       return staff_ids.includes(staff.staff_id);
-  //     });
-
-  //     setStaff(filteredStaff);
-  //   } else if (searchBy === "Name") {
-  //     let filteredStaff = staff.filter((staff) => {
-  //       return (
-  //         staff.fname.toLowerCase().includes(search.toLowerCase()) ||
-  //         staff.lname.toLowerCase().includes(search.toLowerCase())
-  //       );
-  //     });
-  //     setStaff(filteredStaff);
-  //   }
-  // }
-
   function searchRoles(query: string) {
     if (query === "") {
       setFilteredRoles(roleDetails);
@@ -231,7 +109,6 @@ export default function SearchStaff() {
   async function handleClick(role_id: number) {
     let role_id_arr: number[] = [];
     await getRoleSkills([role_id]).then((res) => {
-      setFilteredRoleSkills(res);
       role_id_arr = res[role_id];
     });
 
@@ -271,20 +148,22 @@ export default function SearchStaff() {
           skill_id_array.push(skill_id);
         }
       });
-      // console.log(skill_id_array);
+      console.log(skill_id_array);
 
-      if (skill_id_array.length >= 3 && skill_id_array.length/filteredRoleSkillDetails.length >= 0.7) {
+      // && skill_id_array.length/filteredRoleSkillDetails.length >= 0.7
+      if (skill_id_array.length >= 3 ) {
         filtered_staff_ids.push(Number(staff_id));
       }
     });
 
-    // console.log(filtered_staff_ids);
+    console.log(filtered_staff_ids);
 
     let filteredStaff = [...initialStaff].filter((staff) => {
       return filtered_staff_ids.includes(staff.staff_id);
     });
 
     setStaff(filteredStaff);
+
   }
 
 // sorts table of staff members by skill match percentage
@@ -301,20 +180,42 @@ export default function SearchStaff() {
     filtered_staff_skills = res
   })
 
+  // let sorted_staff_ids: Array<number> = 
+  //   Object.entries(filtered_staff_skills).sort((a, b) => {
+  //     return (b[1].length)/max_skill_count - (a[1].length)/max_skill_count
+  //   }).map((staff) => {
+  //     return Number(staff[0])
+  //   })
+  // console.log(sorted_staff_ids)
+
+  let matchSkills: Array<any> = []
+  Object.entries(filtered_staff_skills).forEach(([staff_id, staffSkills]) => {
+    let skill_id_array: Array<number> = [];
+    filteredRoleSkillDetails.forEach((skill) => {
+      if (staffSkills.includes(skill.skill_id)) {
+        skill_id_array.push(skill.skill_id);
+      }
+    });
+    matchSkills.push([staff_id, skill_id_array])
+  })
+
+  setSortedStaffSkills(matchSkills)
+  
   let sorted_staff_ids: Array<number> = 
-    Object.entries(filtered_staff_skills).sort((a, b) => {
-      return (b[1].length)/max_skill_count - (a[1].length)/max_skill_count
+    matchSkills.sort((a, b) => {
+      return b[1].length - a[1].length
     }).map((staff) => {
       return Number(staff[0])
     })
-  // console.log(sorted_staff_ids)
 
-  let sorted_staff_skills: Array<any> = 
-  Object.entries(filtered_staff_skills).sort((a, b) => {
-    return (b[1].length)/max_skill_count - (a[1].length)/max_skill_count
-  })
-  console.log(sorted_staff_skills)
-  setSortedStaffSkills(sorted_staff_skills)
+  // console.log(matchSkills)
+
+  // let sorted_staff_skills: Array<any> = 
+  // Object.entries(filtered_staff_skills).sort((a, b) => {
+  //   return (b[1].length)/max_skill_count - (a[1].length)/max_skill_count
+  // })
+  // console.log(sorted_staff_skills)
+  // setSortedStaffSkills(sorted_staff_skills)
 
   let sorted_staff: Array<TStaff> = []
   sorted_staff_ids.forEach((staff_id) => {
@@ -352,7 +253,6 @@ export default function SearchStaff() {
     });
     getAllRoles().then((res) => {
       // Fetch details for all roles concurrently using Promise.all
-      setRoles(res);
       let role_ids: Array<Number> = [];
       res.forEach((role) => {
         role_ids.push(role.role_id);
@@ -384,6 +284,11 @@ export default function SearchStaff() {
                     onChange={(e) => {
                       setQuery(e.target.value);
                       searchRoles(e.target.value);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Backspace") {
+                        setSelected(undefined);
+                      }
                     }}
                   />
                   <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
@@ -503,7 +408,7 @@ export default function SearchStaff() {
                   <Table.Row key={staff.staff_id}>
                     <Table.Cell>{staff.staff_id}</Table.Cell>
                     <Table.Cell >
-                      <a className='cursor-pointer' onClick={() => {
+                      <a className='cursor-pointer hover:underline' onClick={() => {
                         setModalStaff(staff as TStaff);
                         staff
                         setModalSkills(single_staff_skills);

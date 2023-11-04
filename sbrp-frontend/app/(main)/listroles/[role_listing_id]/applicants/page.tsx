@@ -2,25 +2,25 @@
 import React from 'react';
 import axios, { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
-import { Button, Modal, Table } from 'flowbite-react';
-import { useRouter } from 'next/navigation';
-import { HiOutlineArrowLeft } from 'react-icons/hi';
+import { Table } from 'flowbite-react';
 import Modal_Staff from '@/app/_components/ModalStaff';
+import { FaSort } from "react-icons/fa";
+import { BsPersonCheckFill, BsPersonXFill } from "react-icons/bs";
 
 export default function Role_Applicants( { params } : { params: { role_listing_id: string } }) {
-  const router = useRouter();
   const role_listing_id = params.role_listing_id;
   const [openModal, setOpenModal] = useState<string | undefined>();
   const [modalStaff, setModalStaff] = useState<TStaff>();
   const [modalSkills, setModalSkills] = useState<TSkillDetails[]>([]);
+  const [modalRoleApplicant, setModalRoleApplicant] = useState<TRoleApplicant>({} as TRoleApplicant);
+  const [userStaff, setUserStaff] = useState<TStaff>();
   const [roleApplicants, setRoleApplicants] = useState<Array<TRoleApplicant>>([]);
   const [applicantDetails, setApplicantDetails] = useState<Array<TStaff>>([]);
   const [applicantSkills, setApplicantSkills] = useState<TSpecificStaffSkills>({}); // [ { staff_id: 1, skills: [ { skill_id: 1, skill_name: 'skill_name', skill_level: 1 } ] }
-  const [role, setRole] = useState<TRoleListing | undefined>(undefined);
   const [roleSkills, setRoleSkills] = useState<Array<TRoleSkills>>([]); 
   const [skills, setSkills] = useState<Array<TSkillDetails>>([]);
   const [loading, setLoading] = useState(true);
-  const props = { openModal, setOpenModal, modalStaff, modalSkills };
+  const props = { openModal, setOpenModal, modalStaff, modalSkills, page: 'applicants', roleApplicant: modalRoleApplicant, userStaff: userStaff };
   async function getAllSkills(): Promise<Array<TSkillDetails>> {
     const response: AxiosResponse<TResponseData> = await axios.get(
       `/api/skills/getAll`
@@ -59,19 +59,116 @@ export default function Role_Applicants( { params } : { params: { role_listing_i
     );
     return response.data.data;
   }
+ 
+  async function getOneStaff(staff_id: number): Promise<TStaff> {
+    const response: AxiosResponse<TResponseData> = await axios.get(
+      `/api/staff/getOne/${staff_id}`
+    );
+    return response.data.data;
+}
+
+// used in ModalStaff
+  function updateRoleApplicantMain(currRoleApplicant: TRoleApplicant) {
+    setModalRoleApplicant(currRoleApplicant)
+
+    let new_role_applicants = [...roleApplicants]
+    let index = new_role_applicants.findIndex((roleApplicant: TRoleApplicant) => roleApplicant.role_app_id === currRoleApplicant.role_app_id)
+    new_role_applicants[index] = currRoleApplicant
+    setRoleApplicants(new_role_applicants)
+  }
+
+
+
+  function getTime(date ?: Date) {
+    return date != null ? date.getTime() : 0;
+  }
+
+  function handleSort(type: string) {
+    if (type === "skill") {
+      let sorted_role_applicants: Array<any> = []
+      roleApplicants.forEach((roleApplicant: TRoleApplicant) => {
+        const applicantSkill: number[] = applicantSkills[roleApplicant.staff_id];
+        let applicantSkillPercentage: number = 0;
+        if (applicantSkill) {
+          let matchSkills = [];
+          roleSkills.forEach((roleSkill: TRoleSkills) => {
+            if (applicantSkill.includes(roleSkill.skill_id)) {
+              matchSkills.push(roleSkill);
+            }
+          });
+          applicantSkillPercentage = (matchSkills.length / roleSkills.length) * 100;
+        }
+        sorted_role_applicants.push([roleApplicant.role_app_id, applicantSkillPercentage]);
+      });
+
+      sorted_role_applicants.sort(function(a, b) {
+        return b[1] - a[1];
+      });
+      console.log(sorted_role_applicants);
+
+      let sorted_roleApplicants: Array<TRoleApplicant> = [];
+      sorted_role_applicants.forEach((role_applicant: Array<any>) => {
+        roleApplicants.find((roleApplicant: TRoleApplicant) => {
+          if (roleApplicant.role_app_id === role_applicant[0]) {
+            sorted_roleApplicants.push(roleApplicant);
+          }
+        });
+      });
+
+      console.log(sorted_roleApplicants);
+
+      setRoleApplicants(sorted_roleApplicants);
+    } else if (type === "time") {
+      let sorted_role_applicants: Array<any> = []
+      roleApplicants.forEach((roleApplicant: TRoleApplicant) => {
+        sorted_role_applicants.push([roleApplicant.role_app_id, roleApplicant.role_app_ts_create]);
+      });
+
+      sorted_role_applicants.sort(function(a, b) {
+        return getTime(new Date(b[1])) - getTime(new Date(a[1]));
+        // return a[1].localeCompare(b[1])
+      });
+      console.log(sorted_role_applicants);
+
+      let sorted_roleApplicants: Array<TRoleApplicant> = [];
+      sorted_role_applicants.forEach((role_applicant: Array<any>) => {
+        roleApplicants.find((roleApplicant: TRoleApplicant) => {
+          if (roleApplicant.role_app_id === role_applicant[0]) {
+            sorted_roleApplicants.push(roleApplicant);
+          }
+        });
+      });
+
+      console.log(sorted_roleApplicants);
+
+      setRoleApplicants(sorted_roleApplicants);
+
+    }
+  
+  }
+  
   useEffect(() => {
     setLoading(true);
     getAllSkills().then((skills: Array<TSkillDetails>) => {
       setSkills(skills);
     });
     getRoleListing(Number(role_listing_id)).then((role: TRoleListing) => {
-      setRole(role);
       getRoleSkills(role.role_id).then((roleSkills: Array<TRoleSkills>) => {
         setRoleSkills(roleSkills);
       });
     });
     getRoleApplicants(Number(role_listing_id)).then((roleApplicants: Array<TRoleApplicant>) => {
-      setRoleApplicants(roleApplicants);
+      // setRoleApplicants(roleApplicants);
+      let sorted_role_applicants: Array<TRoleApplicant> = []
+      roleApplicants.forEach((roleApplicant: TRoleApplicant) => {
+        if (roleApplicant.hr_checked === "supported") {
+          sorted_role_applicants.unshift(roleApplicant);
+        } else {
+          sorted_role_applicants.push(roleApplicant);
+        }
+      setRoleApplicants(sorted_role_applicants);
+      
+      });
       const staff_ids: Array<number> = [];
       roleApplicants.forEach((roleApplicant: TRoleApplicant) => {
         staff_ids.push(roleApplicant.staff_id);
@@ -88,6 +185,12 @@ export default function Role_Applicants( { params } : { params: { role_listing_i
       console.log(error);
       setLoading(false);
     });
+    let userStaff = sessionStorage.getItem("staff_id")
+    if (userStaff) {
+      getOneStaff(parseInt(userStaff)).then((staff: TStaff) => {
+        setUserStaff(staff);
+      });
+    }
 
   }, [role_listing_id])
   return (
@@ -116,14 +219,14 @@ export default function Role_Applicants( { params } : { params: { role_listing_i
             <Table.HeadCell>
               <span className="font-bold">Status</span>
             </Table.HeadCell>
-            <Table.HeadCell>
-              <span className="font-bold">Applied Date</span>
+            <Table.HeadCell className='cursor-pointer' onClick={() => {handleSort("time")}}>
+              <span className="font-bold" >Applied Date <FaSort className='inline mb-0.5'></FaSort></span>
+            </Table.HeadCell>
+            <Table.HeadCell className='cursor-pointer' onClick={() => {handleSort("skill")}}>
+              <span className="font-bold">Skill Match (%) <FaSort className='inline mb-0.5'></FaSort></span>
             </Table.HeadCell>
             <Table.HeadCell>
-              <span className="font-bold">Role Skill %</span>
-            </Table.HeadCell>
-            <Table.HeadCell>
-              <span className="font-bold">More Actions</span>
+              <span className="font-bold">HR Support</span>
             </Table.HeadCell>
           </Table.Head>
           <Table.Body>
@@ -171,7 +274,12 @@ export default function Role_Applicants( { params } : { params: { role_listing_i
                       <span>{roleApplicant.role_app_id}</span>
                     </Table.Cell>
                     <Table.Cell>
-                      <span>{applicantDetail?.fname} {applicantDetail?.lname}</span>
+                      <a className='cursor-pointer hover:underline' onClick={() => {
+                        setModalStaff(applicantDetail as TStaff);
+                        setModalSkills(applicantSkillDetails);
+                        setModalRoleApplicant(roleApplicant);
+                        props.setOpenModal('pop-up-profile');
+                      }}>{applicantDetail?.fname} {applicantDetail?.lname}</a>
                     </Table.Cell>
                     <Table.Cell>
                       <span>{applicantDetail?.email}</span>
@@ -189,11 +297,20 @@ export default function Role_Applicants( { params } : { params: { role_listing_i
                       {applicantSkillPercentage}%
                     </Table.Cell>
                     <Table.Cell>
-                      <Button size="xs" onClick={() => {
+                      {/* <Button size="xs" onClick={() => {
                         setModalStaff(applicantDetail as TStaff);
                         setModalSkills(applicantSkillDetails);
                         props.setOpenModal('pop-up-profile');
-                      }}>View Profile</Button>
+                      }}>View Profile</Button> */}
+                      {roleApplicant.hr_checked === "supported" ? 
+                      <div className='flex flex-col items-center'>
+                        <BsPersonCheckFill className='w-7 h-7 text-green-500'></BsPersonCheckFill>
+                        <p className='text-xs'>Supported</p>
+                      </div>
+                      :<div className='flex flex-col items-center'>
+                        <BsPersonXFill className='w-7 h-7 text-red-700'></BsPersonXFill>
+                        <p className='text-xs'>Unsupported</p>
+                      </div>}
                     </Table.Cell>
                   </Table.Row>
                 )
@@ -201,7 +318,7 @@ export default function Role_Applicants( { params } : { params: { role_listing_i
             )}
           </Table.Body>
         </Table>
-        <Modal_Staff props={props} />
+        <Modal_Staff props={props} updateRoleApplicantMain={updateRoleApplicantMain} />
       </div>
     </div>
   )

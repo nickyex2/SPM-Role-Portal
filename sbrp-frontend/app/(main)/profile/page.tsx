@@ -3,7 +3,7 @@ import React from "react";
 import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Button, Table, Card, Badge } from "flowbite-react";
+import { Card, Badge } from "flowbite-react";
 import Loading from "../../_components/Loading";
 import { HiUser } from "react-icons/hi";
 
