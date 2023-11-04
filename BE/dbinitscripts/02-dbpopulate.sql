@@ -225,3 +225,118 @@ VALUES
     (19458657, 1, 'Sample Role Listing 1', 3, '2023-10-01', '2023-10-10', 2, 'active', 2),
     (19458658, 3, 'Sample Role Listing 2', 3, '2023-11-01', '2023-11-10', 2, 'inactive', 2);
 
+
+-- Insert new staff members starting from ID 7
+INSERT INTO STAFF_DETAILS (`fname`, `lname`, `dept`, `email`, `phone`, `biz_address`, `sys_role`) VALUES
+('John', 'Smith', 'IT', 'john_smith@all-in-one.com.sg', '65 1834 5678', '1, Marina Boulevard, Singapore 018989', 'staff'),
+('Mary', 'Johnson', 'SALES', 'mary_johnson@all-in-one.com.sg', '65 1934 5678', '1, Marina Boulevard, Singapore 018989', 'manager'),
+('David', 'Lee', 'HUMAN RESOURCE AND ADMIN', 'david_lee@all-in-one.com.sg', '65 2034 5678', '1, Marina Boulevard, Singapore 018989', 'hr'),
+('Jennifer', 'Wong', 'FINANCE', 'jennifer_wong@all-in-one.com.sg', '65 2134 5678', '1, Marina Boulevard, Singapore 018989', 'staff'),
+('Michael', 'Chen', 'IT', 'michael_chen@all-in-one.com.sg', '65 2234 5678', '1, Marina Boulevard, Singapore 018989', 'staff'),
+('Linda', 'Ng', 'SALES', 'linda_ng@all-in-one.com.sg', '65 2334 5678', '1, Marina Boulevard, Singapore 018989', 'manager'),
+('Robert', 'Tan', 'FINANCE', 'robert_tan@all-in-one.com.sg', '65 2434 5678', '1, Marina Boulevard, Singapore 018989', 'staff'),
+('Susan', 'Lim', 'IT', 'susan_lim@all-in-one.com.sg', '65 2534 5678', '1, Marina Boulevard, Singapore 018989', 'staff'),
+('Richard', 'Koh', 'HUMAN RESOURCE AND ADMIN', 'richard_koh@all-in-one.com.sg', '65 2634 5678', '1, Marina Boulevard, Singapore 018989', 'hr'),
+('William', 'Goh', 'SALES', 'william_goh@all-in-one.com.sg', '65 2734 5678', '1, Marina Boulevard, Singapore 018989', 'manager'),
+('Jessica', 'Lau', 'FINANCE', 'jessica_lau@all-in-one.com.sg', '65 2834 5678', '1, Marina Boulevard, Singapore 018989', 'staff'),
+('Thomas', 'Ong', 'IT', 'thomas_ong@all-in-one.com.sg', '65 2934 5678', '1, Marina Boulevard, Singapore 018989', 'staff'),
+('Sarah', 'Tan', 'IT', 'sarah_tan@all-in-one.com.sg', '65 3034 5678', '1, Marina Boulevard, Singapore 018989', 'staff');
+
+-- Set up STAFF_REPORTING_OFFICER relationships
+INSERT INTO STAFF_REPORTING_OFFICER (`staff_id`, `RO_id`) VALUES
+(7, 3),  -- John reports to Faud Nizam
+(8, 6),  -- Mary reports to Samuel Tan
+(9, 3),  -- David reports to Faud Nizam
+(10, 6), -- Jennifer reports to Samuel Tan
+(11, 3), -- Michael reports to Faud Nizam
+(12, 6), -- Linda reports to Samuel Tan
+(13, 3), -- Robert reports to Faud Nizam
+(14, 6), -- Susan reports to Samuel Tan
+(15, 3), -- Richard reports to Faud Nizam
+(16, 6), -- William reports to Samuel Tan
+(17, 3), -- Jessica reports to Faud Nizam
+(18, 6), -- Thomas reports to Samuel Tan
+(19, 3), -- Sarah reports to Faud Nizam
+
+-- Set up STAFF_ROLES for the new staff members
+INSERT INTO STAFF_ROLES (`staff_id`, `staff_role`, `role_type`, `sr_status`) VALUES
+(7, 2, 'primary', 'active'),  -- John has a primary role
+(8, 2, 'primary', 'active'),  -- Mary has a primary role
+(9, 38, 'primary', 'active'), -- David has a primary role
+(10, 20, 'primary', 'active'), -- Jennifer has a primary role
+(11, 95, 'primary', 'active'), -- Michael has a primary role
+(12, 38, 'primary', 'active'), -- Linda has a primary role
+(13, 20, 'primary', 'active'), -- Robert has a primary role
+(14, 95, 'primary', 'active'), -- Susan has a primary role
+(15, 38, 'primary', 'active'), -- Richard has a primary role
+(16, 20, 'primary', 'active'), -- William has a primary role
+(17, 95, 'primary', 'active'), -- Jessica has a primary role
+(18, 38, 'primary', 'active'), -- Thomas has a primary role
+(19, 20, 'primary', 'active'); -- Sarah has a primary role
+(14, 94, 'secondary', 'active'), -- Susan has a secondary role
+(15, 37, 'secondary', 'active'), -- Richard has a secondary role
+(16, 21, 'secondary', 'active'), -- William has a secondary role
+(17, 94, 'secondary', 'active'), -- Jessica has a secondary role
+(18, 37, 'secondary', 'active'), -- Thomas has a secondary role
+(19, 22, 'secondary', 'active'); -- Sarah has a secondary role
+
+-- Set up STAFF_SKILLS for the new staff members
+INSERT INTO STAFF_SKILLS (`staff_id`, `skill_id`, `ss_status`) VALUES
+(7, 1, 'active'),
+(7, 2, 'active'),
+(7, 3, 'active'),
+(8, 4, 'active'),
+(8, 5, 'active'),
+(8, 6, 'active'),
+(9, 7, 'active'),
+(9, 8, 'active'),
+(9, 9, 'active'),
+(10, 1, 'active'),
+(10, 2, 'active'),
+(10, 3, 'active'),
+(11, 4, 'active'),
+(11, 5, 'active'),
+(11, 6, 'active'),
+(12, 7, 'active'),
+(12, 8, 'active'),
+(12, 9, 'active'),
+(13, 1, 'active'),
+(13, 2, 'active'),
+(13, 3, 'active'),
+(14, 4, 'active'),
+(14, 5, 'active'),
+(14, 6, 'active'),
+(15, 7, 'active'),
+(15, 8, 'active'),
+(15, 9, 'active'),
+(16, 1, 'active'),
+(16, 2, 'active'),
+(16, 3, 'active'),
+(17, 4, 'active'),
+(17, 5, 'active'),
+(17, 6, 'active'),
+(18, 7, 'active'),
+(18, 8, 'active'),
+(18, 9, 'active'),
+(19, 1, 'active'),
+(19, 2, 'active'),
+(19, 3, 'active');
+
+
+-- Insert skills for the new roles
+-- Insert skills for the new roles in a single query
+INSERT INTO ROLE_SKILLS (`role_id`, `skill_id`) VALUES
+(32, 1), (32, 2), (32, 3), (32, 4), (32, 5),
+(33, 6), (33, 7), (33, 8), (33, 9), (33, 10),
+(34, 11), (34, 12), (34, 13), (34, 14), (34, 15),
+(35, 16), (35, 17), (35, 18), (35, 19), (35, 20),
+(36, 21), (36, 22), (36, 23), (36, 24), (36, 25),
+(37, 26), (37, 27), (37, 28), (37, 29), (37, 30),
+(38, 31), (38, 32), (38, 33), (38, 34), (38, 35),
+(39, 36), (39, 37), (39, 38), (39, 39), (39, 40),
+(40, 41), (40, 42), (40, 43), (40, 44), (40, 45),
+(41, 1), (41, 2), (41, 3), (41, 4), (41, 5),
+(42, 6), (42, 7), (42, 8), (42, 9), (42, 10),
+(43, 11), (43, 12), (43, 13), (43, 14), (43, 15),
+(44, 16), (44, 17), (44, 18), (44, 19), (44, 20),
+(45, 21), (45, 22), (45, 23), (45, 24), (45, 25);
