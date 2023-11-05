@@ -608,7 +608,7 @@ export default function Test() {
 										>
 											<div className="max-h-40 overflow-y-scroll">
 												{allStaff.map((staff) => {
-													return (
+													return ( (["manager"].includes(staff?.sys_role)) &&
 														<Dropdown.Item
 															onClick={() =>
 																selectStaff(
@@ -863,7 +863,7 @@ export default function Test() {
 								<HiCheck className="h-5 w-5" />
 							</div>
 							<div className="ml-3 text-sm font-normal">
-								Successful Application!
+								Successfully Edited Application!
 							</div>
 							<Toast.Toggle />
 						</Toast>
@@ -882,7 +882,7 @@ export default function Test() {
 								<HiX className="h-5 w-5" />
 							</div>
 							<div className="ml-3 text-sm font-normal">
-								Error in Application
+								Error in editing Application
 							</div>
 						</Toast>
 					)}

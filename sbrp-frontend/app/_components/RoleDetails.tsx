@@ -203,6 +203,7 @@ export default function RoleDetails({
 			editedRoleData
 		);
 		props.setOpenModal(undefined);
+		props.setOpenSubmitModal(undefined);
 		if (response.status === 200) {
 			setUpdateRoleListing(response.data.data);
 			roleDetailsToastProps.setShowEditSuccessToast(true);
