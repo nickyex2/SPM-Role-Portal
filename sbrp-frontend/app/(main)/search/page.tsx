@@ -80,6 +80,9 @@ export default function SearchStaff() {
 		return response.data.data?.role_listings;
 	}
 
+	function updateRoleApplicantMain(currRoleApplicant: TRoleApplicant) {
+    return null;
+  }
 	async function getRoleDetails(
 		role_ids: Array<Number>
 	): Promise<Array<TRoleDetails>> {
@@ -265,7 +268,7 @@ export default function SearchStaff() {
 									<Combobox.Input
 										className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
 										// displayValue={(person) => person.name}
-										placeholder="Search Staff"
+										placeholder="Search Roles"
 										onChange={(e) => {
 											setQuery(e.target.value);
 											searchRoles(e.target.value);
@@ -476,7 +479,7 @@ export default function SearchStaff() {
 							})}
 						</Table.Body>
 					</Table>
-					<Modal_Staff props={props} />
+					<Modal_Staff props={props} updateRoleApplicantMain={updateRoleApplicantMain}/>
 				</div>
 			</div>
 		</>
