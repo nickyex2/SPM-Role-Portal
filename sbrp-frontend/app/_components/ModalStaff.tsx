@@ -18,7 +18,7 @@ export default function Modal_Staff({
 		roleApplicant?: TRoleApplicant;
 		userStaff?: TStaff | undefined;
 	};
-	updateRoleApplicantMain?: (roleApplicant: TRoleApplicant) => void;
+	updateRoleApplicantMain: (roleApplicant: TRoleApplicant) => void;
 }) {
 	const [reportingOfficer, setReportingOfficer] = useState<
 		TStaff | undefined
@@ -58,7 +58,12 @@ export default function Modal_Staff({
 			`/api/role/roleapp/update/${role_app_id}`,
 			{ role_app_status: "applied", hr_checked: hr_checked }
 		);
-
+		if (response.status === 200) {
+			console.log("Updated role applicant");
+			updateRoleApplicantMain(
+				response.data.data
+			);
+		}
 		return response.data.data;
 	}
 
@@ -152,19 +157,11 @@ export default function Modal_Staff({
 										onClick={() => {
 											// update db
 											if (props.roleApplicant) {
-												if (updateRoleApplicantMain) {
 													updateRoleApplicant(
 														"Supported",
 														props.roleApplicant
 															.role_app_id
 													);
-													updateRoleApplicantMain(
-														props.roleApplicant
-													);
-													console.log(
-														props.roleApplicant
-													);
-												}
 											}
 										}}
 									>
@@ -176,19 +173,11 @@ export default function Modal_Staff({
 										onClick={() => {
 											// update db
 											if (props.roleApplicant) {
-												if (updateRoleApplicantMain) {
 													updateRoleApplicant(
 														"Unsupported",
 														props.roleApplicant
 															.role_app_id
 													);
-													updateRoleApplicantMain(
-														props.roleApplicant
-													);
-													console.log(
-														props.roleApplicant
-													);
-												}
 											}
 										}}
 									>

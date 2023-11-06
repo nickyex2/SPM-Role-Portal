@@ -44,7 +44,7 @@ export default function R_Navbar() {
       <Navbar.Collapse>
         <Navbar.Link href="/listroles">Jobs</Navbar.Link>
         <Navbar.Link href="/Skills">Skills</Navbar.Link>
-        {staff.sys_role === "hr" ? (
+        {staff.sys_role === "hr" || staff.sys_role === "manager" ? (
           <Navbar.Link href="/search">Staff</Navbar.Link>
         ) : null}
         <Navbar.Link active href="/profile" className="md:hidden">

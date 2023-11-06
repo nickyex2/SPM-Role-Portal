@@ -155,6 +155,9 @@ export default function Role_Applicants( { params } : { params: { role_listing_i
     getRoleListing(Number(role_listing_id)).then((role: TRoleListing) => {
       getRoleSkills(role.role_id).then((roleSkills: Array<TRoleSkills>) => {
         setRoleSkills(roleSkills);
+      })
+      .catch((error: any) => {
+        console.log(error);
       });
     });
     getRoleApplicants(Number(role_listing_id)).then((roleApplicants: Array<TRoleApplicant>) => {
@@ -266,7 +269,7 @@ export default function Role_Applicants( { params } : { params: { role_listing_i
                       matchSkills.push(roleSkill);
                     }
                   });
-                  applicantSkillPercentage = (matchSkills.length / roleSkills.length) * 100;
+                  applicantSkillPercentage = (matchSkills.length / roleSkills.length) * 100 || 0;
                 }
                 return (
                   <Table.Row key={roleApplicant.role_app_id}>
