@@ -697,7 +697,7 @@ export default function Test() {
 				) : (
 					<div className="my-6 mx-auto"></div>
 				)}
-				<div className="grid grid-cols-2 gap-0 mt-5">
+				<div className="grid grid-cols-2 gap-0 ">
 					<div className="flex-1 bg-#fff border-black border-solid rounded max-w">
 						{sysRole && currUserSkills && (
 							<RoleListings

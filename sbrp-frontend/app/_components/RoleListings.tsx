@@ -107,18 +107,18 @@ export default function RoleListings({
 					? "bg-blue-200 dark:bg-gray-700"
 					: "bg-white dark:bg-gray-800";
 				const hoverStyles = isSelected
-					? ""
-					: "hover:bg-gray-100 dark:hover:bg-gray-700";
+					? "hover:no-underline hover:cursor-pointer"
+					: "hover:bg-gray-100 dark:hover:bg-gray-700 hover:no-underline hover:cursor-pointer";
 				return (
 					<div
 						// href={`/listroles/${role.role_listing_id}`}
-						className={`max-w p-4 border border-gray-200 rounded-lg shadow ${hoverStyles} ${backgroundColor} mx-auto mb-2 grid grid-cols-3 gap-1 hover:underline dark:border-gray-700`}
+						className={`max-w p-4 border border-gray-200 rounded-none shadow ${hoverStyles} ${backgroundColor} mx-auto  grid grid-cols-3 gap-1 hover:underline dark:border-gray-700`}
 						key={role.role_listing_id}
 						onClick={() => onRoleClick(role)}
 					>
 						{/* roleList.TITLE */}
 						<div className="col-span-3">
-							<h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
+							<h5 className="text-lg font-bold tracking-tight text-gray-900 dark:text-white">
 								{
 									roleDetails.find(
 										(roleDetail) =>
@@ -131,7 +131,7 @@ export default function RoleListings({
 						{/* Department, How many days posted ago */}
 						<div className="col-span-3">
 							<div className="flex items-center">
-								<p className="font-normal text-sm text-gray-700 dark:text-white">
+								<p className="font-semibold text-sm text-gray-700 dark:text-white">
 									{/* Convert this from all capital to first letter capital with the remaining lower */}
 									{/* {roleListingSource?.dept?.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())} */}
 									{
@@ -147,7 +147,7 @@ export default function RoleListings({
 
 						{/* roleList.role_listing_close */}
 						<div className="col-span-2">
-							<p className="font-normal text-sm text-gray-700 dark:text-gray-400">
+							<p className="mt-2 font-normal text-sm text-gray-700 dark:text-gray-400">
 								Application Deadline:{" "}
 								{dateFormat(
 									role.role_listing_close,
@@ -162,12 +162,12 @@ export default function RoleListings({
 								<p className="font-normal text-sm text-gray-700 dark:text-gray-400">
 									Application Status:{" "}
 									{role.role_listing_status === "active" ? (
-										<span className="inline-block bg-green-200 rounded-full px-3 py-1 text-[10px] font-semibold text-gray-700 mr-2 mb-2">
-											active
+										<span className="inline-block bg-green-200 rounded-full px-2 py-0.5 text-[10px] font-semibold text-green-600 mr-2 mb-2 ml-1">
+											Active
 										</span>
 									) : (
-										<span className="inline-block bg-red-200 rounded-full px-3 py-1 text-[10px] font-semibold text-gray-700 mr-2 mb-2">
-											inactive
+										<span className="inline-block bg-red-200 rounded-full px-2 py-0.5 text-[10px] font-semibold text-rose-700 mr-2 mb-2 ml-1">
+											Inactive
 										</span>
 									)}
 								</p>

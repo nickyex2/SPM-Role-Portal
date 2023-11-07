@@ -711,7 +711,7 @@ export default function RoleDetails({
 
 						<div className="col-span-4">
 							<div className="flex items-center">
-								<p className="font-normal text-sm text-gray-400 dark:text-white">
+								<p className="font-light text-sm text-gray-400 dark:text-white">
 									{daysSincePosted === 0
 										? "Posted Today"
 										: `Posted ${daysSincePosted} days ago`}
@@ -721,7 +721,7 @@ export default function RoleDetails({
 						{/* Department, How many days posted ago */}
 						<div className="col-span-1">
 							<div className="flex items-center">
-								<p className="font-normal text-sm text-gray-700 dark:text-white">
+								<p className="font-medium text-sm text-gray-700 dark:text-white">
 									{/* Convert this from all capital to first letter capital with the remaining lower */}
 									Department: <b>{roleListingSource?.dept}</b>
 								</p>
@@ -731,7 +731,7 @@ export default function RoleDetails({
 						{/* Closing Date */}
 						<div className="col-span-4">
 							<div className="flex items-center">
-								<p className="font-normal text-sm text-gray-700 dark:text-white">
+								<p className="font-medium text-sm text-gray-700 dark:text-white">
 									Application Deadline:{" "}
 									{dateFormat(
 										selectedRole.role_listing_close,
@@ -744,7 +744,7 @@ export default function RoleDetails({
 						{/* Hiring Manager (email) */}
 						<div className="col-span-4">
 							<div className="flex items-center">
-								<p className="font-normal text-sm text-gray-700 dark:text-white">
+								<p className="font-medium text-sm text-gray-700 dark:text-white">
 									Hiring Manager:{" "}
 									{roleListingSource?.fname
 										?.toLowerCase()
@@ -759,8 +759,8 @@ export default function RoleDetails({
 						</div>
 
 						{/* Skill Match */}
-						<div className="col-span-1">
-							<p className="font-normal text-sm text-gray-700 dark:text-white">
+						<div className="col-span-1 mt-3">
+							<p className="font-medium text-sm text-gray-700 dark:text-white">
 								Skill Match:
 								<br />
 								<b>
@@ -774,7 +774,7 @@ export default function RoleDetails({
 							</p>
 						</div>
 
-						<div className="col-span-3">
+						<div className="col-span-3 mt-4">
 							<p className="font-normal text-sm text-gray-700 dark:text-white">
 								{roleSkillsDetails.map((skill) => {
 									if (
