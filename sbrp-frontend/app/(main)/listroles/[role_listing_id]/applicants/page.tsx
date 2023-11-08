@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Table } from 'flowbite-react';
 import Modal_Staff from '@/app/_components/ModalStaff';
 import { FaSort } from "react-icons/fa";
-import { BsPersonCheckFill, BsPersonXFill } from "react-icons/bs";
+import { BsPersonCheckFill, BsPersonXFill, BsPersonFillExclamation } from "react-icons/bs";
 
 export default function Role_Applicants( { params } : { params: { role_listing_id: string } }) {
   const role_listing_id = params.role_listing_id;
@@ -310,10 +310,16 @@ export default function Role_Applicants( { params } : { params: { role_listing_i
                         <BsPersonCheckFill className='w-7 h-7 text-green-500'></BsPersonCheckFill>
                         <p className='text-xs'>Supported</p>
                       </div>
-                      :<div className='flex flex-col items-center'>
+                      : roleApplicant.hr_checked === "unsupported" || roleApplicant.role_app_status === "withdrawn" ?
+                      <div className='flex flex-col items-center'>
                         <BsPersonXFill className='w-7 h-7 text-red-700'></BsPersonXFill>
                         <p className='text-xs'>Unsupported</p>
-                      </div>}
+                      </div> :
+                      <div className='flex flex-col items-center'>
+                        <BsPersonFillExclamation className='w-7 h-7 text-yellow-700'></BsPersonFillExclamation>
+                        <p className='text-xs'>Pending</p>
+                      </div>
+                    }
                     </Table.Cell>
                   </Table.Row>
                 )

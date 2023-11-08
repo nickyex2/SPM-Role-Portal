@@ -177,13 +177,20 @@ export default function RoleListings({
 						<div className="col-span-3 flex justify-end">
 							<div>
 								<p className="font-normal text-sm text-gray-700 dark:text-white">
-									{matchColour(
+									{roleSkills[role.role_id]?.length > 0 ? matchColour(
 										(roleSkills[role.role_id]?.filter(
 											(skill) =>
 												currUserSkills?.includes(skill)
 										).length /
 											roleSkills[role.role_id]?.length) *
 											100 || 0
+									): matchColour(
+										(roleSkills[role.role_id]?.filter(
+											(skill) =>
+												currUserSkills?.includes(skill)
+										).length /
+											roleSkills[role.role_id]?.length) *
+											100 || 100
 									)}
 								</p>
 							</div>
@@ -191,7 +198,7 @@ export default function RoleListings({
 
 						<div className="col-span-2">
 							<p className="font-normal text-gray-700 dark:text-white">
-								{roleSkills[role.role_id]
+								{roleSkills[role.role_id]?.length > 0
 									? roleSkills[role.role_id].map((skill) => {
 											let skillDetail = allSkills.find(
 												(skillDetail) =>
@@ -226,7 +233,7 @@ export default function RoleListings({
 												);
 											}
 									  })
-									: null}
+									: "No skills required"}
 							</p>
 						</div>
 					</div>
